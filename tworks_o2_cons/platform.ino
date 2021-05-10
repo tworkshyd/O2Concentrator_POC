@@ -1,7 +1,7 @@
 // platform.c
 
 
-#include "inc/platform.h"
+#include "platform.h"
 
 
 void platform_init (void) {

@@ -1,7 +1,8 @@
-#include "inc\data_base.h"
-#include "inc\ui.h"
-#include "inc\display.h"
-#include "inc\platform.h"
+
+#include "platform.h"
+#include "display.h"
+#include "data_base.h"
+#include "ui.h"
 
 /*
 
@@ -21,14 +22,6 @@
 
 */
 
-// include the library code:
-#include <LiquidCrystal.h>
-
-// initialize the library by associating any needed LCD interface pin
-// as per aurdino nano - base board,  SCH Dated: 09-02-2021
-
-const int rs = 7, en = 8, d4 = 9, d5 = 10, d6 = 11, d7 = 12;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
 

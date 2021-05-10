@@ -10,6 +10,16 @@
 #endif
 
 
+// LCD display port mappings
+#define RS		(7)
+#define EN		(8)
+#define D4		(9)
+#define D5		(10)
+#define D6		(11)
+#define D7		(12)
+
+
+
 void platform_init (void);
 
 
