@@ -53,13 +53,14 @@ PortD - PD7     PD6         PD5         PD4     PD3         PD2         PD1     
 #define RLY_1           (5)
 #define RLY_2           (4)
 #define RLY_3           (3)
-#define RLY_4           (2)
+//#define RLY_4         ()
+//#define DDIR          ()
 
 // Alias names
 #define BCK_F_SOLINOID  RLY_1
 #define ZT2_SOLINOID    RLY_2
 #define ZT1_SOLINOID    RLY_3
-#define DDIR_RELAY      RLY_4
+
 
 // 3. Buzzer
 #define BUZZR           (13)
@@ -71,6 +72,14 @@ PortD - PD7     PD6         PD5         PD4     PD3         PD2         PD1     
 #define Prss_sns_1_adc  (A0)
 #define LM35_Out_adc    (A1)
 
+// 6. Button input
+#define buttonPin       (2)
+
+
+
+#define BUTTON_PRESSED()    (digitalRead(button_input))
+#define BUUZZER_CNTRL(x)    (digitalWrite(BUZZR, !x))
+#define COMPRSSR_CNTRL(x)   (digitalWrite(COMPRSSR, x))
 
 
 

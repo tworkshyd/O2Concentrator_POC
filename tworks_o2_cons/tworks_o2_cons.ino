@@ -5,7 +5,7 @@
 
 #include "platform.h"
 #include "display.h"
-#include "data_base.h"
+#include "db.h"
 #include "ui.h"
 
 
@@ -37,15 +37,22 @@ void setup() {
     Serial.begin(115200);
     Serial.println("Serial port initialized..!!");
     platform_init();
+    db_init ();
     ui_init ();
     o2_cons_init ();
+
+ 
 
 }
 
 
 void loop() {
 
-    o2_main_task ();
+    ui_task_main ();
+
+    if (f_start == true) {
+        o2_main_task ();
+    }   
 
 }
 
@@ -59,7 +66,6 @@ void o2_cons_init (void)    {
     pinMode(Sieve_B_Valve,   OUTPUT);
     pinMode(PreCharge_Valve, OUTPUT);
     
-
     //  SET DELAY TIMING HERE
     //**************************************************************************
     Relay_Test_Delay    = 0;

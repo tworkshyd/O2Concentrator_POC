@@ -10,5 +10,10 @@
 #endif
 
 
-#endif
+extern unsigned char   f_start;
 
+
+void db_init (void);
+
+
+#endif

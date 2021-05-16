@@ -10,6 +10,9 @@
 #endif
 
 
+#define ON  (true)
+#define OFF (false)
+
 
 
 void ui_init (void);
