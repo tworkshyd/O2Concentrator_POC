@@ -10,5 +10,11 @@
 #endif
 
 
-#endif
 
+
+void ui_init (void);
+
+
+
+
+#endif
