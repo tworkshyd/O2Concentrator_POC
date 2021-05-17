@@ -84,6 +84,7 @@ void ui_task_main (void)    {
                 BUUZZER_CNTRL (ON);
                 COMPRSSR_CNTRL (ON);
                 delay (1000);
+                lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Stopping.. ");
                 delay (1000);
                 BUUZZER_CNTRL (OFF);
