@@ -7,6 +7,7 @@
  * Prameters :  line_no (1 to LCD_ROWS), start_col ( 0 to LCD_COLS-1)
  *              align (LEFT, CENTER, RIGHT)
  */
+ /*
 void lcd_wirte_to_line (char line_no, char start_col, char * str_ptr, char align)   {
 
     // validate prameters
@@ -26,4 +27,4 @@ void lcd_wirte_to_line (char line_no, char start_col, char * str_ptr, char align
     
     lcd.print("Hyderabad");
     
-}
+}*/

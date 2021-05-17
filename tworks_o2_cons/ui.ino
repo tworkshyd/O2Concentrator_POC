@@ -101,6 +101,4 @@ void ui_task_main (void)    {
             break;
     }
 
-
-
 }
