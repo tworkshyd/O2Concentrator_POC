@@ -77,6 +77,15 @@ PortD - PD7     PD6         PD5         PD4     PD3         PD2         PD1     
 
 
 
+
+// RELAY PIN ASSIGNMENT
+//**************************************************************************
+int Sieve_A_Valve_Z1     = RLY_3;    // Z1TSOL
+int Sieve_B_Valve_Z2     = RLY_2;    // Z2TSOL
+int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
+
+
+
 #define BUTTON_PRESSED()    (digitalRead(button_input))
 #define BUUZZER_CNTRL(x)    (digitalWrite(BUZZR, !x))
 #define COMPRSSR_CNTRL(x)   (digitalWrite(COMPRSSR, x))
