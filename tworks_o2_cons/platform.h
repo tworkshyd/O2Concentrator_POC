@@ -27,7 +27,7 @@ PortB - PB7         PB6         PB5         PB4         PB3             PB2     
 PortC - PC7     PC6         PC5             PC4             PC3         PC2        PC1          PC0 
         -       -/RESET     19/A5/ADC5/SCL  18/A4/ADC4/SDA  17/A3/ADC3  16/A2/ADC2 15/A1/ADC1   14/A0/ADC0
 --------------------------------------------------------------------------------------------------------
-        ASpare4 ASpare3     SCL             SDA             Aspare2     ASpare1     LM35Out     Psns1
+        ASpare4 ASpare3     SCL             SDA             Aspare2     LM35Out     Push_Button Psns1
 ========================================================================================================
 
 ========================================================================================================
@@ -70,10 +70,10 @@ PortD - PD7     PD6         PD5         PD4     PD3         PD2         PD1     
 
 // 5. Sensor inputs
 #define Prss_sns_1_adc  (A0)
-#define LM35_Out_adc    (A1)
+#define LM35_Out_adc    (A2)
 
 // 6. Button input
-#define buttonPin       (2)
+#define buttonPin       (A1)    // (2)
 
 
 

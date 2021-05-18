@@ -49,16 +49,18 @@ void setup() {
     ui_init ();
     o2_cons_init ();
 
+    
+
 }
 
 
 void loop() {
 
-    // ui_task_main ();
+    ui_task_main ();
 
-    // if (f_start == true) {
+    if (f_start == true) {
         o2_main_task ();
-    // }
+    }
 
 }
 
