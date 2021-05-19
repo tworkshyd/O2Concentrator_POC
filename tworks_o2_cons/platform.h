@@ -86,7 +86,7 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 
 
 
-#define BUTTON_PRESSED()    (digitalRead(button_input))
+#define BUTTON_PRESSED()    (!digitalRead(button_input))
 #define BUUZZER_CNTRL(x)    (digitalWrite(BUZZR, !x))
 #define COMPRSSR_CNTRL(x)   (digitalWrite(COMPRSSR, x))
 

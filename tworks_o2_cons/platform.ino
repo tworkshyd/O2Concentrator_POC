@@ -19,6 +19,7 @@ void platform_init (void) {
     pinMode(BUZZR,          OUTPUT);
     pinMode(COMPRSSR,       OUTPUT);
     pinMode(buttonPin,      INPUT );
+    pinMode(buttonPin,INPUT_PULLUP);
     
     // default pin-state
     digitalWrite(RLY_1,     HIGH);

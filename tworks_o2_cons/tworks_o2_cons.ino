@@ -6,6 +6,7 @@
 
 #include "platform.h"
 #include "display.h"
+#include "commn.h"
 #include "db.h"
 #include "ui.h"
 
@@ -51,6 +52,7 @@ void setup() {
     platform_init();
     db_init ();
     ui_init ();
+    commn_init();
     o2_cons_init ();
 
     // start task timers

@@ -38,7 +38,7 @@ void ui_task_main (void)    {
     buttonState = digitalRead(buttonPin);
 
 
-    if (buttonState == HIGH)   {
+    if (buttonState == LOW) {   // HIGH)   {
         button_press_stability++;
         if (button_press_stability >= 1000)   {
             button_press_stability = 0;
@@ -128,8 +128,14 @@ void ui_task_main (void)    {
             lcd.print("Compressor Test..");
 
             // 4. Compressor check
+            // Open release valves.. to avoid blocking of compressor o/p during its test-run
             lcd.setCursor(0, 2);
-            lcd.print("Compressor - ON   ");
+            lcd.print("Opening releaseValvs");
+            delay (1000);
+            digitalWrite(Sieve_A_Valve_Z1,      LOW);      // on           
+            digitalWrite(Sieve_B_Valve_Z2,      LOW);      // on
+            lcd.setCursor(0, 2);
+            lcd.print("Compressor - ON     ");
             BUUZZER_CNTRL (ON);
             COMPRSSR_CNTRL (ON);
             digitalWrite(PreCharge_Valve_BCKF,      LOW);       // on
@@ -137,13 +143,14 @@ void ui_task_main (void)    {
             BUUZZER_CNTRL (OFF);
             COMPRSSR_CNTRL (OFF);
             lcd.setCursor(0, 2);
-            lcd.print("Compressor - OFF  ");
+            lcd.print("Compressor - OFF    ");
             digitalWrite(PreCharge_Valve_BCKF,      HIGH);      // off
             delay (1000);
 
             lcd.clear();
             lcd.setCursor(0, 3);
-            lcd.print("Testing over...!! ");
+                  //  "1.3.5.7.9.........20"
+            lcd.print("Testing over...!!   ");
             delay(2000);
             lcd.clear();
             ui_print_welcome ();
