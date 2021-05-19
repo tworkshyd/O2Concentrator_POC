@@ -64,9 +64,12 @@ void ui_task_main (void)    {
         case 0:
             if (powerUpTimer.check())   {
                 ui_state += 2;
+                lcd.setCursor(0, 3);
+                lcd.print("Press ButtonToStart!");
             }
             else {
                 if (button_presed == true)  {
+                    button_presed = false;
                     ui_state++;
                 }
             }
@@ -128,14 +131,16 @@ void ui_task_main (void)    {
             lcd.setCursor(0, 2);
             lcd.print("Compressor - ON   ");
             BUUZZER_CNTRL (ON);
+            COMPRSSR_CNTRL (ON);
             digitalWrite(PreCharge_Valve_BCKF,      LOW);       // on
             delay(5000);
             BUUZZER_CNTRL (OFF);
+            COMPRSSR_CNTRL (OFF);
             lcd.setCursor(0, 2);
             lcd.print("Compressor - OFF  ");
             digitalWrite(PreCharge_Valve_BCKF,      HIGH);      // off
             delay (1000);
-            
+
             lcd.clear();
             lcd.setCursor(0, 3);
             lcd.print("Testing over...!! ");
@@ -143,12 +148,13 @@ void ui_task_main (void)    {
             lcd.clear();
             ui_print_welcome ();
             lcd.setCursor(0, 3);
-            lcd.print("Press ButtonToStart!");            
+            lcd.print("Press ButtonToStart!");
             ui_state++;
             break;
         case 2:
             // System ON check
             if (button_presed == true)  {
+                button_presed = false;
                 f_start = true;
                 Serial.println("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
@@ -166,12 +172,13 @@ void ui_task_main (void)    {
         case 3:
             // System OFF check
             if (button_presed == true)  {
+                button_presed = false;
                 f_start = false;
                 Serial.println("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
                 lcd.print("Stop Button Pressed ");
                 BUUZZER_CNTRL (ON);
-                COMPRSSR_CNTRL (ON);
+                COMPRSSR_CNTRL (OFF);
                 delay (1000);
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Stopping.. ");

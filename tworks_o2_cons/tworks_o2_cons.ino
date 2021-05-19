@@ -113,6 +113,7 @@ void o2_cons_init (void)    {
 
     // start task timers
     o2main_task_vDlyTmr.start();
+    powerUpTimer.start();
 
 }
 
