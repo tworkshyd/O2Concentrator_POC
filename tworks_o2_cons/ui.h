@@ -15,7 +15,8 @@
 
 
 
-void ui_init (void);
+void ui_init        (void);
+void ui_task_main   (void);
 
 
 

@@ -27,7 +27,7 @@ PortB - PB7         PB6         PB5         PB4         PB3             PB2     
 PortC - PC7     PC6         PC5             PC4             PC3         PC2        PC1          PC0 
         -       -/RESET     19/A5/ADC5/SCL  18/A4/ADC4/SDA  17/A3/ADC3  16/A2/ADC2 15/A1/ADC1   14/A0/ADC0
 --------------------------------------------------------------------------------------------------------
-        ASpare4 ASpare3     SCL             SDA             Aspare2     ASpare1     LM35Out     Psns1
+        ASpare4 ASpare3     SCL             SDA             Aspare2     Push_Button LM35Out     Psns1
 ========================================================================================================
 
 ========================================================================================================
@@ -73,11 +73,20 @@ PortD - PD7     PD6         PD5         PD4     PD3         PD2         PD1     
 #define LM35_Out_adc    (A1)
 
 // 6. Button input
-#define buttonPin       (2)
+#define buttonPin       (A2)    // (2)
 
 
 
-#define BUTTON_PRESSED()    (digitalRead(button_input))
+
+// RELAY PIN ASSIGNMENT
+//**************************************************************************
+int Sieve_A_Valve_Z1     = RLY_3;    // Z1TSOL
+int Sieve_B_Valve_Z2     = RLY_2;    // Z2TSOL
+int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
+
+
+
+#define BUTTON_PRESSED()    (!digitalRead(button_input))
 #define BUUZZER_CNTRL(x)    (digitalWrite(BUZZR, !x))
 #define COMPRSSR_CNTRL(x)   (digitalWrite(COMPRSSR, x))
 
