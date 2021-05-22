@@ -6,7 +6,7 @@
 
 #include "platform.h"
 #include "display.h"
-#include "commn.h"
+//#include "commn.h"
 #include "db.h"
 #include "ui.h"
 
@@ -52,7 +52,7 @@ void setup() {
     platform_init();
     db_init ();
     ui_init ();
-    commn_init();
+//    commn_init();
     o2_cons_init ();
 
     // start task timers
@@ -95,9 +95,9 @@ void o2_cons_init (void)    {
     // VALVE RELAY TEST SEQUENCE
     //**************************************************************************
     Serial.println("Relay Test Sequence");
-    digitalWrite(Sieve_A_Valve_Z1,     HIGH); // Turn on relay
+    digitalWrite(Sieve_A_Valve_Z1,       HIGH); // Turn on relay
     delay(Relay_Test_Delay);
-    digitalWrite(Sieve_B_Valve_Z2,     HIGH); // Turn on relay
+    digitalWrite(Sieve_B_Valve_Z2,       HIGH); // Turn on relay
     delay(Relay_Test_Delay);
     digitalWrite(PreCharge_Valve_BCKF,   HIGH); // Turn on relay
     delay(Relay_Test_Delay);
