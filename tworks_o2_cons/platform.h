@@ -92,11 +92,12 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 
 //------------------------------------------------
 // Practical observations:
-// Relay ON --> Valve Close
-// Relay OFF -> valve Open
+// Relay ON --> Valve Open
+// Relay OFF -> valve Close
+// The valves are NC (Normally Closed) type
 //------------------------------------------------
-#define OPEN_VALVE          (HIGH)  // (LOW) 
-#define CLOSE_VALVE         (LOW)   // (HIGH)
+#define OPEN_VALVE          (LOW) 
+#define CLOSE_VALVE         (HIGH)
 
 
 void platform_init (void);
