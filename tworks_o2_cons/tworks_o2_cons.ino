@@ -14,11 +14,11 @@
 
 // moved from here to platform.h
 /*
-// RELAY PIN ASSIGNMENT
-//**************************************************************************
-int Sieve_A_Valve_Z1     = RLY_3;    // Z1TSOL
-int Sieve_B_Valve_Z2     = RLY_2;    // Z2TSOL
-int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
+    // RELAY PIN ASSIGNMENT
+    //**************************************************************************
+    int Sieve_A_Valve_Z1     = RLY_3;    // Z1TSOL
+    int Sieve_B_Valve_Z2     = RLY_2;    // Z2TSOL
+    int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 */
 
 // VARIABLE CREATION
@@ -70,7 +70,7 @@ void loop() {
 
     ui_task_main ();
     o2_sensor_scan ();
-    
+
     if (f_start == true) {
         o2_main_task ();
     }
@@ -96,25 +96,26 @@ void o2_cons_init (void)    {
     PreCharge_Delay     = 700;
 
     // VALVE RELAY TEST SEQUENCE
-    //**************************************************************************
-    Serial.println("Relay Test Sequence");
-    digitalWrite(Sieve_A_Valve_Z1,       HIGH); // Turn on relay
-    delay(Relay_Test_Delay);
-    digitalWrite(Sieve_B_Valve_Z2,       HIGH); // Turn on relay
-    delay(Relay_Test_Delay);
-    digitalWrite(PreCharge_Valve_BCKF,   HIGH); // Turn on relay
-    delay(Relay_Test_Delay);
-    Serial.println("Valve Relay Test Sequence Complete");
-    delay(Relay_Test_Delay);
-
+    /*
+        //**************************************************************************
+        Serial.println("Relay Test Sequence");
+        digitalWrite(Sieve_A_Valve_Z1,       HIGH); // Turn on relay
+        delay(Relay_Test_Delay);
+        digitalWrite(Sieve_B_Valve_Z2,       HIGH); // Turn on relay
+        delay(Relay_Test_Delay);
+        digitalWrite(PreCharge_Valve_BCKF,   HIGH); // Turn on relay
+        delay(Relay_Test_Delay);
+        Serial.println("Valve Relay Test Sequence Complete");
+        delay(Relay_Test_Delay);
+    */
+    
     // STARTUP PURGE
     //**************************************************************************
     Serial.println("Relay Test Sequence");
-    digitalWrite(Sieve_A_Valve_Z1,   HIGH); // Turn on relay
-    digitalWrite(Sieve_B_Valve_Z2,   HIGH); // Turn on relay
+    digitalWrite(Sieve_A_Valve_Z1,     HIGH); // Turn on relay
+    digitalWrite(Sieve_B_Valve_Z2,     HIGH); // Turn on relay
     digitalWrite(PreCharge_Valve_BCKF, HIGH); // Turn on relay
     delay(Startup_Purge_Delay);
-
 
     // start task timers
     o2main_task_vDlyTmr.start();

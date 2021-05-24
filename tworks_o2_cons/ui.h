@@ -14,10 +14,23 @@
 #define OFF (false)
 
 
+enum UI_STATES_E  {
 
-void ui_init        (void);
-void ui_task_main   (void);
+    UI_START,
+    UI_FACTORY_MODE,
+    UI_CALIB_MODE,
 
+    UI_SYS_ON_CHECK,
+    UI_SYS_OFF_CHECK,
+    
+    UI_LAST,
+    
+};
+
+
+void ui_init            (void);
+void ui_task_main       (void);
+void power_on_self_test (void);
 
 
 
