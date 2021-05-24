@@ -100,8 +100,11 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 #define CLOSE_VALVE         (HIGH)
 
 
-void platform_init (void);
 
+extern unsigned long systemtick_msecs;
+
+void platform_init (void);
+unsigned long time_elapsed (unsigned long time_delay);
 
 
 #endif

@@ -31,8 +31,6 @@ void ui_init (void) {
 }
 
 
-#define HIGH_BEEP (150)
-#define LOW_BEEP  ( 50)
 
 void beep_for (int msecs) {
 
