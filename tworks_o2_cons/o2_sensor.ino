@@ -67,7 +67,7 @@ void o2_sensor_scan (void)  {
         handleConversion();
     }
     Serial.println();
-    delay(100);
+    //delay(100);
 
 }
 

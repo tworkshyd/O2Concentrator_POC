@@ -17,6 +17,7 @@
 enum UI_STATES_E  {
 
     UI_START,
+    UI_CONFIG_MODE,
     UI_FACTORY_MODE,
     UI_CALIB_MODE,
 

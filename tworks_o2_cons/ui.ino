@@ -32,8 +32,26 @@ void ui_init (void) {
 }
 
 
+#define BUTTON_PRESS_STABILITY_DLY  (1000)  // in msecs
+#define HIGH_BEEP     (200)
+#define LOW_BEEP      ( 50)
+#define SYS_ON_BEEP   (555)
+#define SYS_OFF_BEEP  (111)
 
-#define BUTTON_PRESS_STABILITY_DLY  (100)  // in msecs
+
+// Entry Check
+#define CONFIG_MODE_ENTRY_CHECK           (1)
+#define FACTORY_MODE_ENTRY_CHECK          (3)
+#define CALIBRATION_MODE_ENTRY_CHECK      (5)
+
+
+void beep_for (int msecs) {
+
+    BUUZZER_CNTRL (ON);
+    delay(msecs);
+    BUUZZER_CNTRL (OFF);
+
+}
 
 
 void ui_task_main (void)    {
@@ -58,17 +76,21 @@ void ui_task_main (void)    {
             button_press_stability--;
         if (button_press_stability == 0)    {
             button_pressed = false;
-            button_press_count++;
-            button_press_duration = button_press_count * BUTTON_PRESS_STABILITY_DLY;
+            if (button_pressed) {
+                button_pressed = 0;
+                button_press_count++;
+                button_press_duration = button_press_count * BUTTON_PRESS_STABILITY_DLY;
+            }
         }
         // temp
         Serial.print  ("button_press_count : ");
         Serial.println(button_press_count);
     }
 
-    if (button_press_stability >= BUTTON_PRESS_STABILITY_DLY)   {
-        button_press_stability = 0;
-    }
+//    if (button_press_stability >= BUTTON_PRESS_STABILITY_DLY)   {
+//        button_press_stability = 0;
+//    }
+
 
     switch (ui_state)
     {
@@ -79,7 +101,7 @@ void ui_task_main (void)    {
                 lcd.print("Press ButtonToStart!");
             }
             else {
-                if (button_pressed == true)  {
+                if (button_press_count >= FACTORY_MODE_ENTRY_CHECK)  {
                     button_pressed = false;
                     ui_state = UI_FACTORY_MODE;
                 }
@@ -89,6 +111,7 @@ void ui_task_main (void)    {
             Serial.println("Start Button Pressed..!");
             Serial.println("Factory Mode..");
 
+            // new addition for calibration..
             if (button_pressed == true)  {
                 button_pressed = false;
                 ui_state = UI_CALIB_MODE;
@@ -116,10 +139,11 @@ void ui_task_main (void)    {
                 Serial.println("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
                 lcd.print("Start Button Pressed");
-                BUUZZER_CNTRL (ON);
+                beep_for (SYS_ON_BEEP);   // msecs
+
                 COMPRSSR_CNTRL (ON);
-                delay (1500);
-                BUUZZER_CNTRL (OFF);
+                delay (1000);
+
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Running... ");
                 ui_state = UI_SYS_OFF_CHECK;
@@ -134,13 +158,14 @@ void ui_task_main (void)    {
                 Serial.println("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
                 lcd.print("Stop Button Pressed ");
-                BUUZZER_CNTRL (ON);
                 COMPRSSR_CNTRL (OFF);
+                beep_for (SYS_OFF_BEEP);   // msecs
+
                 delay (1000);
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Stopping.. ");
                 delay (1000);
-                BUUZZER_CNTRL (OFF);
+
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Stopped..! ");
                 ui_state = UI_LAST;
@@ -166,40 +191,45 @@ void power_on_self_test (void) {
     lcd.print("Relay Test..");
     delay (2000);
 
+
     // 1. Relay Z1TSOL
     lcd.setCursor(0, 2);
-    lcd.print("Z1TSOL - ON   ");
-    digitalWrite(Sieve_A_Valve_Z1,      LOW);       // on
-    BUUZZER_CNTRL (ON);
-    delay(2000);
+    lcd.print("Z1TSOL - OPEN   ");
+    digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
+    beep_for (HIGH_BEEP);   // msecs
+    delay(5000);
+
     lcd.setCursor(0, 2);
-    lcd.print("Z1TSOL - OFF");
-    BUUZZER_CNTRL (OFF);
-    digitalWrite(Sieve_A_Valve_Z1,      HIGH);      // off
-    delay(2000);
+    lcd.print("Z1TSOL - CLOSE  ");
+    digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
+    beep_for (LOW_BEEP);   // msecs
+
+    delay(5000);
+
 
     // 2. Relay Z2TSOL
     lcd.setCursor(0, 2);
-    lcd.print("Z2TSOL - ON   ");
-    BUUZZER_CNTRL (ON);
-    digitalWrite(Sieve_B_Valve_Z2,      LOW);       // on
-    delay(2000);
-    BUUZZER_CNTRL (OFF);
+    lcd.print("Z2TSOL - OPEN   ");
+    digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
+    beep_for (HIGH_BEEP);   // msecs
+    delay(5000);
     lcd.setCursor(0, 2);
-    lcd.print("Z2TSOL - OFF   ");
-    digitalWrite(Sieve_B_Valve_Z2,      HIGH);      // off
+    lcd.print("Z2TSOL - CLOSE  ");
+    digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
+    beep_for (LOW_BEEP);   // msecs
     delay(2000);
 
     // 3. Relay BCKFSOL
     lcd.setCursor(0, 2);
-    lcd.print("BCKFSOL - ON   ");
-    BUUZZER_CNTRL (ON);
-    digitalWrite(PreCharge_Valve_BCKF,      LOW);       // on
-    delay(2000);
-    BUUZZER_CNTRL (OFF);
+    lcd.print("BCKFSOL - OPEN  ");
+    digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
+    beep_for (HIGH_BEEP);   // msecs
+    delay(5000);
+
     lcd.setCursor(0, 2);
-    lcd.print("BCKFSOL - OFF  ");
-    digitalWrite(PreCharge_Valve_BCKF,      HIGH);      // off
+    lcd.print("BCKFSOL - CLOSE ");
+    digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
+    beep_for (LOW_BEEP);   // msecs
     delay(2000);
 
     //lcd.clear();
@@ -209,21 +239,26 @@ void power_on_self_test (void) {
     // 4. Compressor check
     // Open release valves.. to avoid blocking of compressor o/p during its test-run
     lcd.setCursor(0, 2);
+    //        "...................."
     lcd.print("Opening releaseValvs");
+    beep_for (HIGH_BEEP);   // msecs
+    digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
+    digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
     delay (1000);
-    digitalWrite(Sieve_A_Valve_Z1,      LOW);      // on
-    digitalWrite(Sieve_B_Valve_Z2,      LOW);      // on
+
     lcd.setCursor(0, 2);
     lcd.print("Compressor - ON     ");
-    BUUZZER_CNTRL (ON);
-    COMPRSSR_CNTRL (ON);
-    digitalWrite(PreCharge_Valve_BCKF,      LOW);       // on
+    digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
+    beep_for (HIGH_BEEP);   // msecs
     delay(5000);
+    COMPRSSR_CNTRL (ON);
+
     BUUZZER_CNTRL (OFF);
     COMPRSSR_CNTRL (OFF);
     lcd.setCursor(0, 2);
     lcd.print("Compressor - OFF    ");
-    digitalWrite(PreCharge_Valve_BCKF,      HIGH);      // off
+    digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
+    beep_for (LOW_BEEP);   // msecs
     delay (1000);
 
     lcd.clear();
