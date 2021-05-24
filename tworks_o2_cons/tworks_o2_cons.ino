@@ -88,7 +88,6 @@ void o2_cons_init (void)    {
     //**************************************************************************
     Relay_Test_Delay    = 1000;
     Startup_Purge_Delay = 1000;
-    Production_Delay    = 4000;
     Flush_Delay         = 450;
     PreCharge_Delay     = 700;
 

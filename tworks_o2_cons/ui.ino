@@ -89,38 +89,38 @@ void ui_task_main (void)    {
 
             // 1. Relay Z1TSOL
             lcd.setCursor(0, 2);
-            lcd.print("Z1TSOL - ON   ");
-            digitalWrite(Sieve_A_Valve_Z1,      LOW);       // on
+            lcd.print("Z1TSOL - OPEN   ");
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE); 
             BUUZZER_CNTRL (ON);
             delay(2000);
             lcd.setCursor(0, 2);
-            lcd.print("Z1TSOL - OFF");
+            lcd.print("Z1TSOL - CLOSE  ");
             BUUZZER_CNTRL (OFF);
-            digitalWrite(Sieve_A_Valve_Z1,      HIGH);      // off
+            digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
             delay(2000);
 
             // 2. Relay Z2TSOL
             lcd.setCursor(0, 2);
-            lcd.print("Z2TSOL - ON   ");
+            lcd.print("Z2TSOL - OPEN   ");
             BUUZZER_CNTRL (ON);
-            digitalWrite(Sieve_B_Valve_Z2,      LOW);       // on
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);       
             delay(2000);
             BUUZZER_CNTRL (OFF);
-            lcd.setCursor(0, 2);
-            lcd.print("Z2TSOL - OFF   ");
-            digitalWrite(Sieve_B_Valve_Z2,      HIGH);      // off
+            lcd.setCursor(0, 2);                  
+            lcd.print("Z2TSOL - CLOSE  ");
+            digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);    
             delay(2000);
 
             // 3. Relay BCKFSOL
-            lcd.setCursor(0, 2);
-            lcd.print("BCKFSOL - ON   ");
+            lcd.setCursor(0, 2);               
+            lcd.print("BCKFSOL - OPEN  ");
             BUUZZER_CNTRL (ON);
-            digitalWrite(PreCharge_Valve_BCKF,      LOW);       // on
+            digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);    
             delay(2000);
             BUUZZER_CNTRL (OFF);
             lcd.setCursor(0, 2);
-            lcd.print("BCKFSOL - OFF  ");
-            digitalWrite(PreCharge_Valve_BCKF,      HIGH);      // off
+            lcd.print("BCKFSOL - CLOSE ");
+            digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE); 
             delay(2000);
 
             //lcd.clear();
@@ -130,21 +130,23 @@ void ui_task_main (void)    {
             // 4. Compressor check
             // Open release valves.. to avoid blocking of compressor o/p during its test-run
             lcd.setCursor(0, 2);
+            //        "...................." 
             lcd.print("Opening releaseValvs");
             delay (1000);
-            digitalWrite(Sieve_A_Valve_Z1,      LOW);      // on           
-            digitalWrite(Sieve_B_Valve_Z2,      LOW);      // on
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);        
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE); 
             lcd.setCursor(0, 2);
             lcd.print("Compressor - ON     ");
             BUUZZER_CNTRL (ON);
             COMPRSSR_CNTRL (ON);
-            digitalWrite(PreCharge_Valve_BCKF,      LOW);       // on
+            
+            digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE); 
             delay(5000);
             BUUZZER_CNTRL (OFF);
             COMPRSSR_CNTRL (OFF);
             lcd.setCursor(0, 2);
             lcd.print("Compressor - OFF    ");
-            digitalWrite(PreCharge_Valve_BCKF,      HIGH);      // off
+            digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE); 
             delay (1000);
 
             lcd.clear();

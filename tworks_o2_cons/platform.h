@@ -90,6 +90,11 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 #define BUUZZER_CNTRL(x)    (digitalWrite(BUZZR, !x))
 #define COMPRSSR_CNTRL(x)   (digitalWrite(COMPRSSR, x))
 
+//------------------------------------------------
+// Practical observations:
+// Relay ON --> Valve Close
+// Relay OFF -> valve Open
+//------------------------------------------------
 #define OPEN_VALVE          (HIGH)  // (LOW) 
 #define CLOSE_VALVE         (LOW)   // (HIGH)
 
