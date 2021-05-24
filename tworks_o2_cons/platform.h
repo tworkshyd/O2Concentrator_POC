@@ -9,6 +9,10 @@
 	#include "WProgram.h"
 #endif
 
+
+
+
+
 /* 
  *  1. 1st row : From Port map O2 concentrator document &
  *   
@@ -75,7 +79,8 @@ PortD - PD7     PD6         PD5         PD4     PD3         PD2         PD1     
 // 6. Button input
 #define buttonPin       (A2)    // (2)
 
-
+// 7. ADS interrupt pin
+#define ADS_READY_INTR  (2)
 
 
 // RELAY PIN ASSIGNMENT

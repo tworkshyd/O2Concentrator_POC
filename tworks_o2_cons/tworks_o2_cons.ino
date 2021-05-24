@@ -7,6 +7,7 @@
 #include "platform.h"
 #include "display.h"
 #include "commn.h"
+#include "o2_sensor.h"
 #include "db.h"
 #include "ui.h"
 
@@ -53,6 +54,7 @@ void setup() {
     db_init ();
     ui_init ();
     commn_init();
+    ads_init ();
     o2_cons_init ();
 
     // start task timers
@@ -67,7 +69,8 @@ void loop() {
 
 
     ui_task_main ();
-
+    o2_sensor_scan ();
+    
     if (f_start == true) {
         o2_main_task ();
     }
@@ -95,9 +98,9 @@ void o2_cons_init (void)    {
     // VALVE RELAY TEST SEQUENCE
     //**************************************************************************
     Serial.println("Relay Test Sequence");
-    digitalWrite(Sieve_A_Valve_Z1,     HIGH); // Turn on relay
+    digitalWrite(Sieve_A_Valve_Z1,       HIGH); // Turn on relay
     delay(Relay_Test_Delay);
-    digitalWrite(Sieve_B_Valve_Z2,     HIGH); // Turn on relay
+    digitalWrite(Sieve_B_Valve_Z2,       HIGH); // Turn on relay
     delay(Relay_Test_Delay);
     digitalWrite(PreCharge_Valve_BCKF,   HIGH); // Turn on relay
     delay(Relay_Test_Delay);
