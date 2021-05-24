@@ -81,6 +81,11 @@ void loop (void) {
 
     if (time_elapsed (time_tag) > 1000) {
         time_tag = systemtick_msecs;
+
+        if (f_system_running == true) {
+            system_runtime_secs++;
+            o2_main_task ();
+        }
         Serial.print(".");
     }
 
@@ -88,9 +93,6 @@ void loop (void) {
 
     ui_task_main ();
     // o2_sensor_scan ();
-    if (f_start == true) {
-        o2_main_task ();
-    }
 
 
 }

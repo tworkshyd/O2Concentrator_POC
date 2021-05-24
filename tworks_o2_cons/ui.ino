@@ -1,17 +1,22 @@
 // ui.c
 
 
+#include <string.h>
+
 #include "platform.h"
 #include "ui.h"
 #include "db.h"
 
 
-static int  ui_state;
+static int  ui_state, prev_ui_state;
+static int  f_state_changed;
+
 
 int buttonState = 0;         // variable for reading the pushbutton status
 int button_pressed;
 int button_press_count;
 int button_press_duration;
+
 
 void ui_print_welcome (void)    {
 
@@ -106,7 +111,7 @@ void ui_task_main (void)    {
     {
         case UI_START:
             if (powerUpTimer.check())   {
-                ui_state = UI_SYS_ON_CHECK;
+                ui_state = UI_SYS_INIT;
                 lcd.setCursor(0, 3);
                 button_press_count = 0;
                 lcd.print("Press ButtonToStart!");
@@ -138,7 +143,7 @@ void ui_task_main (void)    {
             lcd.print("O2 sensorCalibration");
             multi_beeps (5);
 
-            ui_state = UI_SYS_ON_CHECK;
+            ui_state = UI_SYS_INIT;
             break;
         case UI_FACTORY_MODE:
             Serial.println("Factory Mode..");
@@ -150,12 +155,7 @@ void ui_task_main (void)    {
 
             // Power On self test - on demand
             power_on_self_test ();
-
-            lcd.clear();
-            ui_print_welcome ();
-            lcd.setCursor(0, 3);
-            lcd.print("Press ButtonToStart!");
-            ui_state = UI_SYS_ON_CHECK;
+            ui_state = UI_SYS_INIT;
             break;
 
         case UI_CONFIG_MODE:
@@ -166,15 +166,22 @@ void ui_task_main (void)    {
             lcd.setCursor(0, 1);
 
             multi_beeps (2);
-            ui_state = UI_SYS_ON_CHECK;
+            ui_state = UI_SYS_INIT;
             break;
 
+        case UI_SYS_INIT:
+            lcd.clear();
+            ui_print_welcome ();
+            lcd.setCursor(0, 3);
+            lcd.print("Press ButtonToStart!");
+            ui_state = UI_SYS_ON_CHECK;
+            break;
         case UI_SYS_ON_CHECK:
             // System ON check
             if (button_pressed == true)  {
                 button_pressed = false;
-                button_press_count = 0;
-                f_start = true;
+                f_system_running = true;
+
                 Serial.println("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
                 lcd.print("Start Button Pressed");
@@ -184,16 +191,75 @@ void ui_task_main (void)    {
                 delay (1000);
 
                 lcd.setCursor(0, 3);
-                lcd.print("O2 Cons. Running... ");
-                ui_state = UI_SYS_OFF_CHECK;
+                lcd.print("O2 Cons. Starting... ");
+                delay (1000);
+
+                ui_state = UI_SYS_RUNNING;
             }
             break;
+
+
+        case UI_SYS_RUNNING:
+            // system running
+            // LCD Line 1
+            if (f_state_changed)  {
+                f_state_changed = 0;
+                lcd_clear_buf (lcd_string_l1);
+                lcd_clear_buf (lcd_string_l2);
+                lcd_clear_buf (lcd_string_l3);
+                lcd_clear_buf (lcd_string_l4);
+
+                lcd.clear();
+                lcd.setCursor(0, 0);
+                sprintf(lcd_string_l1, "O2 CONC   PRESSURE ");
+                Serial.println(lcd_string_l1);
+                //        "...................."
+                lcd.print(lcd_string_l1);
+            }
+
+            // LCD Line 2
+            // O2 concentration / output pressure
+            if (prev_o2_concentration != o2_concentration || prev_output_pressure != output_pressure)  {
+                prev_o2_concentration  = o2_concentration;
+                prev_output_pressure = output_pressure;
+                sprintf(lcd_string_l3, "%2d \%%      %2d psi", o2_concentration, output_pressure);
+                Serial.println(lcd_string_l3);
+                lcd.setCursor(0, 1);
+                lcd.print(lcd_string_l3);
+            }
+
+            // LCD Line 3
+            // lcd.setCursor(0, 2);
+            // blank for now
+
+            // LCD Line 4
+            if (prev_system_runtime_secs ^ system_runtime_secs) {
+                prev_system_runtime_secs = system_runtime_secs;
+
+                int secs = ( system_runtime_secs %  60);
+                int mins = ((system_runtime_secs % (60 * 60)) / 60);
+                int hrs  = ( system_runtime_secs / (60 * 60));
+                sprintf(lcd_string_l4, "RUN TIME %02d:%02d:%02d", hrs, mins, secs);
+                Serial.println(lcd_string_l4);
+                lcd.setCursor(0, 3);
+                lcd.print(lcd_string_l4);
+            }
+
+            // System OFF check
+            if (button_pressed == true)  {
+                ui_state = UI_SYS_OFF_CHECK;
+            }
+            else {
+                // no state change
+            }
+            break;
+
 
         case UI_SYS_OFF_CHECK:
             // System OFF check
             if (button_pressed == true)  {
                 button_pressed = false;
-                f_start = false;
+                f_system_running = false;
                 Serial.println("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
                 lcd.print("Stop Button Pressed ");
@@ -209,6 +275,10 @@ void ui_task_main (void)    {
                 lcd.print("O2 Cons. Stopped..! ");
                 ui_state = UI_LAST;
             }
+            else {
+                // back to run state..
+                ui_state = UI_SYS_RUNNING;
+            }
             break;
         default:
         case UI_LAST:
@@ -216,6 +286,10 @@ void ui_task_main (void)    {
             break;
     }
 
+    if (ui_state != prev_ui_state ) {
+        prev_ui_state = ui_state;
+        f_state_changed = 1;
+    }
 }
 
 

@@ -42,6 +42,18 @@ LiquidCrystal lcd(RS, EN, D4, D5, D6, D7);
 
 enum ALIGN {LEFT, CENTER, RIGHT};
 
+
+
+extern char     lcd_string_l1[LCD_COLS + 1];
+extern char     lcd_string_l2[LCD_COLS + 1];
+extern char     lcd_string_l3[LCD_COLS + 1];
+extern char     lcd_string_l4[LCD_COLS + 1];
+
+
+
+void lcd_clear_buf (char * bufp);
+
+
 // initialize the library by associating any needed LCD interface pin
 // as per aurdino nano - base board,  SCH Dated: 09-02-2021
 
