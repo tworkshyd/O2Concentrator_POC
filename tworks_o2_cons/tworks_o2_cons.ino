@@ -13,11 +13,11 @@
 
 // moved from here to platform.h
 /*
-// RELAY PIN ASSIGNMENT
-//**************************************************************************
-int Sieve_A_Valve_Z1     = RLY_3;    // Z1TSOL
-int Sieve_B_Valve_Z2     = RLY_2;    // Z2TSOL
-int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
+    // RELAY PIN ASSIGNMENT
+    //**************************************************************************
+    int Sieve_A_Valve_Z1     = RLY_3;    // Z1TSOL
+    int Sieve_B_Valve_Z2     = RLY_2;    // Z2TSOL
+    int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 */
 
 // VARIABLE CREATION
@@ -52,7 +52,7 @@ void setup() {
     platform_init();
     db_init ();
     ui_init ();
-//    commn_init();
+    //    commn_init();
     o2_cons_init ();
 
     // start task timers
@@ -94,22 +94,24 @@ void o2_cons_init (void)    {
 
     // VALVE RELAY TEST SEQUENCE
     //**************************************************************************
-    Serial.println("Relay Test Sequence");
-    digitalWrite(Sieve_A_Valve_Z1,       HIGH); // Turn on relay
-    delay(Relay_Test_Delay);
-    digitalWrite(Sieve_B_Valve_Z2,       HIGH); // Turn on relay
-    delay(Relay_Test_Delay);
-    digitalWrite(PreCharge_Valve_BCKF,   HIGH); // Turn on relay
-    delay(Relay_Test_Delay);
-    Serial.println("Valve Relay Test Sequence Complete");
-    delay(Relay_Test_Delay);
+    /*
+        Serial.println("Relay Test Sequence");
+        digitalWrite(Sieve_A_Valve_Z1,       HIGH); // Turn on relay
+        delay(Relay_Test_Delay);
+        digitalWrite(Sieve_B_Valve_Z2,       HIGH); // Turn on relay
+        delay(Relay_Test_Delay);
+        digitalWrite(PreCharge_Valve_BCKF,   HIGH); // Turn on relay
+        delay(Relay_Test_Delay);
+        Serial.println("Valve Relay Test Sequence Complete");
+        delay(Relay_Test_Delay);
+    */
 
     // STARTUP PURGE
     //**************************************************************************
     Serial.println("Relay Test Sequence");
-    digitalWrite(Sieve_A_Valve_Z1,   HIGH); // Turn on relay
-    digitalWrite(Sieve_B_Valve_Z2,   HIGH); // Turn on relay
-    digitalWrite(PreCharge_Valve_BCKF, HIGH); // Turn on relay
+    digitalWrite(Sieve_A_Valve_Z1,      HIGH); // Turn on relay
+    digitalWrite(Sieve_B_Valve_Z2,      HIGH); // Turn on relay
+    digitalWrite(PreCharge_Valve_BCKF,  HIGH); // Turn on relay
     delay(Startup_Purge_Delay);
 
 
@@ -130,9 +132,9 @@ void o2_main_task (void)    {
                 //CYCLE 1
                 //**************************************************************************
                 Serial.println("Sieve A Charge / Sieve B Purge");
-                digitalWrite(Sieve_A_Valve_Z1,      LOW);   // HIGH);
-                digitalWrite(Sieve_B_Valve_Z2,      HIGH);  // LOW);
-                digitalWrite(PreCharge_Valve_BCKF,  HIGH);  // LOW);
+                digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);  // LOW);   // HIGH);
+                digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE); // HIGH);  // LOW);
+                digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE); // HIGH);  // LOW);
                 // delay(Production_Delay);
                 nb_delay = Production_Delay;
                 cycle++;
@@ -141,9 +143,9 @@ void o2_main_task (void)    {
                 //CYCLE 2
                 //**************************************************************************
                 Serial.println("Sieve A Charge / Sieve B Purge / Flush/PreCharge");
-                digitalWrite(Sieve_A_Valve_Z1,      LOW);   // HIGH);
-                digitalWrite(Sieve_B_Valve_Z2,      HIGH);  // LOW);
-                digitalWrite(PreCharge_Valve_BCKF,  LOW);   // HIGH);
+                digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );  // LOW);   // HIGH);
+                digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);  // HIGH);  // LOW);
+                digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE );  // LOW);   // HIGH);
                 // delay(Flush_Delay) ;
                 nb_delay = Flush_Delay;
                 cycle++;
@@ -152,9 +154,9 @@ void o2_main_task (void)    {
                 //CYCLE 3
                 //**************************************************************************
                 Serial.println("Sieve A Charge / Sieve B Charge / Flush/PreCharge");
-                digitalWrite(Sieve_A_Valve_Z1,      LOW);   // HIGH);
-                digitalWrite(Sieve_B_Valve_Z2,      LOW);   // HIGH);
-                digitalWrite(PreCharge_Valve_BCKF,  LOW);   // HIGH);
+                digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);  // LOW);   // HIGH);
+                digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);  // LOW);   // HIGH);
+                digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);  // LOW);   // HIGH);
                 // delay(PreCharge_Delay);
                 nb_delay = PreCharge_Delay;
                 cycle++;
@@ -163,9 +165,9 @@ void o2_main_task (void)    {
                 //CYCLE 4
                 //**************************************************************************
                 Serial.println("Sieve A Purge / Sieve B Charge");
-                digitalWrite(Sieve_A_Valve_Z1,      HIGH);  // LOW);
-                digitalWrite(Sieve_B_Valve_Z2,      LOW);   // HIGH);
-                digitalWrite(PreCharge_Valve_BCKF,  HIGH);  // LOW);
+                digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);  // HIGH);  // LOW);
+                digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );  // LOW);   // HIGH);
+                digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);  // HIGH);  // LOW);
                 // delay(Production_Delay);
                 nb_delay = Production_Delay;
                 cycle++;
@@ -174,9 +176,9 @@ void o2_main_task (void)    {
                 //CYCLE 5
                 //**************************************************************************
                 Serial.println("Sieve A Purge / Sieve B Charge / Flush/PreCharge");
-                digitalWrite(Sieve_A_Valve_Z1,      HIGH);  // LOW);
-                digitalWrite(Sieve_B_Valve_Z2,      LOW);   // HIGH);
-                digitalWrite(PreCharge_Valve_BCKF,  LOW);   // HIGH);
+                digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);  // HIGH);  // LOW);
+                digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );  // LOW);   // HIGH);
+                digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE );  // LOW);   // HIGH);
                 // delay(Flush_Delay);
                 nb_delay = Flush_Delay;
                 cycle++;
@@ -185,9 +187,9 @@ void o2_main_task (void)    {
                 //CYCLE 6
                 //**************************************************************************
                 Serial.println("Sieve A Charge / Sieve B Charge / Flush/PreCharge");
-                digitalWrite(Sieve_A_Valve_Z1,      LOW);   // HIGH);
-                digitalWrite(Sieve_B_Valve_Z2,      LOW);   // HIGH);
-                digitalWrite(PreCharge_Valve_BCKF,  LOW);   // HIGH);
+                digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);  // LOW);   // HIGH);
+                digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);  // LOW);   // HIGH);
+                digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);  // LOW);   // HIGH);
                 // delay(PreCharge_Delay) ;
                 nb_delay = PreCharge_Delay;
                 cycle = 0;

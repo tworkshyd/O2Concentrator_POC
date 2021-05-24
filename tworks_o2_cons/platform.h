@@ -90,6 +90,8 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 #define BUUZZER_CNTRL(x)    (digitalWrite(BUZZR, !x))
 #define COMPRSSR_CNTRL(x)   (digitalWrite(COMPRSSR, x))
 
+#define OPEN_VALVE          (HIGH)  // (LOW) 
+#define CLOSE_VALVE         (LOW)   // (HIGH)
 
 
 void platform_init (void);
