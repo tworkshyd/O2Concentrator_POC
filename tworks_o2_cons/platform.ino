@@ -5,6 +5,11 @@
 #include "display.h"
 
 
+
+unsigned long systemtick_msecs;
+
+
+
 void platform_init (void) {
 
     // set up the LCD's number of columns and rows:
@@ -19,8 +24,8 @@ void platform_init (void) {
     pinMode(BUZZR,          OUTPUT);
     pinMode(COMPRSSR,       OUTPUT);
     pinMode(buttonPin,      INPUT );
-    pinMode(buttonPin,INPUT_PULLUP);
-    
+    pinMode(buttonPin, INPUT_PULLUP);
+
     // default pin-state
     digitalWrite(RLY_1,     HIGH);
     digitalWrite(RLY_2,     HIGH);
@@ -29,8 +34,15 @@ void platform_init (void) {
 
     digitalWrite(BUZZR,     HIGH);
     digitalWrite(COMPRSSR,  LOW );
-    
+
     Serial.println("GPIO init done..");
 
-    
+
+}
+
+
+unsigned long time_elapsed (unsigned long time_delay)  {
+
+    return systemtick_msecs - time_delay;
+
 }

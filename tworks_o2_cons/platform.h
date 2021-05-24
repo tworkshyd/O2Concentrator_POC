@@ -91,9 +91,11 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 
 
 
-#define BUTTON_PRESSED()    (!digitalRead(button_input))
+#define BUTTON_ACTIVE       (LOW)
 #define BUUZZER_CNTRL(x)    (digitalWrite(BUZZR, !x))
 #define COMPRSSR_CNTRL(x)   (digitalWrite(COMPRSSR, x))
+
+
 
 //------------------------------------------------
 // Practical observations:
@@ -105,8 +107,11 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 #define CLOSE_VALVE         (HIGH)
 
 
-void platform_init (void);
 
+extern unsigned long systemtick_msecs;
+
+void platform_init (void);
+unsigned long time_elapsed (unsigned long time_delay);
 
 
 #endif

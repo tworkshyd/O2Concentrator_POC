@@ -32,17 +32,8 @@ void ui_init (void) {
 }
 
 
-#define BUTTON_PRESS_STABILITY_DLY  (1000)  // in msecs
-#define HIGH_BEEP     (200)
-#define LOW_BEEP      ( 50)
-#define SYS_ON_BEEP   (555)
-#define SYS_OFF_BEEP  (111)
 
 
-// Entry Check
-#define CONFIG_MODE_ENTRY_CHECK           (1)
-#define FACTORY_MODE_ENTRY_CHECK          (3)
-#define CALIBRATION_MODE_ENTRY_CHECK      (5)
 
 
 void beep_for (int msecs) {
@@ -54,42 +45,61 @@ void beep_for (int msecs) {
 }
 
 
+void multi_beeps (int count) {
+
+    int   i;
+    if (count > 10) {
+        count = 10;
+    }
+
+    for (i = 0; i < count; i++)
+    {
+        beep_for (50);
+        delay(100);
+    }
+
+}
+
+
+
 void ui_task_main (void)    {
 
-    static int     button_press_stability;
+    static int            button_debounce_delay;
+    static unsigned long  time_tag;
 
     buttonState = digitalRead(buttonPin);
 
 
 
-    if (buttonState == LOW) {   // press detection
-        button_press_stability++;
-        if (button_press_stability >= BUTTON_PRESS_STABILITY_DLY)   {
-            button_press_stability = 0;
+    if (buttonState == BUTTON_ACTIVE) {   // press detection
+        button_debounce_delay++;
+        if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
+            button_debounce_delay = 0;
             button_pressed = true;
         }
         // temp
-        Serial.println(button_press_stability);
+        Serial.print  ("button_debounce_delay : ");
+        Serial.println(button_debounce_delay);
     }
     else {  // release detection
-        if (button_press_stability)
-            button_press_stability--;
-        if (button_press_stability == 0)    {
-            button_pressed = false;
+        if (button_debounce_delay)
+            button_debounce_delay--;
+        if (button_debounce_delay == 0)    {
             if (button_pressed) {
-                button_pressed = 0;
+                button_pressed = false;
                 button_press_count++;
-                button_press_duration = button_press_count * BUTTON_PRESS_STABILITY_DLY;
+                time_tag = systemtick_msecs;
+                // temp
+                Serial.print  ("button_press_count : ");
+                Serial.println(button_press_count);
             }
         }
-        // temp
-        Serial.print  ("button_press_count : ");
-        Serial.println(button_press_count);
+
     }
 
-//    if (button_press_stability >= BUTTON_PRESS_STABILITY_DLY)   {
-//        button_press_stability = 0;
-//    }
+    //    if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
+    //        button_debounce_delay = 0;
+    //    }
 
 
     switch (ui_state)
@@ -98,24 +108,45 @@ void ui_task_main (void)    {
             if (powerUpTimer.check())   {
                 ui_state = UI_SYS_ON_CHECK;
                 lcd.setCursor(0, 3);
+                button_press_count = 0;
                 lcd.print("Press ButtonToStart!");
             }
-            else {
-                if (button_press_count >= FACTORY_MODE_ENTRY_CHECK)  {
-                    button_pressed = false;
+            else if (time_elapsed (time_tag) > 1500) {
+                if (button_press_count >= CALIBRATION_MODE_ENTRY_CHECK)  {
+                    button_press_count = 0;
+                    ui_state = UI_CALIB_MODE;
+                }
+                else if (button_press_count >= FACTORY_MODE_ENTRY_CHECK)  {
+                    button_press_count = 0;
                     ui_state = UI_FACTORY_MODE;
                 }
+                if (button_press_count >= CONFIG_MODE_ENTRY_CHECK)  {
+                    button_press_count = 0;
+                    ui_state = UI_CONFIG_MODE;
+                }
+            }
+            else {
+                // nop
             }
             break;
-        case UI_FACTORY_MODE:
-            Serial.println("Start Button Pressed..!");
-            Serial.println("Factory Mode..");
+        case UI_CALIB_MODE:
+            Serial.println("Entered Calibration Mode..");
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Calibration Mode..");
+            lcd.setCursor(0, 1);
+            lcd.print("O2 sensorCalibration");
+            multi_beeps (5);
 
-            // new addition for calibration..
-            if (button_pressed == true)  {
-                button_pressed = false;
-                ui_state = UI_CALIB_MODE;
-            }
+            ui_state = UI_SYS_ON_CHECK;
+            break;
+        case UI_FACTORY_MODE:
+            Serial.println("Factory Mode..");
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Factory Mode..");
+
+            multi_beeps (3);
 
             // Power On self test - on demand
             power_on_self_test ();
@@ -127,14 +158,22 @@ void ui_task_main (void)    {
             ui_state = UI_SYS_ON_CHECK;
             break;
 
-        case UI_CALIB_MODE:
+        case UI_CONFIG_MODE:
+            Serial.println("Entered Configuration Mode..");
+            lcd.clear();
+            lcd.setCursor(0, 0);
+            lcd.print("Configuration Mode..");
+            lcd.setCursor(0, 1);
 
+            multi_beeps (2);
+            ui_state = UI_SYS_ON_CHECK;
             break;
 
         case UI_SYS_ON_CHECK:
             // System ON check
             if (button_pressed == true)  {
                 button_pressed = false;
+                button_press_count = 0;
                 f_start = true;
                 Serial.println("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
@@ -184,13 +223,8 @@ void ui_task_main (void)    {
 
 void power_on_self_test (void) {
 
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Factory Mode..");
     lcd.setCursor(0, 1);
-    lcd.print("Relay Test..");
-    delay (2000);
-
+    lcd.print("Relay Tests..");
 
     // 1. Relay Z1TSOL
     lcd.setCursor(0, 2);
