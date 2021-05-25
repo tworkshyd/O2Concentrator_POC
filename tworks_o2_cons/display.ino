@@ -3,10 +3,7 @@
 #include "display.h"
 
 
-char     lcd_string_l1[LCD_COLS + 1];
-char     lcd_string_l2[LCD_COLS + 1];
-char     lcd_string_l3[LCD_COLS + 1];
-char     lcd_string_l4[LCD_COLS + 1];
+char     lcd_temp_string[LCD_COLS + 1];
 
 
 

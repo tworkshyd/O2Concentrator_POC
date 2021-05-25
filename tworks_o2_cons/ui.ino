@@ -71,10 +71,16 @@ void ui_task_main (void)    {
 
     static int            button_debounce_delay;
     static unsigned long  time_tag;
+    static unsigned int   state_time;
+    char                  str_temp[6];
+    char                  str_temp2[6];
 
     buttonState = digitalRead(buttonPin);
 
-
+    if (f_sec_change_ui_task) {
+        f_sec_change_ui_task = 0;
+        state_time++;
+    }
 
     if (buttonState == BUTTON_ACTIVE) {   // press detection
         button_debounce_delay++;
@@ -110,7 +116,8 @@ void ui_task_main (void)    {
     switch (ui_state)
     {
         case UI_START:
-            if (powerUpTimer.check())   {
+            // if (powerUpTimer.check())   {
+            if (state_time >= 5) {
                 ui_state = UI_SYS_INIT;
                 lcd.setCursor(0, 3);
                 button_press_count = 0;
@@ -131,7 +138,9 @@ void ui_task_main (void)    {
                 }
             }
             else {
-                // nop
+                if (f_state_changed)  {
+                    ui_print_welcome ();
+                }
             }
             break;
         case UI_CALIB_MODE:
@@ -204,17 +213,17 @@ void ui_task_main (void)    {
             // LCD Line 1
             if (f_state_changed)  {
                 f_state_changed = 0;
-                lcd_clear_buf (lcd_string_l1);
-                lcd_clear_buf (lcd_string_l2);
-                lcd_clear_buf (lcd_string_l3);
-                lcd_clear_buf (lcd_string_l4);
+                lcd_clear_buf (lcd_temp_string);
+                lcd_clear_buf (lcd_temp_string);
+                lcd_clear_buf (lcd_temp_string);
+                lcd_clear_buf (lcd_temp_string);
 
                 lcd.clear();
                 lcd.setCursor(0, 0);
-                sprintf(lcd_string_l1, "O2 CONC   PRESSURE ");
-                Serial.println(lcd_string_l1);
+                sprintf(lcd_temp_string, "O2 CONC   PRESSURE ");
+                Serial.println(lcd_temp_string);
                 //        "...................."
-                lcd.print(lcd_string_l1);
+                lcd.print(lcd_temp_string);
             }
 
             // LCD Line 2
@@ -222,10 +231,19 @@ void ui_task_main (void)    {
             if (prev_o2_concentration != o2_concentration || prev_output_pressure != output_pressure)  {
                 prev_o2_concentration  = o2_concentration;
                 prev_output_pressure = output_pressure;
-                sprintf(lcd_string_l3, "%2d \%%      %2d psi", o2_concentration, output_pressure);
-                Serial.println(lcd_string_l3);
+                // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
+                // Serial.println(lcd_temp_string);
+                /* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
+                dtostrf(o2_concentration, 4, 2, str_temp);
+                
+                
+                dtostrf(output_pressure, 4, 2, str_temp2);
+                // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
+                sprintf(lcd_temp_string, "%s %%   %s psi", str_temp, str_temp2);
+                               
+                Serial.println(lcd_temp_string);
                 lcd.setCursor(0, 1);
-                lcd.print(lcd_string_l3);
+                lcd.print(lcd_temp_string);
             }
 
             // LCD Line 3
@@ -239,10 +257,10 @@ void ui_task_main (void)    {
                 int secs = ( system_runtime_secs %  60);
                 int mins = ((system_runtime_secs % (60 * 60)) / 60);
                 int hrs  = ( system_runtime_secs / (60 * 60));
-                sprintf(lcd_string_l4, "RUN TIME %02d:%02d:%02d", hrs, mins, secs);
-                Serial.println(lcd_string_l4);
+                sprintf(lcd_temp_string, "RUN TIME %02d:%02d:%02d", hrs, mins, secs);
+                Serial.println(lcd_temp_string);
                 lcd.setCursor(0, 3);
-                lcd.print(lcd_string_l4);
+                lcd.print(lcd_temp_string);
             }
 
             // System OFF check
@@ -289,6 +307,9 @@ void ui_task_main (void)    {
     if (ui_state != prev_ui_state ) {
         prev_ui_state = ui_state;
         f_state_changed = 1;
+        state_time = 0;
+        Serial.print("ui_state : ");
+        Serial.println(ui_state);
     }
 }
 

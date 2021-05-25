@@ -82,6 +82,12 @@ void loop (void) {
     if (time_elapsed (time_tag) > 1000) {
         time_tag = systemtick_msecs;
 
+        f_sec_change_ui_task = 1;
+        f_sec_change_o2_task = 1;
+        f_sec_change_sensor_task = 1;
+
+        o2_sensor_scan ();
+        
         if (f_system_running == true) {
             system_runtime_secs++;
             o2_main_task ();
@@ -92,7 +98,7 @@ void loop (void) {
 
 
     ui_task_main ();
-    // o2_sensor_scan ();
+    
 
 
 }

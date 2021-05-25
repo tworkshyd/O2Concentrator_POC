@@ -8,7 +8,11 @@
 
 volatile bool RDY = false;
 uint8_t channel = 0;
-int16_t val[4] = { 0, 0, 0, 0 };
+//int16_t val[4] = { 0, 0, 0, 0 };
+int16_t o2_raw_adc_count;
+float o2_slope;
+float o2_const_val;
+
 
 ADS1115 ADS(O2_SENSOR_ADS_ADDR);
 
@@ -46,30 +50,65 @@ void adsReady()
 void handleConversion()
 {
     //  if (RDY)
-    {
-        // save the value
-        val[channel] = ADS.getValue();
-        // request next channel
-        channel++;
-        if (channel >= 4) channel = 0;
-        ADS.readADC(channel);
-        RDY = false;
-    }
+    //{
+    // save the value
+    // val[channel] = ADS.getValue();
+    // request next channel
+    // channel++;
+    // if (channel >= 4) channel = 0;
+    // ADS.readADC(channel);
+    // RDY = false;
+    //}
+
+    ADS.readADC(0);
+    o2_raw_adc_count = ADS.getValue();
+
 }
 
 
 void o2_sensor_scan (void)  {
 
-    for (int i = 0; i < 4; i++)
-    {
-        Serial.print(val[i]);
-        Serial.print('\t');
-        handleConversion();
-    }
-    Serial.println();
+    float   m_raw_voltage;
+    /*
+        for (int i = 0; i < 4; i++)
+        {
+            Serial.print(val[i]);
+            Serial.print('\t');
+            handleConversion();
+        }
+        Serial.println();
+    */
+
+
     //delay(100);
 
+    handleConversion();
+    Serial.print("o2_raw_adc_count : ");
+    Serial.print(o2_raw_adc_count);
+        
+    // from ventilator code for Envitech O2 sensor
+    // o2_value = ((m_raw_voltage*0.166) + 1.3228); // Envitech
+    // m_raw_voltage = o2_raw_adc_count * 1000;
+    // m_raw_voltage = ((o2_raw_adc_count * 5.0) / 1024);
+    // m_raw_voltage = ((o2_raw_adc_count * 5.0) / 4095);
+    // m_raw_voltage = ((o2_raw_adc_count * 0.000125)
+    m_raw_voltage = ((float)o2_raw_adc_count * 1000.0) * 0.000125;
+    Serial.print(", m_raw_voltage : ");
+    // Serial.print(m_raw_voltage);
+    Serial.print(m_raw_voltage, 4);
+    
+    // temp hard coding till calib menu is ready
+    o2_slope = 0.166;
+    o2_const_val = 1.3228;
+    o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
+    Serial.print(", o2_concentration : ");
+    // Serial.print(o2_concentration);
+    Serial.print(o2_concentration, 4);
+    Serial.println();
+
 }
+
+
 
 
 // -- END OF FILE --

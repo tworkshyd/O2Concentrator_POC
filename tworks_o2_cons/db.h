@@ -11,9 +11,14 @@
 
 
 extern unsigned char   f_system_running;
+extern unsigned char   f_sec_change_ui_task;
+extern unsigned char   f_sec_change_o2_task;
+extern unsigned char   f_sec_change_sensor_task;
 
-extern unsigned int    o2_concentration;
-extern unsigned int    output_pressure;
+extern float           o2_concentration;
+extern float           output_pressure;
+extern float           prev_o2_concentration;
+extern float           prev_output_pressure;
 extern unsigned int    system_runtime_secs;
 
 void db_init (void);
