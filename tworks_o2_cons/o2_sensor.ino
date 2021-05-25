@@ -25,8 +25,9 @@ void ads_init (void)  {
     attachInterrupt(digitalPinToInterrupt(2), adsReady, RISING);
 
     ADS.begin();
-    ADS.setGain(0);        // 6.144 volt
-    ADS.setDataRate(7);    // slow
+    // ADS.setGain(0);      // 6.144 volt
+    ADS.setGain(1);         // GAIN_ONE (for an input range of +/-4.096V) 
+    ADS.setDataRate(7);     // slow
 
     // SET ALERT RDY PIN
     ADS.setComparatorThresholdHigh(0x8000);
