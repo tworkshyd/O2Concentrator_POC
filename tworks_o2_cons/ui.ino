@@ -214,9 +214,7 @@ void ui_task_main (void)    {
             if (f_state_changed)  {
                 f_state_changed = 0;
                 lcd_clear_buf (lcd_temp_string);
-                lcd_clear_buf (lcd_temp_string);
-                lcd_clear_buf (lcd_temp_string);
-                lcd_clear_buf (lcd_temp_string);
+               
 
                 lcd.clear();
                 lcd.setCursor(0, 0);
@@ -257,7 +255,7 @@ void ui_task_main (void)    {
                 int secs = ( system_runtime_secs %  60);
                 int mins = ((system_runtime_secs % (60 * 60)) / 60);
                 int hrs  = ( system_runtime_secs / (60 * 60));
-                sprintf(lcd_temp_string, "RUN TIME %02d:%02d:%02d", hrs, mins, secs);
+                sprintf(lcd_temp_string, "RUN TIME  %02d:%02d:%02d", hrs, mins, secs);
                 Serial.println(lcd_temp_string);
                 lcd.setCursor(0, 3);
                 lcd.print(lcd_temp_string);
@@ -271,7 +269,6 @@ void ui_task_main (void)    {
                 // no state change
             }
             break;
-
 
         case UI_SYS_OFF_CHECK:
             // System OFF check
