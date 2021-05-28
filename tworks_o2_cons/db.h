@@ -16,8 +16,8 @@ extern unsigned char   f_sec_change_o2_task;
 extern unsigned char   f_sec_change_sensor_task;
 
 extern float           o2_concentration;
-extern float           output_pressure;
 extern float           prev_o2_concentration;
+extern float           output_pressure;
 extern float           prev_output_pressure;
 extern unsigned int    system_runtime_secs;
 

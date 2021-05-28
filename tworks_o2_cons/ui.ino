@@ -235,7 +235,7 @@ void ui_task_main (void)    {
                 dtostrf(o2_concentration, 4, 2, str_temp);
                 
                 
-                dtostrf(output_pressure, 4, 2, str_temp2);
+                dtostrf(output_pressure, 5, 2, str_temp2);
                 // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
                 sprintf(lcd_temp_string, "%s %%   %s psi", str_temp, str_temp2);
                                

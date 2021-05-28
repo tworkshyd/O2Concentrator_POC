@@ -87,6 +87,7 @@ void loop (void) {
         f_sec_change_sensor_task = 1;
 
         o2_sensor_scan ();
+        read_pressure ();
         
         if (f_system_running == true) {
             system_runtime_secs++;
