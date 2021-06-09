@@ -38,9 +38,6 @@ void ui_init (void) {
 
 
 
-
-
-
 void beep_for (int msecs) {
 
     BUUZZER_CNTRL (ON);
@@ -116,7 +113,7 @@ void ui_task_main (void)    {
     switch (ui_state)
     {
         case UI_START:
-            // if (powerUpTimer.check())   {
+            //if (powerUpTimer.check())   {
             if (state_time >= 5) {
                 ui_state = UI_SYS_INIT;
                 lcd.setCursor(0, 3);
@@ -214,7 +211,7 @@ void ui_task_main (void)    {
             if (f_state_changed)  {
                 f_state_changed = 0;
                 lcd_clear_buf (lcd_temp_string);
-               
+
 
                 lcd.clear();
                 lcd.setCursor(0, 0);
@@ -233,12 +230,12 @@ void ui_task_main (void)    {
                 // Serial.println(lcd_temp_string);
                 /* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
                 dtostrf(o2_concentration, 4, 2, str_temp);
-                
-                
+
+
                 dtostrf(output_pressure, 5, 2, str_temp2);
                 // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
                 sprintf(lcd_temp_string, "%s %%   %s psi", str_temp, str_temp2);
-                               
+
                 Serial.println(lcd_temp_string);
                 lcd.setCursor(0, 1);
                 lcd.print(lcd_temp_string);

@@ -188,14 +188,14 @@ void o2_sensor_scan (void)  {
 
 
     handleConversion();
-    Serial.print("o2_raw_adc_count : ");
-    Serial.print(o2_raw_adc_count);
+//    Serial.print("o2_raw_adc_count : ");
+//    Serial.print(o2_raw_adc_count);
 
 
     m_raw_voltage = ((float)o2_raw_adc_count * 1000.0) * 0.000125;
-    Serial.print(", m_raw_voltage : ");
+//    Serial.print(", m_raw_voltage : ");
     // Serial.print(m_raw_voltage);
-    Serial.print(m_raw_voltage, 4);
+//    Serial.print(m_raw_voltage, 4);
 
     // temp hard coding till calib menu is ready
     // o2_slope = 0.02065262;  // 48.42; // 0.166;
@@ -203,10 +203,10 @@ void o2_sensor_scan (void)  {
     //    o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
     o2_concentration = ((o2_raw_adc_count * o2_slope) + o2_const_val);
 
-    Serial.print(", o2_concentration : ");
+//    Serial.print(", o2_concentration : ");
     // Serial.print(o2_concentration);
-    Serial.print(o2_concentration, 4);
-    Serial.println();
+//    Serial.print(o2_concentration, 4);
+//    Serial.println();
 
 }
 

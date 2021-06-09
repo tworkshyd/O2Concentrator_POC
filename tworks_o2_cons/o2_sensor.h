@@ -13,13 +13,13 @@
  * @def   Defines 
  * @brief   Defines used in this file
  */
-#define SUCCESS           0
-#define ERROR_OFFSET        (-1)
-#define ERROR_UNKNOWN       (ERROR_OFFSET-1)
-#define ERROR_I2C_TIMEOUT       (ERROR_OFFSET-2)
-#define ERROR_TIMER_INIT        (ERROR_OFFSET-3)
-#define ERROR_SENSOR_READ     (ERROR_OFFSET-4)
-#define ERROR_BAD_PARAM       (ERROR_OFFSET-5)
+#define SUCCESS                   0
+#define ERROR_OFFSET              (-1)
+#define ERROR_UNKNOWN             (ERROR_OFFSET-1)
+#define ERROR_I2C_TIMEOUT         (ERROR_OFFSET-2)
+#define ERROR_TIMER_INIT          (ERROR_OFFSET-3)
+#define ERROR_SENSOR_READ         (ERROR_OFFSET-4)
+#define ERROR_BAD_PARAM           (ERROR_OFFSET-5)
 #define ERROR_SENSOR_UNSUPPORTED  (ERROR_OFFSET-6)
 #define ERROR_SENSOR_CALIBRATION  (ERROR_OFFSET-7)
 

@@ -2,7 +2,7 @@
 
 // tworks_o2_cons.c
 
-#include <UniversalTimer.h>
+//#include <UniversalTimer.h>
 
 #include "platform.h"
 #include "display.h"
@@ -27,15 +27,15 @@
 
 // VARIABLE CREATION
 //**************************************************************************
-unsigned long Relay_Test_Delay;     // delay variable creation
-unsigned long Startup_Purge_Delay;  // delay variable creation
-unsigned long Production_Delay;     // delay variable creation
-unsigned long Flush_Delay;          // delay variable creation
-unsigned long PreCharge_Delay;      // delay variable creation
+unsigned long int Relay_Test_Delay;     // delay variable creation
+unsigned long int Startup_Purge_Delay;  // delay variable creation
+unsigned long int Production_Delay;     // delay variable creation
+unsigned long int Flush_Delay;          // delay variable creation
+unsigned long int PreCharge_Delay;      // delay variable creation
 
 
-unsigned long nb_delay;
-unsigned long prev_nb_delay;
+unsigned long int nb_delay;
+unsigned long int prev_nb_delay;
 unsigned char cycle;
 
 void o2_cons_init (void);
@@ -43,10 +43,10 @@ void o2_main_task (void);
 
 
 // Create a timer with 5 sec and non-repeating
-UniversalTimer powerUpTimer(1000, false);
+//UniversalTimer powerUpTimer(1000, false);
 
 // Create a timer with 100ms and repeating
-UniversalTimer system_tick_timer (TICK_time, true);
+//UniversalTimer system_tick_timer (TICK_time, true);
 
 
 
@@ -64,8 +64,8 @@ void setup (void) {
     o2_cons_init ();
 
     // start task timers
-    powerUpTimer.start();
-    system_tick_timer.start();
+    //powerUpTimer.start();
+    //system_tick_timer.start();
 
 }
 
@@ -74,9 +74,9 @@ void loop (void) {
 
     static unsigned long time_tag;
 
-    if (system_tick_timer.check())    {
-        systemtick_msecs += TICK_time;
-    }
+    //if (system_tick_timer.check())    {
+    //    systemtick_msecs += TICK_time;
+    //}
 
     if (time_elapsed (time_tag) > 1000) {
         time_tag = systemtick_msecs;
@@ -132,13 +132,13 @@ void o2_cons_init (void)    {
     //delay (1000);
 
     // start task timers
-    powerUpTimer.start();
+    //powerUpTimer.start();
 
 }
 
 void o2_main_task (void)    {
 
-    static unsigned long  time_tag;
+    static unsigned long int time_tag;
 
     if (time_elapsed (time_tag) < nb_delay)  {
         return;
@@ -147,7 +147,9 @@ void o2_main_task (void)    {
     // else
     time_tag = systemtick_msecs;
 
-    //     chine_PSA_logic();
+    Serial.println ("calling PSA logic..");
+    
+    // chine_PSA_logic();
     chine_new_PSA_logic();
 
     if (nb_delay != prev_nb_delay)  {
@@ -286,9 +288,9 @@ void chine_new_PSA_logic (void)  {
             nb_delay = PreCharge_Delay;
             cycle++;
             break;
-
         default:
             cycle = 0;
+            nb_delay = 0;
             break;
     }
 
