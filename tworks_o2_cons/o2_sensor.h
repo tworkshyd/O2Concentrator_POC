@@ -24,6 +24,7 @@
 #define ERROR_SENSOR_CALIBRATION  (ERROR_OFFSET-7)
 
 
+#define O2_SENSOR_CHANNEL_NO      (0)
 
 int sensor_zero_calibration (void);
 

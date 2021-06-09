@@ -4,43 +4,43 @@
 #define _PLATFORM_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+#include "arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 
 
 
 
-/* 
- *  1. 1st row : From Port map O2 concentrator document &
- *   
- *  2. 2nd row : From Aurdino Nano - pinout diagram 
- *      "https://components101.com/microcontrollers/arduino-nano"   
- *  3. As per O2 concentrator circuit 
- *  
-========================================================================================================
-PortB - PB7         PB6         PB5         PB4         PB3             PB2         PB1             PB0 
-        -           -           13/SCK      12/MISO     11/PWM/MOSI     10/PWM/#SS  9/MISO/INT1     8/    
---------------------------------------------------------------------------------------------------------
+/*
+    1. 1st row : From Port map O2 concentrator document &
+
+    2. 2nd row : From Aurdino Nano - pinout diagram
+        "https://components101.com/microcontrollers/arduino-nano"
+    3. As per O2 concentrator circuit
+
+    ========================================================================================================
+    PortB - PB7         PB6         PB5         PB4         PB3             PB2         PB1             PB0
+        -           -           13/SCK      12/MISO     11/PWM/MOSI     10/PWM/#SS  9/MISO/INT1     8/
+    --------------------------------------------------------------------------------------------------------
         -           -           Low-Buz     DB7         DB6             DB5         DB4             En
-========================================================================================================
+    ========================================================================================================
 
-========================================================================================================
-PortC - PC7     PC6         PC5             PC4             PC3         PC2        PC1          PC0 
+    ========================================================================================================
+    PortC - PC7     PC6         PC5             PC4             PC3         PC2        PC1          PC0
         -       -/RESET     19/A5/ADC5/SCL  18/A4/ADC4/SDA  17/A3/ADC3  16/A2/ADC2 15/A1/ADC1   14/A0/ADC0
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
         ASpare4 ASpare3     SCL             SDA             Aspare2     Push_Button LM35Out     Psns1
-========================================================================================================
+    ========================================================================================================
 
-========================================================================================================
-PortD - PD7     PD6         PD5         PD4     PD3         PD2         PD1         PD0 
+    ========================================================================================================
+    PortD - PD7     PD6         PD5         PD4     PD3         PD2         PD1         PD0
         7/      6/PWM       5/PWM       4/      3/PWM/INT1  2/INT0      1/TXD       0/RXD
---------------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------------
         RS      Comp-On     BckFSol     ZT2Sol  ZT1Sol      DDIR        TXD         RXD
-========================================================================================================
-*/ 
+    ========================================================================================================
+*/
 
 
 
@@ -103,15 +103,16 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 // Relay OFF -> valve Close
 // The valves are NC (Normally Closed) type
 //------------------------------------------------
-#define OPEN_VALVE          (LOW) 
+#define OPEN_VALVE          (LOW)
 #define CLOSE_VALVE         (HIGH)
 
 
 
-extern unsigned long systemtick_msecs;
+extern volatile unsigned long systemtick_msecs;
 
 void platform_init (void);
-unsigned long time_elapsed (unsigned long time_delay);
+unsigned long time_elapsed    (unsigned long time_delay);
+void          new_delay_msecs (unsigned int  time_delay);
 
 
 #endif

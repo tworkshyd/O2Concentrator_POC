@@ -32,17 +32,17 @@
 
 enum UI_STATES_E  {
 
-    UI_START,
-    UI_CALIB_MODE,
-    UI_FACTORY_MODE,
-    UI_CONFIG_MODE,
+    UI_START,         // 0
+    UI_CALIB_MODE,    // 1
+    UI_FACTORY_MODE,  // 2
+    UI_CONFIG_MODE,   // 3
 
-    UI_SYS_INIT,
-    UI_SYS_ON_CHECK,
-    UI_SYS_RUNNING,
-    UI_SYS_OFF_CHECK,
+    UI_SYS_INIT,      // 4
+    UI_SYS_ON_CHECK,  // 5
+    UI_SYS_RUNNING,   // 6
+    UI_SYS_OFF_CHECK, // 7
 
-    UI_LAST,
+    UI_LAST,          // 8
 
 };
 

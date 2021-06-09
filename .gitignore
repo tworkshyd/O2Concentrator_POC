@@ -15,3 +15,6 @@ tworks_o2_cons/Release/board.buildinfo
 *.mk
 
 *.cppproj
+
+*.sisc
+O2c_browse.si4project/

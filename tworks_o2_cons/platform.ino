@@ -6,42 +6,67 @@
 
 
 
-unsigned long int systemtick_msecs;
+volatile unsigned long int systemtick_msecs;
+
+// Note: timer 0 is not working with I2C peripheral, hence use Timer 1 / 2 for systick
+
+
+void config_timer1  (void)  {
+
+    // Timer 1
+    TCCR1A = 0; // set entire TCCR0A register to 0
+    TCCR1B = 0; // same for TCCR0B
+    TCNT1  = 0; // initialize counter value to 0
+
+    // set timer1 interrupt at 1kHz == 1msecs
+    // set compare match register for 1khz increments
+    OCR1A = 249; // = (16*10^6) / (1000*64) - 1 (must be < 66535)
+
+    // set timer1 interrupt at 2kHz == 500usecs
+    // set compare match register for 2khz increments
+    // OCR1A = 124;  // = (16*10^6) / (2000*64) - 1 (must be < 66535)
+
+    // turn on CTC mode
+    TCCR1B |= (1 << WGM12);
+    // Set CS12, CS11 and CS10 bits for 64 prescaler
+    TCCR1B |= (1 << CS11) | (1 << CS10);
+    
+    // enable timer compare interrupt
+    TIMSK1 |= (1 << OCIE1A);
+
+}
 
 
 void timer_init (void)  {
-  
+
     cli();//stop interrupts
-
-    TCCR0A = 0; // set entire TCCR0A register to 0
-    TCCR0B = 0; // same for TCCR0B
-    TCNT0  = 0; // initialize counter value to 0
-
-    // set timer0 interrupt at 1kHz == 1msecs
-    // set compare match register for 1khz increments
-    OCR0A = 249; // = (16*10^6) / (1000*64) - 1 (must be <256)
-    
-    // set timer0 interrupt at 2kHz == 500usecs
-    // set compare match register for 2khz increments
-    // OCR0A = 124;  // = (16*10^6) / (2000*64) - 1 (must be <256)
-   
-    // turn on CTC mode
-    TCCR0A |= (1 << WGM01);
-    // Set CS01 and CS00 bits for 64 prescaler
-    TCCR0B |= (1 << CS01) | (1 << CS00);
-    // enable timer compare interrupt
-    TIMSK0 |= (1 << OCIE0A);
-    
+    config_timer1 ();
     sei();//allow interrupts
-  
+
+    Serial.println ("Timer initialized..");
 }
 
-ISR (TIMER0_COMPA_vect) { // change the 0 to 1 for timer0
-  
-    //interrupt commands here
+ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
+
+    // interrupt commands here
     systemtick_msecs++;
 
 }
+
+
+void new_delay_msecs (unsigned int  time_delay) {
+
+    unsigned long int   time_tag;
+
+
+    Serial.print ("/");
+    time_tag = systemtick_msecs;
+    while (time_elapsed (time_tag) < time_delay)
+    {
+        // nop
+    }
+}
+
 
 void platform_init (void) {
 

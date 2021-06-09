@@ -16,15 +16,6 @@
 #define TICK_time (10)
 
 
-// moved from here to platform.h
-/*
-    // RELAY PIN ASSIGNMENT
-    //**************************************************************************
-    int Sieve_A_Valve_Z1     = RLY_3;    // Z1TSOL
-    int Sieve_B_Valve_Z2     = RLY_2;    // Z2TSOL
-    int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
-*/
-
 // VARIABLE CREATION
 //**************************************************************************
 unsigned long int Relay_Test_Delay;     // delay variable creation
@@ -38,34 +29,22 @@ unsigned long int nb_delay;
 unsigned long int prev_nb_delay;
 unsigned char cycle;
 
+
 void o2_cons_init (void);
 void o2_main_task (void);
-
-
-// Create a timer with 5 sec and non-repeating
-//UniversalTimer powerUpTimer(1000, false);
-
-// Create a timer with 100ms and repeating
-//UniversalTimer system_tick_timer (TICK_time, true);
-
-
 
 
 
 void setup (void) {
 
-    Serial.begin(115200);
-    Serial.println("Serial port initialized..!!");
-    platform_init();
+    Serial.begin (115200);
+    Serial.println ("Serial port initialized..!!");
+    platform_init ();
     db_init ();
     ui_init ();
-    commn_init();
     ads_init ();
+    commn_init ();
     o2_cons_init ();
-
-    // start task timers
-    //powerUpTimer.start();
-    //system_tick_timer.start();
 
 }
 
@@ -73,10 +52,6 @@ void setup (void) {
 void loop (void) {
 
     static unsigned long time_tag;
-
-    //if (system_tick_timer.check())    {
-    //    systemtick_msecs += TICK_time;
-    //}
 
     if (time_elapsed (time_tag) > 1000) {
         time_tag = systemtick_msecs;
@@ -112,9 +87,9 @@ void o2_cons_init (void)    {
 
     // SET PIN MODE FOR PINS IN PROGRAM
     //**************************************************************************
-    pinMode(Sieve_A_Valve_Z1,   OUTPUT);
-    pinMode(Sieve_B_Valve_Z2,   OUTPUT);
-    pinMode(PreCharge_Valve_BCKF,   OUTPUT);
+    pinMode(Sieve_A_Valve_Z1,     OUTPUT);
+    pinMode(Sieve_B_Valve_Z2,     OUTPUT);
+    pinMode(PreCharge_Valve_BCKF, OUTPUT);
 
     //  SET DELAY TIMING HERE
     //**************************************************************************
@@ -129,12 +104,12 @@ void o2_cons_init (void)    {
     digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
     digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
     digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
-    //delay (1000);
+    new_delay_msecs (1000);
 
-    // start task timers
-    //powerUpTimer.start();
 
 }
+
+
 
 void o2_main_task (void)    {
 
@@ -148,7 +123,7 @@ void o2_main_task (void)    {
     time_tag = systemtick_msecs;
 
     Serial.println ("calling PSA logic..");
-    
+
     // chine_PSA_logic();
     chine_new_PSA_logic();
 
@@ -159,9 +134,8 @@ void o2_main_task (void)    {
         Serial.println (nb_delay);
     }
 
-
-
 }
+
 
 
 void chine_PSA_logic (void)  {
@@ -172,9 +146,8 @@ void chine_PSA_logic (void)  {
             //CYCLE 1
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Purge");
-            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE); // HIGH);  // LOW);
-            // delay(Production_Delay);
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
+            digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
             nb_delay = Production_Delay;
             cycle++;
             break;
@@ -182,9 +155,8 @@ void chine_PSA_logic (void)  {
             //CYCLE 2
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Purge / Flush/PreCharge");
-            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);  // HIGH);  // LOW);
-            // delay(Flush_Delay);
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
             nb_delay = Flush_Delay;
             cycle++;
             break;
@@ -192,9 +164,8 @@ void chine_PSA_logic (void)  {
             //CYCLE 3
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Charge / Flush/PreCharge");
-            digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);  // LOW);   // HIGH);
-            // delay(Production_Delay);
+            digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
             nb_delay = Production_Delay;
             cycle++;
             break;
@@ -202,9 +173,8 @@ void chine_PSA_logic (void)  {
             //CYCLE 1
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Purge");
-            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE); // HIGH);  // LOW);
-            // delay(Flush_Delay);
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
             nb_delay = Flush_Delay;
             cycle++;
             break;
@@ -216,6 +186,8 @@ void chine_PSA_logic (void)  {
 
 }
 
+
+
 void chine_new_PSA_logic (void)  {
 
     switch (cycle)
@@ -224,10 +196,9 @@ void chine_new_PSA_logic (void)  {
             //CYCLE 1
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Purge");
-            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE); // HIGH);  // LOW);
-            digitalWrite(PreCharge_Valve_BCKF,      CLOSE_VALVE);
-            // delay(Production_Delay);
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
+            digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
+            digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
             nb_delay = Production_Delay;
             cycle++;
             break;
@@ -235,10 +206,9 @@ void chine_new_PSA_logic (void)  {
             //CYCLE 2
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Purge");
-            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE); // HIGH);  // LOW);
-            digitalWrite(PreCharge_Valve_BCKF,      OPEN_VALVE);
-            // delay(Flush_Delay) ;
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
+            digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
+            digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE );
             nb_delay = Flush_Delay;
             cycle++;
             break;
@@ -246,10 +216,9 @@ void chine_new_PSA_logic (void)  {
             //CYCLE 3
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Purge / Flush/PreCharge");
-            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);  // HIGH);  // LOW);
-            digitalWrite(PreCharge_Valve_BCKF,      OPEN_VALVE);
-            // delay(PreCharge_Delay);
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
+            digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE );
             nb_delay = PreCharge_Delay;
             cycle++;
             break;
@@ -257,10 +226,9 @@ void chine_new_PSA_logic (void)  {
             //CYCLE 4
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Charge / Flush/PreCharge");
-            digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);  // LOW);   // HIGH);               digitalWrite(PreCharge_Valve_BCKF,      OPEN_VALVE);
-            digitalWrite(PreCharge_Valve_BCKF,      CLOSE_VALVE);
-            // delay(Production_Delay);
+            digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
+            digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
             nb_delay = Production_Delay;
             cycle++;
             break;
@@ -269,10 +237,9 @@ void chine_new_PSA_logic (void)  {
             //CYCLE 5
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Charge / Flush/PreCharge");
-            digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);  // LOW);   // HIGH);               digitalWrite(PreCharge_Valve_BCKF,      OPEN_VALVE);
-            digitalWrite(PreCharge_Valve_BCKF,      OPEN_VALVE);
-            // delay(Flush_Delay);
+            digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
+            digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE );
             nb_delay = Flush_Delay;
             cycle++;
             break;
@@ -281,10 +248,9 @@ void chine_new_PSA_logic (void)  {
             //CYCLE 6
             //**************************************************************************
             Serial.println("Sieve A Charge / Sieve B Purge");
-            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);  // LOW);   // HIGH);
-            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE); // HIGH);  // LOW);
-            digitalWrite(PreCharge_Valve_BCKF,      OPEN_VALVE);
-            // delay(PreCharge_Delay) ;
+            digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
+            digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
+            digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
             nb_delay = PreCharge_Delay;
             cycle++;
             break;

@@ -41,7 +41,7 @@ void ui_init (void) {
 void beep_for (int msecs) {
 
     BUUZZER_CNTRL (ON);
-    delay(msecs);
+    new_delay_msecs (msecs);
     BUUZZER_CNTRL (OFF);
 
 }
@@ -57,7 +57,7 @@ void multi_beeps (int count) {
     for (i = 0; i < count; i++)
     {
         beep_for (50);
-        delay(100);
+        new_delay_msecs (100);
     }
 
 }
@@ -104,10 +104,6 @@ void ui_task_main (void)    {
         }
 
     }
-
-    //    if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
-    //        button_debounce_delay = 0;
-    //    }
 
 
     switch (ui_state)
@@ -194,11 +190,11 @@ void ui_task_main (void)    {
                 beep_for (SYS_ON_BEEP);   // msecs
 
                 COMPRSSR_CNTRL (ON);
-                delay (1000);
+                new_delay_msecs (1000);
 
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Starting... ");
-                delay (1000);
+                new_delay_msecs (1000);
 
                 ui_state = UI_SYS_RUNNING;
             }
@@ -219,6 +215,9 @@ void ui_task_main (void)    {
                 Serial.println(lcd_temp_string);
                 //        "...................."
                 lcd.print(lcd_temp_string);
+
+                // temp : just to trigger LCD refresh for O2 values
+                prev_o2_concentration = 0;
             }
 
             // LCD Line 2
@@ -278,10 +277,10 @@ void ui_task_main (void)    {
                 COMPRSSR_CNTRL (OFF);
                 beep_for (SYS_OFF_BEEP);   // msecs
 
-                delay (1000);
+                new_delay_msecs (1000);
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Stopping.. ");
-                delay (1000);
+                new_delay_msecs (1000);
 
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Stopped..! ");
@@ -320,14 +319,14 @@ void power_on_self_test (void) {
     lcd.print("Z1TSOL - OPEN   ");
     digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
     beep_for (HIGH_BEEP);   // msecs
-    delay(5000);
+    new_delay_msecs (5000);
 
     lcd.setCursor(0, 2);
     lcd.print("Z1TSOL - CLOSE  ");
     digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
     beep_for (LOW_BEEP);   // msecs
 
-    delay(5000);
+    new_delay_msecs (5000);
 
 
     // 2. Relay Z2TSOL
@@ -335,25 +334,25 @@ void power_on_self_test (void) {
     lcd.print("Z2TSOL - OPEN   ");
     digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
     beep_for (HIGH_BEEP);   // msecs
-    delay(5000);
+    new_delay_msecs (5000);
     lcd.setCursor(0, 2);
     lcd.print("Z2TSOL - CLOSE  ");
     digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
     beep_for (LOW_BEEP);   // msecs
-    delay(2000);
+    new_delay_msecs (2000);
 
     // 3. Relay BCKFSOL
     lcd.setCursor(0, 2);
     lcd.print("BCKFSOL - OPEN  ");
     digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
     beep_for (HIGH_BEEP);   // msecs
-    delay(5000);
+    new_delay_msecs (5000);
 
     lcd.setCursor(0, 2);
     lcd.print("BCKFSOL - CLOSE ");
     digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
     beep_for (LOW_BEEP);   // msecs
-    delay(2000);
+    new_delay_msecs (2000);
 
     //lcd.clear();
     lcd.setCursor(0, 1);
@@ -367,13 +366,13 @@ void power_on_self_test (void) {
     beep_for (HIGH_BEEP);   // msecs
     digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
     digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
-    delay (1000);
+    new_delay_msecs (1000);
 
     lcd.setCursor(0, 2);
     lcd.print("Compressor - ON     ");
     digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
     beep_for (HIGH_BEEP);   // msecs
-    delay(5000);
+    new_delay_msecs (5000);
     COMPRSSR_CNTRL (ON);
 
     BUUZZER_CNTRL (OFF);
@@ -382,12 +381,12 @@ void power_on_self_test (void) {
     lcd.print("Compressor - OFF    ");
     digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
     beep_for (LOW_BEEP);   // msecs
-    delay (1000);
+    new_delay_msecs (1000);
 
     lcd.clear();
     lcd.setCursor(0, 3);
     //  "1.3.5.7.9.........20"
     lcd.print("Testing over...!!   ");
-    delay(2000);
+    new_delay_msecs (2000);
 
 }
