@@ -9,5 +9,9 @@ tworks_o2_cons/Release/board.buildinfo
 *.eep
 *.elf
 *.hex
+*.lss
+*.map
+*.srec
+*.mk
 
 *.cppproj
