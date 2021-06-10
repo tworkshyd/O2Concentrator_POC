@@ -9,9 +9,9 @@
 
 #define NUM_OF_SAMPLES_O2   (3)
 
-float y_samples[NUM_OF_SAMPLES_O2] = {0.0, 20.9, 100.0};
+float y_samples[NUM_OF_SAMPLES_O2]   = {0.0, 20.9, 100.0};
 //float x_samples[NUM_OF_SAMPLES_O2] = {28.375, 141.75, 633.75};
-float x_samples[NUM_OF_SAMPLES_O2] = {227.0, 1134.0, 5069.0};
+float x_samples[NUM_OF_SAMPLES_O2]   = {227.0, 1134.0, 5069.0};
 
 volatile int16_t  o2_raw_adc_count;
 volatile float    o2_slope;
@@ -22,8 +22,8 @@ ADS1115 ADS(O2_SENSOR_ADS_ADDR);
 
 void ads_init (void)  {
 
-    Serial.print("ADS1X15_LIB_VERSION: ");
-    Serial.println(ADS1X15_LIB_VERSION);
+    DBG_PRINT("ADS1X15_LIB_VERSION: ");
+    DBG_PRINTLN(ADS1X15_LIB_VERSION);
 
     // ads1015.setGain(GAIN_TWOTHIRDS); // 2/3x gain +/- 6.144V  1 bit = 3mV (default)
     // ads1015.setGain(GAIN_ONE);       // 1x gain   +/- 4.096V  1 bit = 2mV
@@ -73,14 +73,14 @@ int sensor_zero_calibration (void)
         sigmaXX += x * x;
         sigmaXY += x * y;
 
-        Serial.print ("x : "); Serial.print (x); Serial.print (", y : "); Serial.println (y);
-        Serial.print ("sigmaX : "); Serial.print (sigmaX); Serial.print (", sigmaY : "); Serial.println (sigmaY);
-        Serial.print ("sigmaXX : "); Serial.print (sigmaXX); Serial.print (", sigmaXY : "); Serial.println (sigmaXY);
+        DBG_PRINT ("x : "); DBG_PRINT (x); DBG_PRINT (", y : "); DBG_PRINTLN (y);
+        DBG_PRINT ("sigmaX : "); DBG_PRINT (sigmaX); DBG_PRINT (", sigmaY : "); DBG_PRINTLN (sigmaY);
+        DBG_PRINT ("sigmaXX : "); DBG_PRINT (sigmaXX); DBG_PRINT (", sigmaXY : "); DBG_PRINTLN (sigmaXY);
 
     }
     
     denominator = (NUM_OF_SAMPLES_O2 * sigmaXX) - (sigmaX * sigmaX);
-    Serial.print ("denominator : "); Serial.println (denominator);
+    DBG_PRINT ("denominator : "); DBG_PRINTLN (denominator);
     
     if (denominator != 0) {      
         o2_slope = ((NUM_OF_SAMPLES_O2 * sigmaXY) - (sigmaX * sigmaY)) / denominator;
@@ -92,17 +92,18 @@ int sensor_zero_calibration (void)
         o2_slope = 0;
         o2_const_val = 0;
         result =  ERROR_SENSOR_CALIBRATION;
-        Serial.println ("Error: O2 calibration failed!!");
+        DBG_PRINTLN ("Error: O2 calibration failed!!");
 
     }
 
-    Serial.println ();
-    Serial.print   ("o2_slope : ");
-    Serial.print   (o2_slope);
-    Serial.print   (", o2_const_val : ");
-    Serial.println (o2_const_val);
+    DBG_PRINTLN ("");
+    DBG_PRINT   ("o2_slope : ");
+    DBG_PRINT   (o2_slope);
+    DBG_PRINT   (", o2_const_val : ");
+    DBG_PRINTLN (o2_const_val);
 
     return result;
+    
 }
 
 
@@ -113,13 +114,13 @@ void o2_sensor_scan (void)  {
     ADS.readADC(O2_SENSOR_CHANNEL_NO);
     o2_raw_adc_count = ADS.getValue();
     
-    Serial.print("o2_raw_adc_count : ");
-    Serial.print(o2_raw_adc_count);
+    DBG_PRINT("o2_raw_adc_count : ");
+    DBG_PRINT(o2_raw_adc_count);
 
 
     m_raw_voltage = ((float)o2_raw_adc_count * 1000.0) * 0.000125;
-    Serial.print(", m_raw_voltage : ");
-    Serial.print(m_raw_voltage, 4);
+    DBG_PRINT(", m_raw_voltage : ");
+    DBG_PRINT(m_raw_voltage, 4);
 
     // temp hard coding till calib menu is ready
     // o2_slope = 0.02065262;  // 48.42; // 0.166;
@@ -128,10 +129,10 @@ void o2_sensor_scan (void)  {
     // o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
     o2_concentration = ((o2_raw_adc_count * o2_slope) + o2_const_val);
 
-    Serial.print(", o2_concentration : ");
-    Serial.print(o2_concentration);
-    Serial.print(o2_concentration, 4);
-    Serial.println();
+    DBG_PRINT(", o2_concentration : ");
+    DBG_PRINT(o2_concentration);
+    DBG_PRINT(o2_concentration, 4);
+    DBG_PRINTLN("");
 
 }
 

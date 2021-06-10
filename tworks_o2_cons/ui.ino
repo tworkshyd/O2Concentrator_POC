@@ -86,8 +86,8 @@ void ui_task_main (void)    {
             button_pressed = true;
         }
         // temp
-        Serial.print  ("button_debounce_delay : ");
-        Serial.println(button_debounce_delay);
+        DBG_PRINT  ("button_debounce_delay : ");
+        DBG_PRINTLN(button_debounce_delay);
     }
     else {  // release detection
         if (button_debounce_delay)
@@ -98,8 +98,8 @@ void ui_task_main (void)    {
                 button_press_count++;
                 time_tag = systemtick_msecs;
                 // temp
-                Serial.print  ("button_press_count : ");
-                Serial.println(button_press_count);
+                DBG_PRINT  ("button_press_count : ");
+                DBG_PRINTLN(button_press_count);
             }
         }
 
@@ -137,7 +137,7 @@ void ui_task_main (void)    {
             }
             break;
         case UI_CALIB_MODE:
-            Serial.println("Entered Calibration Mode..");
+            DBG_PRINTLN("Entered Calibration Mode..");
             lcd.clear();
             lcd.setCursor(0, 0);
             lcd.print("Calibration Mode..");
@@ -148,7 +148,7 @@ void ui_task_main (void)    {
             ui_state = UI_SYS_INIT;
             break;
         case UI_FACTORY_MODE:
-            Serial.println("Factory Mode..");
+            DBG_PRINTLN("Factory Mode..");
             lcd.clear();
             lcd.setCursor(0, 0);
             lcd.print("Factory Mode..");
@@ -161,7 +161,7 @@ void ui_task_main (void)    {
             break;
 
         case UI_CONFIG_MODE:
-            Serial.println("Entered Configuration Mode..");
+            DBG_PRINTLN("Entered Configuration Mode..");
             lcd.clear();
             lcd.setCursor(0, 0);
             lcd.print("Configuration Mode..");
@@ -184,7 +184,7 @@ void ui_task_main (void)    {
                 button_pressed = false;
                 f_system_running = true;
 
-                Serial.println("Start Button Pressed..!");
+                DBG_PRINTLN("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
                 lcd.print("Start Button Pressed");
                 beep_for (SYS_ON_BEEP);   // msecs
@@ -212,7 +212,7 @@ void ui_task_main (void)    {
                 lcd.clear();
                 lcd.setCursor(0, 0);
                 sprintf(lcd_temp_string, "O2 CONC   PRESSURE ");
-                Serial.println(lcd_temp_string);
+                DBG_PRINTLN(lcd_temp_string);
                 //        "...................."
                 lcd.print(lcd_temp_string);
 
@@ -226,7 +226,7 @@ void ui_task_main (void)    {
                 prev_o2_concentration  = o2_concentration;
                 prev_output_pressure = output_pressure;
                 // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
-                // Serial.println(lcd_temp_string);
+                // DBG_PRINTLN(lcd_temp_string);
                 /* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
                 dtostrf(o2_concentration, 4, 2, str_temp);
 
@@ -235,7 +235,7 @@ void ui_task_main (void)    {
                 // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
                 sprintf(lcd_temp_string, "%s %%   %s psi", str_temp, str_temp2);
 
-                Serial.println(lcd_temp_string);
+                DBG_PRINTLN(lcd_temp_string);
                 lcd.setCursor(0, 1);
                 lcd.print(lcd_temp_string);
             }
@@ -252,7 +252,7 @@ void ui_task_main (void)    {
                 int mins = ((system_runtime_secs % (60 * 60)) / 60);
                 int hrs  = ( system_runtime_secs / (60 * 60));
                 sprintf(lcd_temp_string, "RUN TIME  %02d:%02d:%02d", hrs, mins, secs);
-                Serial.println(lcd_temp_string);
+                DBG_PRINTLN(lcd_temp_string);
                 lcd.setCursor(0, 3);
                 lcd.print(lcd_temp_string);
             }
@@ -271,7 +271,7 @@ void ui_task_main (void)    {
             if (button_pressed == true)  {
                 button_pressed = false;
                 f_system_running = false;
-                Serial.println("Stop Button Pressed!");
+                DBG_PRINTLN("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
                 lcd.print("Stop Button Pressed ");
                 COMPRSSR_CNTRL (COMPRSSR_OFF);
@@ -301,8 +301,8 @@ void ui_task_main (void)    {
         prev_ui_state = ui_state;
         f_state_changed = 1;
         state_time = 0;
-        Serial.print("ui_state : ");
-        Serial.println(ui_state);
+        DBG_PRINT("ui_state : ");
+        DBG_PRINTLN(ui_state);
     }
 }
 

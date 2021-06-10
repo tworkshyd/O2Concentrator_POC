@@ -3,6 +3,8 @@
 #include "db.h"
 
 unsigned char   f_system_running;
+
+unsigned char   f_sec_logs_task;
 unsigned char   f_sec_change_ui_task;
 unsigned char   f_sec_change_o2_task;
 unsigned char   f_sec_change_sensor_task;

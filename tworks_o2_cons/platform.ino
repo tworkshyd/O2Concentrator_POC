@@ -43,7 +43,7 @@ void timer_init (void)  {
     config_timer1 ();
     sei();//allow interrupts
 
-    Serial.println ("Timer initialized..");
+    DBG_PRINTLN ("Timer initialized..");
 }
 
 ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
@@ -60,7 +60,7 @@ void new_delay_msecs (unsigned int  time_delay) {
     unsigned long int   time_tag;
 
 
-    Serial.print ("/");
+    DBG_PRINT ("/");
     time_tag = systemtick_msecs;
     while (time_elapsed (time_tag) < time_delay)
     {
@@ -88,11 +88,11 @@ void platform_init (void) {
     pinMode(buttonPin, INPUT_PULLUP);
 
     // default pin-state
-    digitalWrite(RLY_1,     HIGH);
+/*    digitalWrite(RLY_1,     HIGH);
     digitalWrite(RLY_2,     HIGH);
     digitalWrite(RLY_3,     HIGH);
     // igitalWrite(RLY_4,   HIGH);
-
+*/ 
     digitalWrite(buzzr_cntrl_pin, HIGH);
     digitalWrite(compr_cntrl_pin, LOW );
 
@@ -107,7 +107,7 @@ void platform_init (void) {
     digitalWrite(csPin,     LOW );
 
 
-    Serial.println("GPIO init done..");
+    DBG_PRINTLN("GPIO init done..");
 
 
 }
@@ -116,8 +116,8 @@ void platform_init (void) {
 bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
 
 
-    Serial.print ("do_id : ");
-    Serial.println (do_id);
+    DBG_PRINT ("do_id : ");
+    DBG_PRINTLN (do_id);
 
     switch (do_id)
     {
@@ -155,8 +155,8 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
         }
     }
 
-    Serial.print ("do_byte : ");
-    Serial.println(do_byte);
+    DBG_PRINT ("do_byte : ");
+    DBG_PRINTLN(do_byte);
 
 }
 
