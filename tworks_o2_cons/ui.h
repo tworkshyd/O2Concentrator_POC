@@ -10,8 +10,8 @@
 #endif
 
 
-#define ON  (true)
-#define OFF (false)
+//#define ON  (true)
+//#define OFF (false)
 
 
 #define BUTTON_DEBOUNCE_DLY ( 55)    // in msecs

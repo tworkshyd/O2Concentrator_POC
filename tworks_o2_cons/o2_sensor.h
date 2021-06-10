@@ -1,6 +1,6 @@
 // o2_sensor.h
 
-#ifndef   o2_sensor_h
+#ifndef o2_sensor_h
 #define o2_sensor_h
 
 

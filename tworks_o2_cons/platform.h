@@ -11,8 +11,6 @@
 
 
 
-
-
 /*
     1. 1st row : From Port map O2 concentrator document &
 
@@ -67,10 +65,10 @@
 
 
 // 3. Buzzer
-#define BUZZR           (13)
+#define buzzr_cntrl_pin           (13)
 
 // 4. Compressor Control
-#define COMPRSSR        (6)
+#define compr_cntrl_pin (6)
 
 // 5. Sensor inputs
 #define Prss_sns_1_adc  (A0)
@@ -79,8 +77,12 @@
 // 6. Button input
 #define buttonPin       (A2)    // (2)
 
-// 7. ADS interrupt pin
-#define ADS_READY_INTR  (2)
+// Serial 7-segment display signals
+#define dataPin         (2)    // 
+#define clckPin         (A3)    // 
+#define csPin           (A6)    // 
+
+
 
 
 // RELAY PIN ASSIGNMENT
@@ -92,10 +94,16 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 
 
 #define BUTTON_ACTIVE       (LOW)
-#define BUUZZER_CNTRL(x)    (digitalWrite(BUZZR, !x))
-#define COMPRSSR_CNTRL(x)   (digitalWrite(COMPRSSR, x))
+
+// Digital output Controls
+// #define BUUZZER_CNTRL(x)    (digitalWrite(buzzr_cntrl_pin, !x))
+#define BUUZZER_CNTRL(x)    (do_control(BUZZER_CONTROL, x))
+//#define compr_cntrl_pin_CNTRL(x)   (digitalWrite(compr_cntrl_pin, x))
+#define COMPRSSR_CNTRL(x)   (do_control(COMPRESSOR_CONTROL, x))
 
 
+
+// Re-arrange all digital logics as active high logics
 
 //------------------------------------------------
 // Practical observations:
@@ -106,11 +114,22 @@ int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
 #define OPEN_VALVE          (LOW)
 #define CLOSE_VALVE         (HIGH)
 
+//------------------------------------------------
+// Practical observations:
+// Pin High --> Compressor  ON
+// pin Low  --> Compressor  OFF
+//------------------------------------------------
+#define COMPRSSR_ON         (HIGH)
+#define COMPRSSR_OFF        (LOW)
+
+
+#define BUZZ_ON             (1) 
+#define BUZZ_OFF            (0) 
 
 
 extern volatile unsigned long systemtick_msecs;
 
-void platform_init (void);
+void          platform_init   (void);
 unsigned long time_elapsed    (unsigned long time_delay);
 void          new_delay_msecs (unsigned int  time_delay);
 

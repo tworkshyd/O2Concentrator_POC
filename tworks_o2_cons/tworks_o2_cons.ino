@@ -8,6 +8,7 @@
 #include "display.h"
 #include "commn.h"
 #include "o2_sensor.h"
+#include "o2_cons.h"
 #include "db.h"
 #include "ui.h"
 
@@ -28,6 +29,8 @@ unsigned long int PreCharge_Delay;      // delay variable creation
 unsigned long int nb_delay;
 unsigned long int prev_nb_delay;
 unsigned char cycle;
+
+unsigned char do_byte;                // holds all digital outputs current status
 
 
 void o2_cons_init (void);

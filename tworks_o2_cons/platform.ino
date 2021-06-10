@@ -30,7 +30,7 @@ void config_timer1  (void)  {
     TCCR1B |= (1 << WGM12);
     // Set CS12, CS11 and CS10 bits for 64 prescaler
     TCCR1B |= (1 << CS11) | (1 << CS10);
-    
+
     // enable timer compare interrupt
     TIMSK1 |= (1 << OCIE1A);
 
@@ -52,6 +52,7 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
     systemtick_msecs++;
 
 }
+
 
 
 void new_delay_msecs (unsigned int  time_delay) {
@@ -81,8 +82,8 @@ void platform_init (void) {
     pinMode(RLY_3,          OUTPUT);
     // pinMode(RLY_4,       OUTPUT);
 
-    pinMode(BUZZR,          OUTPUT);
-    pinMode(COMPRSSR,       OUTPUT);
+    pinMode(buzzr_cntrl_pin,OUTPUT);
+    pinMode(compr_cntrl_pin,OUTPUT);
     pinMode(buttonPin,      INPUT );
     pinMode(buttonPin, INPUT_PULLUP);
 
@@ -92,13 +93,73 @@ void platform_init (void) {
     digitalWrite(RLY_3,     HIGH);
     // igitalWrite(RLY_4,   HIGH);
 
-    digitalWrite(BUZZR,     HIGH);
-    digitalWrite(COMPRSSR,  LOW );
+    digitalWrite(buzzr_cntrl_pin, HIGH);
+    digitalWrite(compr_cntrl_pin, LOW );
+
+
+    // Serial 7 segment interface
+    pinMode(dataPin,        OUTPUT);
+    pinMode(clckPin,        OUTPUT);
+    pinMode(csPin,          OUTPUT);
+
+    digitalWrite(dataPin,   LOW );
+    digitalWrite(clckPin,   LOW );
+    digitalWrite(csPin,     LOW );
+
 
     Serial.println("GPIO init done..");
 
 
 }
+
+
+bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
+
+
+    Serial.print ("do_id : ");
+    Serial.println (do_id);
+
+    switch (do_id)
+    {
+        case SIEVE_A_VALVE_CONTROL:
+            digitalWrite(compr_cntrl_pin,  bit_value);
+            break;
+        case SIEVE_B_VALVE_CONTROL:
+            digitalWrite(compr_cntrl_pin,  bit_value);
+            break;
+        case SIEVE_BCK_FLUSH_VALVE_CONTROL:
+            digitalWrite(compr_cntrl_pin,  bit_value);
+            break;
+        case COMPRESSOR_CONTROL:
+            digitalWrite(compr_cntrl_pin,  bit_value);
+            break;
+        case BUZZER_CONTROL:
+            digitalWrite(buzzr_cntrl_pin, !bit_value);
+            break;
+        case _7SEG_DATA_CONTROL:
+        case _7SEG_CLCK_CONTROL:
+        case _7SEG_CS_CONTROL:
+            break;
+        default:
+            do_id = INVALID_DO_ID;
+            break;
+    }
+
+
+    if (do_id != INVALID_DO_ID)  {
+        if (bit_value)  {
+            do_byte |= do_id;
+        }
+        else {
+            do_byte &= ~do_id;
+        }
+    }
+
+    Serial.print ("do_byte : ");
+    Serial.println(do_byte);
+
+}
+
 
 
 unsigned long int time_elapsed (unsigned long int time_delay)  {

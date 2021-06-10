@@ -40,9 +40,9 @@ void ui_init (void) {
 
 void beep_for (int msecs) {
 
-    BUUZZER_CNTRL (ON);
+    BUUZZER_CNTRL (BUZZ_ON);
     new_delay_msecs (msecs);
-    BUUZZER_CNTRL (OFF);
+    BUUZZER_CNTRL (BUZZ_OFF);
 
 }
 
@@ -189,7 +189,7 @@ void ui_task_main (void)    {
                 lcd.print("Start Button Pressed");
                 beep_for (SYS_ON_BEEP);   // msecs
 
-                COMPRSSR_CNTRL (ON);
+                COMPRSSR_CNTRL (COMPRSSR_ON);
                 new_delay_msecs (1000);
 
                 lcd.setCursor(0, 3);
@@ -274,7 +274,7 @@ void ui_task_main (void)    {
                 Serial.println("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
                 lcd.print("Stop Button Pressed ");
-                COMPRSSR_CNTRL (OFF);
+                COMPRSSR_CNTRL (COMPRSSR_OFF);
                 beep_for (SYS_OFF_BEEP);   // msecs
 
                 new_delay_msecs (1000);
@@ -373,10 +373,10 @@ void power_on_self_test (void) {
     digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
     beep_for (HIGH_BEEP);   // msecs
     new_delay_msecs (5000);
-    COMPRSSR_CNTRL (ON);
+    COMPRSSR_CNTRL (COMPRSSR_ON);
 
-    BUUZZER_CNTRL (OFF);
-    COMPRSSR_CNTRL (OFF);
+    BUUZZER_CNTRL (BUZZ_OFF);
+    COMPRSSR_CNTRL (COMPRSSR_OFF);
     lcd.setCursor(0, 2);
     lcd.print("Compressor - OFF    ");
     digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
