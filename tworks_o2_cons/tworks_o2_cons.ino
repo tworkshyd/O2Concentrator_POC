@@ -54,11 +54,28 @@ void setup (void) {
 
 void loop (void) {
 
-    static unsigned long time_tag;
+    // 1. periodic tasks are called here
+    if (f_msec) {
+        f_msec = 0;
+        // milli second tasks go here..
 
-    if (time_elapsed (time_tag) > 1000) {
-        time_tag = systemtick_msecs;
+    }
+    else if (f_10msec) {
+        f_10msec = 0;
+        // 10 milli second tasks go here..
 
+    }
+    else if (f_100msec) {
+        f_100msec = 0;
+        // 100 milli second tasks go here..
+    }
+    else if (f_1sec) {
+        f_1sec = 0;
+        if ( (systemtick_secs % 60) == 0) {
+            f_1min = 1;
+        }
+
+        // 1 second tasks go here..
         f_sec_logs_task = 1;
         f_sec_change_ui_task = 1;
         f_sec_change_o2_task = 1;
@@ -67,20 +84,28 @@ void loop (void) {
         o2_sensor_scan ();
         // read_pressure ();
 
-        if (f_system_running == true) {
-            system_runtime_secs++;
-        }
         DBG_PRINT (".");
+
+    }
+    else if (f_1min) {
+        f_1min = 0;
+        if ( (systemtick_secs % (60 * 60)) == 0) {
+            f_1hr = 1;
+        }
+
+        // 1 minute tasks go here..
+
+    }
+    else if (f_1hr) {
+        f_1hr = 0;
+        // 1 hour tasks go here..
+
     }
 
-    if (f_system_running == true) {
+    // 2. contineous tasks are called here
+    else {
         o2_main_task ();
-    }
-
-    ui_task_main ();
-
-    if (f_sec_logs_task)  {
-        f_sec_logs_task = 0;
+        ui_task_main ();
         logs_task ();
     }
 
@@ -120,6 +145,14 @@ void o2_main_task (void)    {
 
     static unsigned long int time_tag;
 
+    if (f_system_running != true) {
+        return;
+    }
+    if (f_sec_change_o2_task) {
+        f_sec_change_o2_task = 0;
+        production_time_secs++;
+    }
+
     if (time_elapsed (time_tag) < nb_delay)  {
         return;
     }
@@ -154,7 +187,7 @@ void chine_PSA_logic (void)  {
             //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
             do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
             //digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
-            do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);            
+            do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
             nb_delay = Production_Delay;
             cycle++;
             break;

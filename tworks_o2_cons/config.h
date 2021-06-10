@@ -18,7 +18,9 @@
 
 // Select by uncommeting the required events from below list
 //  Note: these uncommented events print only if 'ENABLE_EVENT_LOGS' is enabled 
-#define CHANGE_IN_O2_LEVEL    (1)
+#define CHANGE_IN_O2_LEVEL    
+#define CHANGE_IN_PRESSURE    
+#define CHANGE_IN_TEMPERATURE    
 
 
 

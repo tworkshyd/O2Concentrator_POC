@@ -100,7 +100,6 @@ int sensor_zero_calibration (void)
     DBG_PRINT   ("o2_slope : ");
     DBG_PRINT   (o2_slope);
     DBG_PRINT   (", o2_const_val : ");
-    DBG_PRINTLN (o2_const_val);
 
     return result;
     

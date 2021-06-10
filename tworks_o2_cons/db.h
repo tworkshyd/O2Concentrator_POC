@@ -9,19 +9,23 @@
 	#include "WProgram.h"
 #endif
 
+// time keepers
+extern volatile unsigned long int  systemtick_msecs;
+extern volatile unsigned int       systemtick_secs;
+extern volatile bool   f_msec, f_10msec, f_100msec;
+extern volatile bool   f_1sec, f_1min, f_1hr;
 
-extern unsigned char   f_system_running;
-
-extern unsigned char   f_sec_logs_task;
-extern unsigned char   f_sec_change_ui_task;
-extern unsigned char   f_sec_change_o2_task;
-extern unsigned char   f_sec_change_sensor_task;
+extern bool   f_system_running;
+extern bool   f_sec_logs_task;
+extern bool   f_sec_change_ui_task;
+extern bool   f_sec_change_o2_task;
+extern bool   f_sec_change_sensor_task;
 
 extern float           o2_concentration;
 extern float           output_pressure;
 extern float           prev_o2_concentration;
 extern float           prev_output_pressure;
-extern unsigned int    system_runtime_secs;
+extern unsigned int    production_time_secs;
 
 void db_init (void);
 

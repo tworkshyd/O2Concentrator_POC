@@ -3,10 +3,7 @@
 
 #include "platform.h"
 #include "display.h"
-
-
-
-volatile unsigned long int systemtick_msecs;
+#include "db.h"
 
 // Note: timer 0 is not working with I2C peripheral, hence use Timer 1 / 2 for systick
 
@@ -51,8 +48,18 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
     // interrupt commands here
     systemtick_msecs++;
 
+    f_msec = 1;
+    if ( (systemtick_msecs % 10) == 0)  {
+        f_10msec = 1;
+        if ( (systemtick_msecs % 100) == 0)  {
+            f_100msec = 1;
+            if ( (systemtick_msecs % 1000) == 0)  {
+                f_1sec = 1;
+                systemtick_secs++;
+            }
+        }
+    }
 }
-
 
 
 void new_delay_msecs (unsigned int  time_delay) {
@@ -82,17 +89,17 @@ void platform_init (void) {
     pinMode(RLY_3,          OUTPUT);
     // pinMode(RLY_4,       OUTPUT);
 
-    pinMode(buzzr_cntrl_pin,OUTPUT);
-    pinMode(compr_cntrl_pin,OUTPUT);
+    pinMode(buzzr_cntrl_pin, OUTPUT);
+    pinMode(compr_cntrl_pin, OUTPUT);
     pinMode(buttonPin,      INPUT );
     pinMode(buttonPin, INPUT_PULLUP);
 
     // default pin-state
-/*    digitalWrite(RLY_1,     HIGH);
-    digitalWrite(RLY_2,     HIGH);
-    digitalWrite(RLY_3,     HIGH);
-    // igitalWrite(RLY_4,   HIGH);
-*/ 
+    /*    digitalWrite(RLY_1,     HIGH);
+        digitalWrite(RLY_2,     HIGH);
+        digitalWrite(RLY_3,     HIGH);
+        // igitalWrite(RLY_4,   HIGH);
+    */
     digitalWrite(buzzr_cntrl_pin, HIGH);
     digitalWrite(compr_cntrl_pin, LOW );
 

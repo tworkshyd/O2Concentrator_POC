@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "platform.h"
+#include "logs.h"
 #include "ui.h"
 #include "db.h"
 
@@ -238,6 +239,10 @@ void ui_task_main (void)    {
                 DBG_PRINTLN(lcd_temp_string);
                 lcd.setCursor(0, 1);
                 lcd.print(lcd_temp_string);
+#ifdef  CHANGE_IN_O2_LEVEL
+    
+
+#endif
             }
 
             // LCD Line 3
@@ -245,12 +250,12 @@ void ui_task_main (void)    {
             // blank for now
 
             // LCD Line 4
-            if (prev_system_runtime_secs ^ system_runtime_secs) {
-                prev_system_runtime_secs = system_runtime_secs;
+            if (prev_production_time_secs ^ production_time_secs) {
+                prev_production_time_secs = production_time_secs;
 
-                int secs = ( system_runtime_secs %  60);
-                int mins = ((system_runtime_secs % (60 * 60)) / 60);
-                int hrs  = ( system_runtime_secs / (60 * 60));
+                int secs = ( production_time_secs %  60);
+                int mins = ((production_time_secs % (60 * 60)) / 60);
+                int hrs  = ( production_time_secs / (60 * 60));
                 sprintf(lcd_temp_string, "RUN TIME  %02d:%02d:%02d", hrs, mins, secs);
                 DBG_PRINTLN(lcd_temp_string);
                 lcd.setCursor(0, 3);
