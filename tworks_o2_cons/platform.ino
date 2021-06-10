@@ -122,13 +122,13 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
     switch (do_id)
     {
         case SIEVE_A_VALVE_CONTROL:
-            digitalWrite(compr_cntrl_pin,  bit_value);
+            digitalWrite(Sieve_A_Valve_Z1,      bit_value);
             break;
         case SIEVE_B_VALVE_CONTROL:
-            digitalWrite(compr_cntrl_pin,  bit_value);
+            digitalWrite(Sieve_B_Valve_Z2,      bit_value);
             break;
-        case SIEVE_BCK_FLUSH_VALVE_CONTROL:
-            digitalWrite(compr_cntrl_pin,  bit_value);
+        case SIEVE_FLUSH_VLV_CNTRL:
+            digitalWrite(PreCharge_Valve_BCKF,  bit_value);
             break;
         case COMPRESSOR_CONTROL:
             digitalWrite(compr_cntrl_pin,  bit_value);

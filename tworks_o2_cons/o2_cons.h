@@ -11,7 +11,7 @@ enum DO_CONTROLS_E {
 
     SIEVE_A_VALVE_CONTROL          = 0x01,
     SIEVE_B_VALVE_CONTROL          = 0x02,
-    SIEVE_BCK_FLUSH_VALVE_CONTROL  = 0x04,
+    SIEVE_FLUSH_VLV_CNTRL          = 0x04,
     COMPRESSOR_CONTROL             = 0x08,
     
     BUZZER_CONTROL                 = 0x10,    

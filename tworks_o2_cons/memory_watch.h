@@ -31,6 +31,16 @@
 
 
 
+// 10 Jun 2021
+    - 06:00pm : serial prints
+
+      Sketch uses 15588 bytes (48%) of program storage space. Maximum is 32256 bytes.
+      Global variables use 1715 bytes (83%) of dynamic memory, leaving 333 bytes for local variables. Maximum is 2048 bytes.
+      Low memory available, stability problems may occur.
+
+
+
+
 
 
 

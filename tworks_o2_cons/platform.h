@@ -87,10 +87,9 @@
 
 // RELAY PIN ASSIGNMENT
 //**************************************************************************
-int Sieve_A_Valve_Z1     = RLY_3;    // Z1TSOL
-int Sieve_B_Valve_Z2     = RLY_2;    // Z2TSOL
-int PreCharge_Valve_BCKF = RLY_1;    // BACKFSOL
-
+#define  Sieve_A_Valve_Z1       RLY_3       // Z1TSOL
+#define  Sieve_B_Valve_Z2       RLY_2       // Z2TSOL
+#define  PreCharge_Valve_BCKF   RLY_1       // BACKFSOL
 
 
 #define BUTTON_ACTIVE       (LOW)
