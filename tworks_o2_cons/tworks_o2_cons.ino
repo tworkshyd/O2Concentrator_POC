@@ -18,16 +18,6 @@
 #define TICK_time (10)
 
 
-// VARIABLE CREATION
-//**************************************************************************
-
-/*
- * unsigned long int Relay_Test_Delay;     // delay variable creation
-unsigned long int Startup_Purge_Delay;  // delay variable creation
-unsigned long int Production_Delay;     // delay variable creation
-unsigned long int Flush_Delay;          // delay variable creation
-unsigned long int PreCharge_Delay;      // delay variable creation
-*/
 
 unsigned char cycle;
 
@@ -151,7 +141,6 @@ void o2_main_task (void)    {
 
     DBG_PRINTLN ("calling PSA logic..");
 
-    // chine_PSA_logic();
     chine_new_PSA_logic();
 
     if (nb_delay != prev_nb_delay)  {

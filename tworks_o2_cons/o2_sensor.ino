@@ -13,9 +13,7 @@ float y_samples[NUM_OF_SAMPLES_O2]   = {0.0, 20.9, 100.0};
 //float x_samples[NUM_OF_SAMPLES_O2] = {28.375, 141.75, 633.75};
 float x_samples[NUM_OF_SAMPLES_O2]   = {227.0, 1134.0, 5069.0};
 
-volatile int16_t  o2_raw_adc_count;
-volatile float    o2_slope;
-volatile float    o2_const_val;
+
 
 
 ADS1115 ADS(O2_SENSOR_ADS_ADDR);
@@ -107,8 +105,6 @@ int sensor_zero_calibration (void)
 
 
 void o2_sensor_scan (void)  {
-
-    float   m_raw_voltage;
 
     ADS.readADC(O2_SENSOR_CHANNEL_NO);
     o2_raw_adc_count = ADS.getValue();

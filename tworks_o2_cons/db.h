@@ -32,12 +32,18 @@ extern unsigned int    production_time_secs;
 
 
 extern unsigned long int Production_Delay;     // delay variable creation
-extern unsigned long int Flush_Delay;          // delay variable creation
+extern volatile unsigned long int Flush_Delay;          // delay variable creation
 extern unsigned long int PreCharge_Delay;      // delay variable creation
 
 extern unsigned long int nb_delay;
 extern unsigned long int prev_nb_delay;
 extern unsigned char     do_byte;              // holds all digital outputs current status
+
+extern volatile int16_t  o2_raw_adc_count;
+extern volatile float    o2_slope;
+extern volatile float    o2_const_val;
+extern volatile float    m_raw_voltage;
+
 
 
 void db_init (void);

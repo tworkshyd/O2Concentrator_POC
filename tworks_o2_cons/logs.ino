@@ -39,21 +39,38 @@ void log_dump (void)  {
 
     // 1. time stamp
     sprintf(lcd_temp_string, "%02d:%02d:%02d ", systemtick_hrs, systemtick_mins, systemtick_secs);
-    PLOG_PRINT (lcd_temp_string);
+    Serial.print (lcd_temp_string);
 
     // 2. system run time
     int secs = ( production_time_secs %  60);
     int mins = ((production_time_secs % (60 * 60)) / 60);
     int hrs  = ( production_time_secs / (60 * 60));
     sprintf(lcd_temp_string, "%02d:%02d:%02d ", hrs, mins, secs);
-    PLOG_PRINT (lcd_temp_string);
+    Serial.print (lcd_temp_string);
 
     // 3. production time, flush time n precharge time
-    sprintf(lcd_temp_string, "%d %d %d ", Production_Delay, Flush_Delay, PreCharge_Delay);
-    PLOG_PRINT (lcd_temp_string); 
+    Serial.print (Production_Delay);
+    Serial.print (" ");
+    Serial.print (Flush_Delay);
+    Serial.print (" ");
+    Serial.print (PreCharge_Delay);
+    Serial.print (" ");
 
     // 4. sieve A, B & back fluxh vavle status
     sprintf(lcd_temp_string, "%d %d %d ", (do_byte & SIEVE_A_VALVE_CONTROL) != 0, (do_byte & SIEVE_B_VALVE_CONTROL) != 0, (do_byte & SIEVE_FLUSH_VLV_CNTRL) != 0);
-    PLOG_PRINTLN (lcd_temp_string); 
+    Serial.print (lcd_temp_string);
+
+   // 5. O2 raw adc, mv, %
+    Serial.print(o2_raw_adc_count);
+    Serial.print (" ");
+    Serial.print(m_raw_voltage, 2);
+    Serial.print (" ");
+    Serial.print(o2_concentration, 2);
+    Serial.print (" ");
+
+   // 6. O2 cons ACD, room temp, RH
+    sprintf(lcd_temp_string, "%d %d %d ", 1, 2, 3);
+    Serial.println (lcd_temp_string);
+
 
 }
