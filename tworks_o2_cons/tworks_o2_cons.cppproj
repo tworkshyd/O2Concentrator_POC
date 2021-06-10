@@ -66,10 +66,9 @@
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
       <Value>../../../tworks_o2_cons</Value>
-      <Value>G:/arduino-1.8.13/libraries/LiquidCrystal/src</Value>
+      <Value>G:/arduino-1.8.13/portable/sketchbook/libraries/UniversalTimer/src</Value>
       <Value>G:/arduino-1.8.13/hardware/arduino/avr/cores/arduino</Value>
       <Value>G:/arduino-1.8.13/hardware/arduino/avr/variants/eightanaloginputs</Value>
-      <Value>F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~2/TWORKS~1</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr//lib/gcc/avr/7.3.0/include</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr/avr/include</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr/avr/include-fixed</Value>
@@ -101,10 +100,9 @@
   <avrgcccpp.compiler.directories.IncludePaths>
     <ListValues>
       <Value>../../../tworks_o2_cons</Value>
-      <Value>G:/arduino-1.8.13/libraries/LiquidCrystal/src</Value>
+      <Value>G:/arduino-1.8.13/portable/sketchbook/libraries/UniversalTimer/src</Value>
       <Value>G:/arduino-1.8.13/hardware/arduino/avr/cores/arduino</Value>
       <Value>G:/arduino-1.8.13/hardware/arduino/avr/variants/eightanaloginputs</Value>
-      <Value>F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~2/TWORKS~1</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr//lib/gcc/avr/7.3.0/include</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr/avr/include</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr/avr/include-fixed</Value>
@@ -122,7 +120,7 @@
   <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
 </AvrGccCpp>
     </ToolchainSettings>
-    <VMSETTING_IncludePaths>../../../tworks_o2_cons;G:/arduino-1.8.13/libraries/LiquidCrystal/src;G:/arduino-1.8.13/hardware/arduino/avr/cores/arduino;G:/arduino-1.8.13/hardware/arduino/avr/variants/eightanaloginputs;G:/arduino-1.8.13/hardware/tools/avr//lib/gcc/avr/7.3.0/include;G:/arduino-1.8.13/hardware/tools/avr/avr/include;G:/arduino-1.8.13/hardware/tools/avr/avr/include-fixed;G:/arduino-1.8.13/hardware/tools/avr/avr/include/avr;G:/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/4.9.2/include;G:/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/4.9.3/include;{vm.intellisense.add-paths};F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~1/TWORKS~1;G:/aurdino_sketchbook/libraries/Adafruit_BusIO;F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~2/TWORKS~1;</VMSETTING_IncludePaths>
+    <VMSETTING_IncludePaths>../../../tworks_o2_cons;G:/arduino-1.8.13/libraries/LiquidCrystal/src;G:/arduino-1.8.13/hardware/arduino/avr/cores/arduino;G:/arduino-1.8.13/hardware/arduino/avr/variants/eightanaloginputs;G:/arduino-1.8.13/hardware/tools/avr//lib/gcc/avr/7.3.0/include;G:/arduino-1.8.13/hardware/tools/avr/avr/include;G:/arduino-1.8.13/hardware/tools/avr/avr/include-fixed;G:/arduino-1.8.13/hardware/tools/avr/avr/include/avr;G:/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/4.9.2/include;G:/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/4.9.3/include;{vm.intellisense.add-paths};F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~1/TWORKS~1;G:/aurdino_sketchbook/libraries/Adafruit_BusIO;F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~2/TWORKS~1;G:/arduino-1.8.13/portable/sketchbook/libraries/UniversalTimer/src;</VMSETTING_IncludePaths>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
@@ -148,10 +146,9 @@
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
       <Value>../../../tworks_o2_cons</Value>
-      <Value>G:/arduino-1.8.13/libraries/LiquidCrystal/src</Value>
+      <Value>G:/arduino-1.8.13/portable/sketchbook/libraries/UniversalTimer/src</Value>
       <Value>G:/arduino-1.8.13/hardware/arduino/avr/cores/arduino</Value>
       <Value>G:/arduino-1.8.13/hardware/arduino/avr/variants/eightanaloginputs</Value>
-      <Value>F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~2/TWORKS~1</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr//lib/gcc/avr/7.3.0/include</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr/avr/include</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr/avr/include-fixed</Value>
@@ -183,10 +180,9 @@
   <avrgcccpp.compiler.directories.IncludePaths>
     <ListValues>
       <Value>../../../tworks_o2_cons</Value>
-      <Value>G:/arduino-1.8.13/libraries/LiquidCrystal/src</Value>
+      <Value>G:/arduino-1.8.13/portable/sketchbook/libraries/UniversalTimer/src</Value>
       <Value>G:/arduino-1.8.13/hardware/arduino/avr/cores/arduino</Value>
       <Value>G:/arduino-1.8.13/hardware/arduino/avr/variants/eightanaloginputs</Value>
-      <Value>F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~2/TWORKS~1</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr//lib/gcc/avr/7.3.0/include</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr/avr/include</Value>
       <Value>G:/arduino-1.8.13/hardware/tools/avr/avr/include-fixed</Value>
@@ -204,7 +200,7 @@
   <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
 </AvrGccCpp>
     </ToolchainSettings>
-    <VMSETTING_IncludePaths>../../../tworks_o2_cons;G:/arduino-1.8.13/libraries/LiquidCrystal/src;G:/arduino-1.8.13/hardware/arduino/avr/cores/arduino;G:/arduino-1.8.13/hardware/arduino/avr/variants/eightanaloginputs;G:/arduino-1.8.13/hardware/tools/avr//lib/gcc/avr/7.3.0/include;G:/arduino-1.8.13/hardware/tools/avr/avr/include;G:/arduino-1.8.13/hardware/tools/avr/avr/include-fixed;G:/arduino-1.8.13/hardware/tools/avr/avr/include/avr;G:/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/4.9.2/include;G:/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/4.9.3/include;{vm.intellisense.add-paths};F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~1/TWORKS~1;G:/aurdino_sketchbook/libraries/Adafruit_BusIO;F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~2/TWORKS~1;</VMSETTING_IncludePaths>
+    <VMSETTING_IncludePaths>../../../tworks_o2_cons;G:/arduino-1.8.13/libraries/LiquidCrystal/src;G:/arduino-1.8.13/hardware/arduino/avr/cores/arduino;G:/arduino-1.8.13/hardware/arduino/avr/variants/eightanaloginputs;G:/arduino-1.8.13/hardware/tools/avr//lib/gcc/avr/7.3.0/include;G:/arduino-1.8.13/hardware/tools/avr/avr/include;G:/arduino-1.8.13/hardware/tools/avr/avr/include-fixed;G:/arduino-1.8.13/hardware/tools/avr/avr/include/avr;G:/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/4.9.2/include;G:/arduino-1.8.13/hardware/tools/avr/lib/gcc/avr/4.9.3/include;{vm.intellisense.add-paths};F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~1/TWORKS~1;G:/aurdino_sketchbook/libraries/Adafruit_BusIO;F:/Projects/Tworks/4_O2_C~1/Firmware/O2CONC~2/TWORKS~1;G:/arduino-1.8.13/portable/sketchbook/libraries/UniversalTimer/src;</VMSETTING_IncludePaths>
   </PropertyGroup>
   <ItemGroup>
     <None Include="db.ino">

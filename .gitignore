@@ -9,8 +9,13 @@ tworks_o2_cons/Release/board.buildinfo
 *.eep
 *.elf
 *.hex
+*.lss
+*.map
+*.srec
+*.mk
 
 *.cppproj
+<<<<<<< HEAD
 O2c_browse.si4project/O2c_browse.bookmarks.xml
 O2c_browse.si4project/O2c_browse.sip_sym
 O2c_browse.si4project/O2c_browse.sip_xab
@@ -44,3 +49,8 @@ tworks_o2_cons/Release/makedep.mk
 tworks_o2_cons/Release/tworks_o2_cons.lss
 tworks_o2_cons/Release/tworks_o2_cons.map
 tworks_o2_cons/Release/tworks_o2_cons.srec
+=======
+
+*.sisc
+O2c_browse.si4project/
+>>>>>>> board_bringup
