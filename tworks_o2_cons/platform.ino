@@ -56,6 +56,16 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
             if ( (systemtick_msecs % 1000) == 0)  {
                 f_1sec = 1;
                 systemtick_secs++;
+                if (systemtick_secs >= 60)  {
+                    systemtick_secs = 0;
+                    f_1min = 1;
+                    systemtick_mins++;
+                    if (systemtick_mins >= 60) {
+                        systemtick_mins = 0;
+                        f_1hr = 1;
+                        systemtick_hrs++;
+                    }
+                }
             }
         }
     }
@@ -161,6 +171,9 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
             do_byte &= ~do_id;
         }
     }
+
+    // temp
+    // Serial.println(bit_value); Serial.println(do_id); Serial.println(do_byte);
 
     DBG_PRINT ("do_byte : ");
     DBG_PRINTLN(do_byte);

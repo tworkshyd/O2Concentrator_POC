@@ -20,18 +20,17 @@
 
 // VARIABLE CREATION
 //**************************************************************************
-unsigned long int Relay_Test_Delay;     // delay variable creation
+
+/*
+ * unsigned long int Relay_Test_Delay;     // delay variable creation
 unsigned long int Startup_Purge_Delay;  // delay variable creation
 unsigned long int Production_Delay;     // delay variable creation
 unsigned long int Flush_Delay;          // delay variable creation
 unsigned long int PreCharge_Delay;      // delay variable creation
+*/
 
-
-unsigned long int nb_delay;
-unsigned long int prev_nb_delay;
 unsigned char cycle;
 
-unsigned char do_byte;                  // holds all digital outputs current status
 
 
 void o2_cons_init (void);
@@ -71,10 +70,6 @@ void loop (void) {
     }
     else if (f_1sec) {
         f_1sec = 0;
-        if ( (systemtick_secs % 60) == 0) {
-            f_1min = 1;
-        }
-
         // 1 second tasks go here..
         f_sec_logs_task = 1;
         f_sec_change_ui_task = 1;
@@ -89,10 +84,6 @@ void loop (void) {
     }
     else if (f_1min) {
         f_1min = 0;
-        if ( (systemtick_secs % (60 * 60)) == 0) {
-            f_1hr = 1;
-        }
-
         // 1 minute tasks go here..
 
     }
@@ -120,8 +111,6 @@ void o2_cons_init (void)    {
 
     //  SET DELAY TIMING HERE
     //**************************************************************************
-    Relay_Test_Delay    = 1000;
-    Startup_Purge_Delay = 1000;
     Production_Delay    = 4000;   //8 sec and 2 sec gave 73% | 8 sec and 4 sec gave 75%
     Flush_Delay         = 200;
     PreCharge_Delay     = 200;
