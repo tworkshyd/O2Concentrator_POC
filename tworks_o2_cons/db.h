@@ -25,11 +25,11 @@ extern bool           f_sec_change_o2_task;
 extern bool           f_sec_change_sensor_task;
 
 
-extern int            buttonState;         // variable for reading the pushbutton status
-extern int            button_pressed;
-extern int            button_press_count;
-extern int            button_press_duration;
-extern int            button_debounce_delay;
+extern int            bttn_press_detected;
+extern int            bttn_long_press_detected;
+extern int            bttn_press_cnt;
+extern int            bttn_hold_time;
+extern int            bttn_dbnc_dly;
 
 
 extern float           o2_concentration;

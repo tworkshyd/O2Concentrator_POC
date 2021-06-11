@@ -18,11 +18,12 @@ bool            f_sec_change_o2_task;
 bool            f_sec_change_sensor_task;
 
 
-int             buttonState = 0;         // variable for reading the pushbutton status
-int             button_pressed;
-int             button_press_count;
-int             button_press_duration;
-int             button_debounce_delay;
+
+int             bttn_press_detected;
+int             bttn_long_press_detected;
+int             bttn_press_cnt;
+int             bttn_hold_time;
+int             bttn_dbnc_dly;
 
 float           o2_concentration = 93.50;
 float           prev_o2_concentration;

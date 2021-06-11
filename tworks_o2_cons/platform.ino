@@ -77,37 +77,55 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
 
 void button_check (void)  {
 
-    static unsigned long  time_tag;
+    //static unsigned long  time_tag;
+    int                   buttonState = 0;         // variable for reading the pushbutton status
+
 
     buttonState = digitalRead(buttonPin);
 
-
+    // 1. Press detection
     if (buttonState == BUTTON_ACTIVE) {   // press detection
-        button_debounce_delay++;
-        if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
-            button_debounce_delay = 0;
-            button_pressed = true;
+        if (bttn_dbnc_dly < BUTTON_DEBOUNCE_DLY)  {
+            bttn_long_press_detected = false;  // important!!
+            bttn_dbnc_dly++;
         }
-        // temp
-        DBG_PRINT  ("button_debounce_delay : ");
-        DBG_PRINTLN(button_debounce_delay);
+
+        // 2. Short press detection
+        if (bttn_dbnc_dly >= BUTTON_DEBOUNCE_DLY)   {
+            bttn_dbnc_dly = 0;
+            bttn_press_detected = true;       // important!!
+        }
+
+        // 3. Long press detection
+        bttn_hold_time++;
+        if (bttn_hold_time > BUTTON_LONG_PRESS_DLY)  {
+            // temp
+            DBG_PRINT ("long Press Detected - ");
+            DBG_PRINT ("bttn_hold_time : ");
+            DBG_PRINTLN (bttn_hold_time);
+            bttn_hold_time = 0;
+            bttn_press_detected = false;      // important!!
+            bttn_long_press_detected = true;  // important!!            
+        }
     }
-    else {  // release detection
-        if (button_debounce_delay)
-            button_debounce_delay--;
-        if (button_debounce_delay == 0)    {
-            if (button_pressed) {
-                button_pressed = false;
-                button_press_count++;
-                time_tag = systemtick_msecs;
+    // 4. release detection
+    else {
+        if (bttn_dbnc_dly)
+            bttn_dbnc_dly--;
+
+        if (bttn_dbnc_dly == 0)    {
+            if (bttn_press_detected) {
+                bttn_press_detected = false;
+                bttn_press_cnt++;         // increment the count if previous press is not yet used..
+                //time_tag = systemtick_msecs;
                 // temp
                 DBG_PRINT  ("button_press_count : ");
-                DBG_PRINTLN(button_press_count);
+                DBG_PRINTLN(bttn_press_cnt);
             }
         }
     }
-    
-  
+
+
 }
 
 void new_delay_msecs (unsigned int  time_delay) {
@@ -171,8 +189,8 @@ void platform_init (void) {
 bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
 
 
-    DBG_PRINT ("do_id : ");
-    DBG_PRINTLN (do_id);
+    // DBG_PRINT ("do_id : ");
+    // DBG_PRINTLN (do_id);
 
     switch (do_id)
     {
@@ -213,8 +231,8 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
     // temp
     // Serial.println(bit_value); Serial.println(do_id); Serial.println(do_byte);
 
-    DBG_PRINT ("do_byte : ");
-    DBG_PRINTLN(do_byte);
+    // DBG_PRINT ("do_byte : ");
+    // DBG_PRINTLN(do_byte);
 
 }
 

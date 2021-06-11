@@ -79,7 +79,7 @@ void ui_task_main (void)    {
         button_debounce_delay++;
         if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
             button_debounce_delay = 0;
-            button_pressed = true;
+            bttn_press_detected = true;
         }
         // temp
         DBG_PRINT  ("button_debounce_delay : ");
@@ -89,13 +89,13 @@ void ui_task_main (void)    {
         if (button_debounce_delay)
             button_debounce_delay--;
         if (button_debounce_delay == 0)    {
-            if (button_pressed) {
-                button_pressed = false;
-                button_press_count++;
+            if (bttn_press_detected) {
+                bttn_press_detected = false;
+                bttn_press_cnt++;
                 time_tag = systemtick_msecs;
                 // temp
-                DBG_PRINT  ("button_press_count : ");
-                DBG_PRINTLN(button_press_count);
+                DBG_PRINT  ("bttn_press_cnt : ");
+                DBG_PRINTLN(bttn_press_cnt);
             }
         }
     }
@@ -108,21 +108,21 @@ void ui_task_main (void)    {
             if (state_time >= TIME_TO_ENTER_FACTORY_MODE) {
                 ui_state = UI_SYS_INIT;
                 lcd.setCursor(0, 3);
-                button_press_count = 0;
+                bttn_press_cnt = 0;
                 lcd.print("Press ButtonToStart!");
             }
             //else if (time_elapsed (time_tag) > 1500) {
             else if (state_time > (( 2 * TIME_TO_ENTER_FACTORY_MODE) / 3)) {
-                if (button_press_count >= CALIBRATION_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
+                if (bttn_press_cnt >= CALIBRATION_MODE_ENTRY_CHECK)  {
+                    bttn_press_cnt = 0;
                     ui_state = UI_CALIB_MODE;
                 }
-                else if (button_press_count >= FACTORY_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
+                else if (bttn_press_cnt >= FACTORY_MODE_ENTRY_CHECK)  {
+                    bttn_press_cnt = 0;
                     ui_state = UI_FACTORY_MODE;
                 }
-                if (button_press_count >= CONFIG_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
+                if (bttn_press_cnt >= CONFIG_MODE_ENTRY_CHECK)  {
+                    bttn_press_cnt = 0;
                     ui_state = UI_CONFIG_MODE;
                 }
             }
@@ -176,8 +176,8 @@ void ui_task_main (void)    {
             break;
         case UI_SYS_ON_CHECK:
             // System ON check
-            if (button_pressed == true)  {
-                button_pressed = false;
+            if (bttn_press_detected == true)  {
+                bttn_press_detected = false;
                 f_system_running = true;
 
                 DBG_PRINTLN("Start Button Pressed..!");
@@ -258,7 +258,7 @@ void ui_task_main (void)    {
             }
 
             // System OFF check
-            if (button_pressed == true)  {
+            if (bttn_press_detected == true)  {
                 ui_state = UI_SYS_OFF_CHECK;
             }
             else {
@@ -268,8 +268,8 @@ void ui_task_main (void)    {
 
         case UI_SYS_OFF_CHECK:
             // System OFF check
-            if (button_pressed == true)  {
-                button_pressed = false;
+            if (bttn_press_detected == true)  {
+                bttn_press_detected = false;
                 f_system_running = false;
                 DBG_PRINTLN("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
