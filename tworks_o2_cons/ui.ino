@@ -59,7 +59,20 @@ void multi_beeps (int count) {
 
 }
 
-
+/* User Interface..
+ *  after power ON .. 
+ *  |<------------------ 5 seconds -------------->|
+ *                                                |
+ *                                                |--> Long press  (*): "START"  ----> short press : "STOP"
+ *                                                |--> short press ('):    ?
+ *                                                |
+ *  short press - ' (once)   ---> Config mode
+ *  
+ *  short press - ''' (thrice) ---> Factory mode
+ *  
+ *  short press - ''''' (5 times) --> Calibration mode
+ *  
+ */
 
 void ui_task_main (void)    {
    
@@ -74,32 +87,6 @@ void ui_task_main (void)    {
         f_sec_change_ui_task = 0;
         state_time++;
     }
-/*
-    if (buttonState == BUTTON_ACTIVE) {   // press detection
-        button_debounce_delay++;
-        if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
-            button_debounce_delay = 0;
-            bttn_press_detected = true;
-        }
-        // temp
-        DBG_PRINT  ("button_debounce_delay : ");
-        DBG_PRINTLN(button_debounce_delay);
-    }
-    else {  // release detection
-        if (button_debounce_delay)
-            button_debounce_delay--;
-        if (button_debounce_delay == 0)    {
-            if (bttn_press_detected) {
-                bttn_press_detected = false;
-                bttn_press_cnt++;
-                time_tag = systemtick_msecs;
-                // temp
-                DBG_PRINT  ("bttn_press_cnt : ");
-                DBG_PRINTLN(bttn_press_cnt);
-            }
-        }
-    }
-*/
 
     switch (ui_state)
     {
@@ -234,10 +221,7 @@ void ui_task_main (void)    {
                 DBG_PRINTLN(lcd_temp_string);
                 lcd.setCursor(0, 1);
                 lcd.print(lcd_temp_string);
-#ifdef  CHANGE_IN_O2_LEVEL
-    
 
-#endif
             }
 
             // LCD Line 3

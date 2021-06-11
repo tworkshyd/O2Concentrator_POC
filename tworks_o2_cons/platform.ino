@@ -77,8 +77,7 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
 
 void button_check (void)  {
 
-    //static unsigned long  time_tag;
-    int                   buttonState = 0;         // variable for reading the pushbutton status
+    int     buttonState = 0;         // variable for reading the pushbutton status
 
 
     buttonState = digitalRead(buttonPin);
@@ -100,9 +99,9 @@ void button_check (void)  {
         bttn_hold_time++;
         if (bttn_hold_time > BUTTON_LONG_PRESS_DLY)  {
             // temp
-            DBG_PRINT ("long Press Detected - ");
-            DBG_PRINT ("bttn_hold_time : ");
+            DBG_PRINT ("long Press Detected - bttn_hold_time : ");
             DBG_PRINTLN (bttn_hold_time);
+            
             bttn_hold_time = 0;
             bttn_press_detected = false;      // important!!
             bttn_long_press_detected = true;  // important!!            
@@ -117,16 +116,14 @@ void button_check (void)  {
             if (bttn_press_detected) {
                 bttn_press_detected = false;
                 bttn_press_cnt++;         // increment the count if previous press is not yet used..
-                //time_tag = systemtick_msecs;
                 // temp
                 DBG_PRINT  ("button_press_count : ");
                 DBG_PRINTLN(bttn_press_cnt);
             }
         }
     }
-
-
 }
+
 
 void new_delay_msecs (unsigned int  time_delay) {
 
@@ -160,12 +157,7 @@ void platform_init (void) {
     pinMode(buttonPin,      INPUT );
     pinMode(buttonPin, INPUT_PULLUP);
 
-    // default pin-state
-    /*    digitalWrite(RLY_1,     HIGH);
-        digitalWrite(RLY_2,     HIGH);
-        digitalWrite(RLY_3,     HIGH);
-        // igitalWrite(RLY_4,   HIGH);
-    */
+    // default pin-states
     digitalWrite(buzzr_cntrl_pin, HIGH);
     digitalWrite(compr_cntrl_pin, LOW );
 
