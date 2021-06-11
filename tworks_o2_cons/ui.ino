@@ -13,10 +13,6 @@ static int  ui_state, prev_ui_state;
 static int  f_state_changed;
 
 
-int buttonState = 0;         // variable for reading the pushbutton status
-int button_pressed;
-int button_press_count;
-int button_press_duration;
 
 
 void ui_print_welcome (void)    {
@@ -66,20 +62,19 @@ void multi_beeps (int count) {
 
 
 void ui_task_main (void)    {
-
-    static int            button_debounce_delay;
-    static unsigned long  time_tag;
+   
+    //static unsigned long  time_tag;
     static unsigned int   state_time;
     char                  str_temp[6];
     char                  str_temp2[6];
 
-    buttonState = digitalRead(buttonPin);
+    //buttonState = digitalRead(buttonPin);
 
     if (f_sec_change_ui_task) {
         f_sec_change_ui_task = 0;
         state_time++;
     }
-
+/*
     if (buttonState == BUTTON_ACTIVE) {   // press detection
         button_debounce_delay++;
         if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
@@ -103,21 +98,21 @@ void ui_task_main (void)    {
                 DBG_PRINTLN(button_press_count);
             }
         }
-
     }
-
+*/
 
     switch (ui_state)
     {
         case UI_START:
             //if (powerUpTimer.check())   {
-            if (state_time >= 5) {
+            if (state_time >= TIME_TO_ENTER_FACTORY_MODE) {
                 ui_state = UI_SYS_INIT;
                 lcd.setCursor(0, 3);
                 button_press_count = 0;
                 lcd.print("Press ButtonToStart!");
             }
-            else if (time_elapsed (time_tag) > 1500) {
+            //else if (time_elapsed (time_tag) > 1500) {
+            else if (state_time > (( 2 * TIME_TO_ENTER_FACTORY_MODE) / 3)) {
                 if (button_press_count >= CALIBRATION_MODE_ENTRY_CHECK)  {
                     button_press_count = 0;
                     ui_state = UI_CALIB_MODE;

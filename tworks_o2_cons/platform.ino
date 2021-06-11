@@ -69,8 +69,46 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
             }
         }
     }
+
+    // button check detection
+    button_check ();
 }
 
+
+void button_check (void)  {
+
+    static unsigned long  time_tag;
+
+    buttonState = digitalRead(buttonPin);
+
+
+    if (buttonState == BUTTON_ACTIVE) {   // press detection
+        button_debounce_delay++;
+        if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
+            button_debounce_delay = 0;
+            button_pressed = true;
+        }
+        // temp
+        DBG_PRINT  ("button_debounce_delay : ");
+        DBG_PRINTLN(button_debounce_delay);
+    }
+    else {  // release detection
+        if (button_debounce_delay)
+            button_debounce_delay--;
+        if (button_debounce_delay == 0)    {
+            if (button_pressed) {
+                button_pressed = false;
+                button_press_count++;
+                time_tag = systemtick_msecs;
+                // temp
+                DBG_PRINT  ("button_press_count : ");
+                DBG_PRINTLN(button_press_count);
+            }
+        }
+    }
+    
+  
+}
 
 void new_delay_msecs (unsigned int  time_delay) {
 

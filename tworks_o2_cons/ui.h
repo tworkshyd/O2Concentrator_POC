@@ -14,8 +14,7 @@
 //#define OFF (false)
 
 
-#define BUTTON_DEBOUNCE_DLY ( 55)    // in msecs
-
+#define TIME_TO_ENTER_FACTORY_MODE    (6)
 
 #define HIGH_BEEP           (200)
 #define LOW_BEEP            ( 50)
