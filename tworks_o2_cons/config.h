@@ -7,11 +7,12 @@
 
 
 // 1. Periodic logs
-#define ENABLE_PERIODIC_LOGS   
-#define SET_LOG_PERIOD_SECS     (1)
+// #define ENABLE_PERIODIC_LOGS   
+#define SET_LOG_PERIOD_SECS         (3)
 
 // 2. Event logs..
-// #define ENABLE_EVENT_LOGS    
+#define ENABLE_EVENT_LOGS    
+#define O2_VALUE_CHANGE_THRESHOLD   (0.3)    
 
 // 3. Debug logs
 // #define ENABLE_DEBUG_PRINTS

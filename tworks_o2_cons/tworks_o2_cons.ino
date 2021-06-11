@@ -4,10 +4,10 @@
 
 //#include <UniversalTimer.h>
 
-#include "platform.h"
-#include "display.h"
 #include "o2_sensor.h"
+#include "platform.h"
 #include "o2_cons.h"
+#include "display.h"
 #include "config.h"
 #include "logs.h"
 #include "db.h"

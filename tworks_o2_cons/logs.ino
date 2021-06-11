@@ -4,9 +4,13 @@
 #include "logs.h"
 
 
+
 void logs_task (void) {
 
-    static int  log_period;
+    static int    log_period;
+    static float  last_o2_concentration;
+
+    float         change_in_value;
 
 
 
@@ -24,7 +28,16 @@ void logs_task (void) {
     }
 
     // 2. event logging
-    // todo
+    change_in_value = last_o2_concentration - o2_concentration;
+    // Serial.println(change_in_value);
+    change_in_value = abs(change_in_value);
+    // Serial.println(change_in_value);
+    if (change_in_value >= O2_VALUE_CHANGE_THRESHOLD)  {
+        last_o2_concentration = o2_concentration;
+        // Serial.println(change_in_value);
+        log_dump ();
+    }
+
 
     // 3. debug prints
     // DBG_PRINT   ("nice to ");
@@ -60,7 +73,9 @@ void log_dump (void)  {
     sprintf(lcd_temp_string, "%d %d %d ", (do_byte & SIEVE_A_VALVE_CONTROL) != 0, (do_byte & SIEVE_B_VALVE_CONTROL) != 0, (do_byte & SIEVE_FLUSH_VLV_CNTRL) != 0);
     Serial.print (lcd_temp_string);
 
-   // 5. O2 raw adc, mv, %
+    // 5. O2 raw adc, mv, %
+    //sprintf(lcd_temp_string, "%4d %lf %lf ", o2_raw_adc_count, m_raw_voltage, o2_concentration);
+    //Serial.print (lcd_temp_string);
     Serial.print(o2_raw_adc_count);
     Serial.print (" ");
     Serial.print(m_raw_voltage, 2);
@@ -68,7 +83,7 @@ void log_dump (void)  {
     Serial.print(o2_concentration, 2);
     Serial.print (" ");
 
-   // 6. O2 cons ACD, room temp, RH
+    // 6. O2 cons ACD, room temp, RH
     sprintf(lcd_temp_string, "%d %d %d ", 1, 2, 3);
     Serial.println (lcd_temp_string);
 
