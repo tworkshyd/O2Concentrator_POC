@@ -60,19 +60,65 @@ void multi_beeps (int count) {
 }
 
 /* User Interface..
+ *  
+ *  (') --> short press
+ *  (*) ---> Long press
+ *  
  *  after power ON .. 
- *  |<------------------ 5 seconds -------------->|
- *                                                |
- *                                                |--> Long press  (*): "START"  ----> short press : "STOP"
- *                                                |--> short press ('):    ?
- *                                                |
- *  short press - ' (once)   ---> Config mode
- *  
- *  short press - ''' (thrice) ---> Factory mode
- *  
- *  short press - ''''' (5 times) --> Calibration mode
- *  
+ *   |
+ *   |<----------- 5 seconds quiescent period --------->|         .------- <------<------<------<------<------<------.
+ *     |   |   |                                        |         |                                                  ^
+ *     |   |   |                                        |--> Long press  (*): "START"  ----> short press : "STOP" ---'
+ *     |   |   |                                        |
+ *     |   |   |                                        |
+ *     |   |   |                                        
+ *     |   |  (')(') (twice) ---> Config mode 
+ *     |   |                         |
+ *     |   |                        (*) 
+ *     |   |                         |
+ *     |   |                    Reset Timers --> (') --->>>
+ *     |   |                         |
+ *     |   |                        (*)
+ *     |   |                         |
+ *     |   |                       [sure] -----> (') --->>>           
+ *     |   |                         |
+ *     |   |                        (*)          
+ *     |   |                         |
+ *     |   |                     [confirm]  ---> (') --->>>        
+ *     |   |
+ *     |   |
+ *     |  (')(')(') (thrice) ---> Factory mode
+ *     |                              |
+ *     |                             (*)
+ *     |                              |
+ *     |                             SA-Valve -----> (') -----> SB-Valve ----> (') ----> BKP-Valve ----> (') ----> Compressor ---> (')----->>>
+ *     |                              |
+ *     |                             (*)                          < do >                  < do >                     < do >
+ *     |                              |
+ *     |                             OPEN ---> (') ---> CLOSE ---> (') -->.
+ *     |                              |                                   |
+ *     |                              '------- <------------ <------------'
+ *     |
+ *     |
+ *    (')(')(')(')(') (5 times) --> Calibration mode
+ *                                    |
+ *                                   (*)
+ *                                    |
+ *                                   O2 Sensor -----> (') -----> Press-sensor ----->>>
+ *                                    |
+ *                                   (*)                          < do >                  
+ *                                    |
+ *                                    |------- <------------ <------- <------------.
+ *                                    |                                            |
+ *                                    0% ---> (') ---> 21% ---> (') ---> 100% ---->'
+ *                                    |            |    |            |    |        |  
+ *                                   (*)           ^   (*)           ^   (*)       ^
+ *                                    |            |    |            |    |        |
+ *                                  [Save] --->----'  [Save] --->----'  [Save] -->-'
+ *                                  
+ *                                                                       
  */
+ 
 
 void ui_task_main (void)    {
    
