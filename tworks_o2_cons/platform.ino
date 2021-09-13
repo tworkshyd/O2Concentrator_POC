@@ -69,59 +69,6 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
             }
         }
     }
-
-    // button check detection
-    button_check ();
-}
-
-
-void button_check (void)  {
-
-    int     buttonState = 0;         // variable for reading the pushbutton status
-
-
-    buttonState = digitalRead(buttonPin);
-
-    // 1. Press detection
-    if (buttonState == BUTTON_ACTIVE) {   // press detection
-        if (bttn_dbnc_dly < BUTTON_DEBOUNCE_DLY)  {
-            bttn_long_press_detected = false;  // important!!
-            bttn_dbnc_dly++;
-        }
-
-        // 2. Short press detection
-        if (bttn_dbnc_dly >= BUTTON_DEBOUNCE_DLY)   {
-            bttn_dbnc_dly = 0;
-            bttn_press_detected = true;       // important!!
-        }
-
-        // 3. Long press detection
-        bttn_hold_time++;
-        if (bttn_hold_time > BUTTON_LONG_PRESS_DLY)  {
-            // temp
-            DBG_PRINT ("long Press Detected - bttn_hold_time : ");
-            DBG_PRINTLN (bttn_hold_time);
-            
-            bttn_hold_time = 0;
-            bttn_press_detected = false;      // important!!
-            bttn_long_press_detected = true;  // important!!            
-        }
-    }
-    // 4. release detection
-    else {
-        if (bttn_dbnc_dly)
-            bttn_dbnc_dly--;
-
-        if (bttn_dbnc_dly == 0)    {
-            if (bttn_press_detected) {
-                bttn_press_detected = false;
-                bttn_press_cnt++;         // increment the count if previous press is not yet used..
-                // temp
-                DBG_PRINT  ("button_press_count : ");
-                DBG_PRINTLN(bttn_press_cnt);
-            }
-        }
-    }
 }
 
 
@@ -157,7 +104,12 @@ void platform_init (void) {
     pinMode(buttonPin,      INPUT );
     pinMode(buttonPin, INPUT_PULLUP);
 
-    // default pin-states
+    // default pin-state
+    /*    digitalWrite(RLY_1,     HIGH);
+        digitalWrite(RLY_2,     HIGH);
+        digitalWrite(RLY_3,     HIGH);
+        // igitalWrite(RLY_4,   HIGH);
+    */
     digitalWrite(buzzr_cntrl_pin, HIGH);
     digitalWrite(compr_cntrl_pin, LOW );
 
@@ -181,8 +133,8 @@ void platform_init (void) {
 bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
 
 
-    // DBG_PRINT ("do_id : ");
-    // DBG_PRINTLN (do_id);
+    DBG_PRINT ("do_id : ");
+    DBG_PRINTLN (do_id);
 
     switch (do_id)
     {
@@ -223,8 +175,8 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
     // temp
     // Serial.println(bit_value); Serial.println(do_id); Serial.println(do_byte);
 
-    // DBG_PRINT ("do_byte : ");
-    // DBG_PRINTLN(do_byte);
+    DBG_PRINT ("do_byte : ");
+    DBG_PRINTLN(do_byte);
 
 }
 

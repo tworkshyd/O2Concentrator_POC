@@ -24,14 +24,6 @@ extern bool           f_sec_change_ui_task;
 extern bool           f_sec_change_o2_task;
 extern bool           f_sec_change_sensor_task;
 
-
-extern int            bttn_press_detected;
-extern int            bttn_long_press_detected;
-extern int            bttn_press_cnt;
-extern int            bttn_hold_time;
-extern int            bttn_dbnc_dly;
-
-
 extern float           o2_concentration;
 extern float           output_pressure;
 extern float           prev_o2_concentration;

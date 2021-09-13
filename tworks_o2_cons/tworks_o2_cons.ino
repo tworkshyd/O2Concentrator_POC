@@ -101,9 +101,17 @@ void o2_cons_init (void)    {
 
     //  SET DELAY TIMING HERE
     //**************************************************************************
-    Production_Delay    = 4000;   //8 sec and 2 sec gave 73% | 8 sec and 4 sec gave 75%
-    Flush_Delay         = 200;
-    PreCharge_Delay     = 200;
+
+/*
+    // Following timing settings used with 3 valves (2  - 3/2, 1 - 2/2) circuit; 6 step cycle;
+    Production_Delay    = 5000;
+    Flush_Delay         = 400;
+    PreCharge_Delay     = 700;
+*/
+
+    // Following timing settings used with 2 valves, 1 orifice circuit; 4 step cycle;
+    Production_Delay    = 5400;
+    PreCharge_Delay     = 700; 
 
 
     // STARTUP PURGE
@@ -112,8 +120,8 @@ void o2_cons_init (void)    {
     //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
     do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
     //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
-    do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
-    new_delay_msecs (1000);
+    do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
+    new_delay_msecs (500);
 
 
 }
@@ -141,7 +149,9 @@ void o2_main_task (void)    {
 
     DBG_PRINTLN ("calling PSA logic..");
 
-    chine_new_PSA_logic();
+    //tworks3_PSA_logic();
+    tworks2_PSA_logic();
+
 
     if (nb_delay != prev_nb_delay)  {
         prev_nb_delay = nb_delay;
@@ -154,77 +164,15 @@ void o2_main_task (void)    {
 
 
 
-void chine_PSA_logic (void)  {
+void tworks3_PSA_logic (void)  {
 
     switch (cycle)
     {
         case 0:
             //CYCLE 1
             //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Purge");
-            //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
+            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
-            nb_delay = Production_Delay;
-            cycle++;
-            break;
-        case 1:
-            //CYCLE 2
-            //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Purge / Flush/PreCharge");
-            //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
-            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            nb_delay = Flush_Delay;
-            cycle++;
-            break;
-        case 2:
-            //CYCLE 3
-            //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Charge / Flush/PreCharge");
-            //digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
-            do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
-            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            nb_delay = Production_Delay;
-            cycle++;
-            break;
-        case 3:
-            //CYCLE 1
-            //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Purge");
-            //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
-            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            nb_delay = Flush_Delay;
-            cycle++;
-            break;
-
-        default:
-            cycle = 0;
-            break;
-    }
-
-}
-
-
-
-void chine_new_PSA_logic (void)  {
-
-    switch (cycle)
-    {
-        case 0:
-            //CYCLE 1
-            //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Purge");
-            //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
-            do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
-            //digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
             do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
             nb_delay = Production_Delay;
             cycle++;
@@ -232,12 +180,8 @@ void chine_new_PSA_logic (void)  {
         case 1:
             //CYCLE 2
             //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Purge");
-            //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
+            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
-            //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE );
             do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
             nb_delay = Flush_Delay;
             cycle++;
@@ -245,12 +189,8 @@ void chine_new_PSA_logic (void)  {
         case 2:
             //CYCLE 3
             //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Purge / Flush/PreCharge");
-            //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE );
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
+            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE );
             do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
             nb_delay = PreCharge_Delay;
             cycle++;
@@ -258,12 +198,8 @@ void chine_new_PSA_logic (void)  {
         case 3:
             //CYCLE 4
             //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Charge / Flush/PreCharge");
-            //digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
-            do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
+            do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
             do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
             nb_delay = Production_Delay;
             cycle++;
@@ -272,12 +208,8 @@ void chine_new_PSA_logic (void)  {
         case 4:
             //CYCLE 5
             //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Charge / Flush/PreCharge");
-            //digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
-            do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE );
+            do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE );
             do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
             nb_delay = Flush_Delay;
             cycle++;
@@ -286,16 +218,60 @@ void chine_new_PSA_logic (void)  {
         case 5:
             //CYCLE 6
             //**************************************************************************
-            DBG_PRINTLN("Sieve A Charge / Sieve B Purge");
-            //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
+            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
             do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
             nb_delay = PreCharge_Delay;
             cycle++;
             break;
+        default:
+            cycle = 0;
+            nb_delay = 0;
+            break;
+    }
+
+}
+
+void tworks2_PSA_logic (void)  {
+
+    switch (cycle)
+    {
+        case 0:
+            //CYCLE 1
+            //**************************************************************************
+            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
+            do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE); 
+            nb_delay = Production_Delay;
+            cycle++;
+            break;
+      
+        case 1:
+            //CYCLE 3
+            //**************************************************************************
+            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
+            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
+            nb_delay = PreCharge_Delay;
+            cycle++;
+            break;
+            
+        case 2:
+            //CYCLE 4
+            //**************************************************************************
+            do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
+            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
+            nb_delay = Production_Delay;
+            cycle++;
+            break;
+
+        case 3:
+            //CYCLE 6
+            //**************************************************************************
+            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
+            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
+            nb_delay = PreCharge_Delay;
+            cycle++;
+            break;
+            
         default:
             cycle = 0;
             nb_delay = 0;

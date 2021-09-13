@@ -18,16 +18,18 @@ void logs_task (void) {
 
     if (f_sec_logs_task)  {
         f_sec_logs_task = 0;
+
+#ifdef  ENABLE_PERIODIC_LOGS
         log_period++;
         if (log_period >= SET_LOG_PERIOD_SECS)  {
             log_period = 0;
-#ifdef  ENABLE_PERIODIC_LOGS
             log_dump ();
 #endif
         }
     }
 
     // 2. event logging
+#ifdef  ENABLE_EVENT_LOGS
     change_in_value = last_o2_concentration - o2_concentration;
     // Serial.println(change_in_value);
     change_in_value = abs(change_in_value);
@@ -37,7 +39,7 @@ void logs_task (void) {
         // Serial.println(change_in_value);
         log_dump ();
     }
-
+#endif
 
     // 3. debug prints
     // DBG_PRINT   ("nice to ");
