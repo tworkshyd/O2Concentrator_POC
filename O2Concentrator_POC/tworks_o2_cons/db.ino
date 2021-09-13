@@ -17,6 +17,14 @@ bool            f_sec_change_ui_task;
 bool            f_sec_change_o2_task;
 bool            f_sec_change_sensor_task;
 
+
+
+int             bttn_press_detected;
+int             bttn_long_press_detected;
+int             bttn_press_cnt;
+int             bttn_hold_time;
+int             bttn_dbnc_dly;
+
 float           o2_concentration = 93.50;
 float           prev_o2_concentration;
 float           output_pressure  = 25.03;

@@ -13,10 +13,6 @@ static int  ui_state, prev_ui_state;
 static int  f_state_changed;
 
 
-int buttonState = 0;         // variable for reading the pushbutton status
-int button_pressed;
-int button_press_count;
-int button_press_duration;
 
 
 void ui_print_welcome (void)    {
@@ -63,71 +59,103 @@ void multi_beeps (int count) {
 
 }
 
-
+/* User Interface..
+ *  
+ *  (') --> short press
+ *  (*) ---> Long press
+ *  
+ *  after power ON .. 
+ *   |
+ *   |<----------- 5 seconds quiescent period --------->|         .------- <------<------<------<------<------<------.
+ *     |   |   |                                        |         |                                                  ^
+ *     |   |   |                                        |--> Long press  (*): "START"  ----> short press : "STOP" ---'
+ *     |   |   |                                        |
+ *     |   |   |                                        |
+ *     |   |   |                                        
+ *     |   |  (')(') (twice) ---> Config mode 
+ *     |   |                         |
+ *     |   |                        (*) 
+ *     |   |                         |
+ *     |   |                    Reset Timers --> (') --->>>
+ *     |   |                         |
+ *     |   |                        (*)
+ *     |   |                         |
+ *     |   |                       [sure] -----> (') --->>>           
+ *     |   |                         |
+ *     |   |                        (*)          
+ *     |   |                         |
+ *     |   |                     [confirm]  ---> (') --->>>        
+ *     |   |
+ *     |   |
+ *     |  (')(')(') (thrice) ---> Factory mode
+ *     |                              |
+ *     |                             (*)
+ *     |                              |
+ *     |                             SA-Valve -----> (') -----> SB-Valve ----> (') ----> BKP-Valve ----> (') ----> Compressor ---> (')----->>>
+ *     |                              |
+ *     |                             (*)                          < do >                  < do >                     < do >
+ *     |                              |
+ *     |                             OPEN ---> (') ---> CLOSE ---> (') -->.
+ *     |                              |                                   |
+ *     |                              '------- <------------ <------------'
+ *     |
+ *     |
+ *    (')(')(')(')(') (5 times) --> Calibration mode
+ *                                    |
+ *                                   (*)
+ *                                    |
+ *                                   O2 Sensor -----> (') -----> Press-sensor ----->>>
+ *                                    |
+ *                                   (*)                          < do >                  
+ *                                    |
+ *                                    |------- <------------ <------- <------------.
+ *                                    |                                            |
+ *                                    0% ---> (') ---> 21% ---> (') ---> 100% ---->'
+ *                                    |            |    |            |    |        |  
+ *                                   (*)           ^   (*)           ^   (*)       ^
+ *                                    |            |    |            |    |        |
+ *                                  [Save] --->----'  [Save] --->----'  [Save] -->-'
+ *                                  
+ *                                                                       
+ */
+ 
 
 void ui_task_main (void)    {
-
-    static int            button_debounce_delay;
-    static unsigned long  time_tag;
+   
+    //static unsigned long  time_tag;
     static unsigned int   state_time;
     char                  str_temp[6];
     char                  str_temp2[6];
 
-    buttonState = digitalRead(buttonPin);
+    //buttonState = digitalRead(buttonPin);
 
     if (f_sec_change_ui_task) {
         f_sec_change_ui_task = 0;
         state_time++;
     }
 
-    if (buttonState == BUTTON_ACTIVE) {   // press detection
-        button_debounce_delay++;
-        if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
-            button_debounce_delay = 0;
-            button_pressed = true;
-        }
-        // temp
-        DBG_PRINT  ("button_debounce_delay : ");
-        DBG_PRINTLN(button_debounce_delay);
-    }
-    else {  // release detection
-        if (button_debounce_delay)
-            button_debounce_delay--;
-        if (button_debounce_delay == 0)    {
-            if (button_pressed) {
-                button_pressed = false;
-                button_press_count++;
-                time_tag = systemtick_msecs;
-                // temp
-                DBG_PRINT  ("button_press_count : ");
-                DBG_PRINTLN(button_press_count);
-            }
-        }
-
-    }
-
-
     switch (ui_state)
     {
         case UI_START:
             //if (powerUpTimer.check())   {
-            if (state_time >= 5) {
+            if (state_time >= TIME_TO_ENTER_FACTORY_MODE) {
                 ui_state = UI_SYS_INIT;
                 lcd.setCursor(0, 3);
-                button_press_count = 0;
+                bttn_press_cnt = 0;
                 lcd.print("Press ButtonToStart!");
             }
-            else if (time_elapsed (time_tag) > 1500) {
-                if (button_press_count >= CALIBRATION_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
+            //else if (time_elapsed (time_tag) > 1500) {
+            else if (state_time > (( 2 * TIME_TO_ENTER_FACTORY_MODE) / 3)) {
+                if (bttn_press_cnt >= CALIBRATION_MODE_ENTRY_CHECK)  {
+                    bttn_press_cnt = 0;
                     ui_state = UI_CALIB_MODE;
                 }
-                else if (button_press_count >= FACTORY_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
+                else if (bttn_press_cnt >= FACTORY_MODE_ENTRY_CHECK)  {
+                    bttn_press_cnt = 0;
                     ui_state = UI_FACTORY_MODE;
                 }
-                if (button_press_count >= CONFIG_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
+                if (bttn_press_cnt >= CONFIG_MODE_ENTRY_CHECK)  {
+                    bttn_press_cnt = 0;
                     ui_state = UI_CONFIG_MODE;
                 }
             }
@@ -181,8 +209,8 @@ void ui_task_main (void)    {
             break;
         case UI_SYS_ON_CHECK:
             // System ON check
-            if (button_pressed == true)  {
-                button_pressed = false;
+            if (bttn_press_detected == true)  {
+                bttn_press_detected = false;
                 f_system_running = true;
 
                 DBG_PRINTLN("Start Button Pressed..!");
@@ -239,10 +267,7 @@ void ui_task_main (void)    {
                 DBG_PRINTLN(lcd_temp_string);
                 lcd.setCursor(0, 1);
                 lcd.print(lcd_temp_string);
-#ifdef  CHANGE_IN_O2_LEVEL
-    
 
-#endif
             }
 
             // LCD Line 3
@@ -263,7 +288,7 @@ void ui_task_main (void)    {
             }
 
             // System OFF check
-            if (button_pressed == true)  {
+            if (bttn_press_detected == true)  {
                 ui_state = UI_SYS_OFF_CHECK;
             }
             else {
@@ -273,8 +298,8 @@ void ui_task_main (void)    {
 
         case UI_SYS_OFF_CHECK:
             // System OFF check
-            if (button_pressed == true)  {
-                button_pressed = false;
+            if (bttn_press_detected == true)  {
+                bttn_press_detected = false;
                 f_system_running = false;
                 DBG_PRINTLN("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
