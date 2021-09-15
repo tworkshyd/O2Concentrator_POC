@@ -15,7 +15,7 @@
 #define O2_VALUE_CHANGE_THRESHOLD   (0.3)    
 
 // 3. Debug logs
-// #define ENABLE_DEBUG_PRINTS
+#define ENABLE_DEBUG_PRINTS
 
 // Select by uncommeting the required events from below list
 //  Note: these uncommented events print only if 'ENABLE_EVENT_LOGS' is enabled 

@@ -120,7 +120,8 @@ void o2_cons_init (void)    {
     //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
     do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
     //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
-    do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
+    // do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
+    do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
     new_delay_msecs (500);
 
 

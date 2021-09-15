@@ -16,3 +16,6 @@
 	# 3rd test build working on first hand prototyped hardware
 		with 3_2_valve_versions_900gms_08092021
 
+13 Sep 2021
+	# Board bringup for Rev 1.0 h/w started
+

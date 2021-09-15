@@ -97,20 +97,44 @@ void platform_init (void) {
     pinMode(RLY_1,          OUTPUT);
     pinMode(RLY_2,          OUTPUT);
     pinMode(RLY_3,          OUTPUT);
-    // pinMode(RLY_4,       OUTPUT);
+    pinMode(RLY_4,          OUTPUT);
+    
+    pinMode(DDIR,           OUTPUT);
+    digitalWrite(DDIR,      HIGH);
 
     pinMode(buzzr_cntrl_pin, OUTPUT);
     pinMode(compr_cntrl_pin, OUTPUT);
-    pinMode(buttonPin,      INPUT );
-    pinMode(buttonPin, INPUT_PULLUP);
+    pinMode(startButtonPin,  INPUT );
+    pinMode(startButtonPin,  INPUT_PULLUP);
+    //pinMode(configButtonPin, INPUT );
+    //pinMode(configButtonPin, INPUT_PULLUP);
+    
 
     // default pin-state
-    /*    digitalWrite(RLY_1,     HIGH);
+    /* 
+        digitalWrite(RLY_1,     HIGH);
         digitalWrite(RLY_2,     HIGH);
         digitalWrite(RLY_3,     HIGH);
-        // igitalWrite(RLY_4,   HIGH);
+        digitalWrite(RLY_4,     HIGH);
     */
-    digitalWrite(buzzr_cntrl_pin, HIGH);
+
+    // temp : test for LCD pins
+/*    while (1)
+    {
+        digitalWrite(RLY_1,     HIGH);
+        digitalWrite(RLY_2,     HIGH);
+        digitalWrite(RLY_3,     HIGH);
+        digitalWrite(RLY_4,     HIGH);
+        delay(1000);
+        digitalWrite(RLY_1,     LOW);
+        digitalWrite(RLY_2,     LOW);
+        digitalWrite(RLY_3,     LOW);
+        digitalWrite(RLY_4,     LOW);
+        delay(1000);
+     }
+*/
+         
+    digitalWrite(buzzr_cntrl_pin, LOW);
     digitalWrite(compr_cntrl_pin, LOW );
 
 
@@ -148,10 +172,10 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
             digitalWrite(PreCharge_Valve_BCKF,  bit_value);
             break;
         case COMPRESSOR_CONTROL:
-            digitalWrite(compr_cntrl_pin,  bit_value);
+            digitalWrite(compr_cntrl_pin,       bit_value);
             break;
         case BUZZER_CONTROL:
-            digitalWrite(buzzr_cntrl_pin, !bit_value);
+            digitalWrite(buzzr_cntrl_pin,       !bit_value);
             break;
         case _7SEG_DATA_CONTROL:
         case _7SEG_CLCK_CONTROL:

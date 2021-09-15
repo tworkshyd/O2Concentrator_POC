@@ -73,7 +73,7 @@ void ui_task_main (void)    {
     char                  str_temp[6];
     char                  str_temp2[6];
 
-    buttonState = digitalRead(buttonPin);
+    buttonState = digitalRead(startButtonPin);
 
     if (f_sec_change_ui_task) {
         f_sec_change_ui_task = 0;
