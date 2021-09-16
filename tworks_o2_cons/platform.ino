@@ -118,38 +118,23 @@ void platform_init (void) {
         digitalWrite(RLY_4,     HIGH);
     */
 
-    // temp : test for LCD pins
-/*    while (1)
-    {
-        digitalWrite(RLY_1,     HIGH);
-        digitalWrite(RLY_2,     HIGH);
-        digitalWrite(RLY_3,     HIGH);
-        digitalWrite(RLY_4,     HIGH);
-        delay(1000);
-        digitalWrite(RLY_1,     LOW);
-        digitalWrite(RLY_2,     LOW);
-        digitalWrite(RLY_3,     LOW);
-        digitalWrite(RLY_4,     LOW);
-        delay(1000);
-     }
-*/
-         
     digitalWrite(buzzr_cntrl_pin, LOW);
     digitalWrite(compr_cntrl_pin, LOW );
 
 
     // Serial 7 segment interface
-    pinMode(dataPin,        OUTPUT);
-    pinMode(clckPin,        OUTPUT);
-    pinMode(csPin,          OUTPUT);
+    pinMode(dataPin_7segment,        OUTPUT);
+    pinMode(clckPin_7segment,        OUTPUT);
+    pinMode(loadPin_7segment,        OUTPUT);
 
-    digitalWrite(dataPin,   LOW );
-    digitalWrite(clckPin,   LOW );
-    digitalWrite(csPin,     LOW );
+    digitalWrite(dataPin_7segment,   LOW );
+    digitalWrite(clckPin_7segment,   LOW );
+    digitalWrite(loadPin_7segment,   LOW );
 
 
     DBG_PRINTLN("GPIO init done..");
 
+    
 
 }
 
@@ -211,3 +196,23 @@ unsigned long int time_elapsed (unsigned long int time_delay)  {
     return systemtick_msecs - time_delay;
 
 }
+
+
+
+
+/////////////////// scrap area /////////////////////////////////
+/*
+    // temp : test for LCD pins
+    while (1)
+    {
+        digitalWrite(dataPin_7segment,   LOW );
+        digitalWrite(clckPin_7segment,   LOW );
+        digitalWrite(loadPin_7segment,   LOW );
+        delay(1000);
+        digitalWrite(dataPin_7segment,   HIGH );
+        digitalWrite(clckPin_7segment,   HIGH );
+        digitalWrite(loadPin_7segment,   HIGH );
+        delay(1000);
+        
+     }
+*/

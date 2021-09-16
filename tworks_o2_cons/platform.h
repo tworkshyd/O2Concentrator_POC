@@ -172,9 +172,9 @@
 #define configButtonPin     (3)    
 
 // Serial 7-segment display signals
-#define dataPin             (5)     
-#define clckPin             (7)    
-#define csPin               (13)    
+#define dataPin_7segment    (5)     
+#define clckPin_7segment    (7)    
+#define loadPin_7segment    (13)    
 
 // 8. Encoder input
 #define encoderButtonPin    (8)    

@@ -37,6 +37,10 @@ void setup (void) {
     ui_init ();
     ads_init ();
     o2_cons_init ();
+    init_7segments ();
+
+    // temp
+    test_7segments ();
 
 }
 
