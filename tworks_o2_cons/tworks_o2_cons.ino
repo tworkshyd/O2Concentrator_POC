@@ -41,6 +41,8 @@ void setup (void) {
 
     // temp
     test_7segments ();
+    display_o2 (93.5);
+    display_run_hours (3546);
 
 }
 

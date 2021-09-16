@@ -52,6 +52,9 @@ void init_7segments (void);
 void display_banner (void);
 void scrollDigits   (void);
 void test_7segments (void);
+void display_o2     (float o2value);
+void display_run_hours (uint32_t runhours);
+
 
 // initialize the library by associating any needed LCD interface pin
 // as per aurdino nano - base board,  SCH Dated: 09-02-2021

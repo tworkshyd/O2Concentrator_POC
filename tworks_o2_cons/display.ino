@@ -42,22 +42,34 @@ void init_7segments (void) {
  word "Arduino" one after the other on digit 0. 
  */
 void display_banner (void) {
+
+    /*
+     * a = 'a'      j = 
+     * b =          k = 
+     * c =          l = 
+     * d = 'd'      m =
+     * e =          n = 
+     * f =
+     * g =
+     * h =
+     * i = 
+     */
     
-    lc.setChar(0,0,'a',false);
-    delay(delaytime);
-    lc.setRow(0,0,0x05);
-    delay(delaytime);
-    lc.setChar(0,0,'d',false);
-    delay(delaytime);
-    lc.setRow(0,0,0x1c);
-    delay(delaytime);
     lc.setRow(0,0,B00010000);
     delay(delaytime);
-    lc.setRow(0,0,0x15);
+    lc.setRow(0,1,B00010000);
     delay(delaytime);
-    lc.setRow(0,0,0x1D);
+    lc.setRow(0,2,B00010000);
     delay(delaytime);
-    lc.clearDisplay(0);
+    lc.setRow(0,3,B00010000);
+    delay(delaytime);
+    lc.setRow(0,4,B00010000);
+    delay(delaytime);
+    lc.setRow(0,5,B00010000);
+    delay(delaytime);
+    lc.setRow(0,6,B00010000);
+    delay(delaytime);
+    lc.setRow(0,7,B00010000);
     delay(delaytime);
     
 } 
@@ -69,16 +81,16 @@ void display_banner (void) {
  */
 void scrollDigits (void) {
     
-    for(int i=0;i<13;i++) 
+    for(int i = 0; i < 13; i++) 
     {
-        lc.setDigit(0,7, 8,false);
-        lc.setDigit(0,6, 8,false);
-        lc.setDigit(0,5, 8,false);
-        lc.setDigit(0,4, 8,false);
-        lc.setDigit(0,3, 8,false);
-        lc.setDigit(0,2, 8,false);
-        lc.setDigit(0,1, 8,false);
-        lc.setDigit(0,0, 8,false);
+        lc.setDigit(0, 7, 8, false);
+        lc.setDigit(0, 6, 8, false);
+        lc.setDigit(0, 5, 8, false);
+        lc.setDigit(0, 4, 8, false);
+        lc.setDigit(0, 3, 8, false);
+        lc.setDigit(0, 2, 8, false);
+        lc.setDigit(0, 1, 8, false);
+        lc.setDigit(0, 0, 8, false);
         delay(delaytime);
     }
     
@@ -93,6 +105,68 @@ void test_7segments (void) {
   scrollDigits();
   
 }
+
+#define TOTAL_DIGITS    (7)
+#define DIGIT_VALUE_MAX (9)
+
+
+void disp_digit_on_7seg (uint8_t place, uint8_t value)   {
+
+    if (place > TOTAL_DIGITS  &&  value > DIGIT_VALUE_MAX)  {
+        // invalid parameters
+        return;
+    }
+
+    lc.setDigit (0, place, value, false);
+    
+}
+
+void display_o2 (float o2value) {
+
+    uint16_t     int_o2value;
+    uint8_t     decimal_digit;
+    uint8_t     unit_digit;
+    uint8_t     tens_digit;
+
+    int_o2value   = (uint16_t)(o2value * 10);
+    decimal_digit = int_o2value % 10;
+    int_o2value   = int_o2value / 10;
+    unit_digit    = int_o2value % 10;
+    int_o2value   = int_o2value / 10;
+    tens_digit    = int_o2value % 10;
+    
+    
+    lc.setDigit(0, 0, tens_digit,    false);
+    lc.setDigit(0, 1, unit_digit,    true);
+    lc.setDigit(0, 2, decimal_digit, false);
+   
+    
+}
+
+void display_run_hours (uint32_t runhours) {
+
+    uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
+
+    unit_digit    = runhours % 10;
+    runhours      = runhours / 10;
+    tens_digit    = runhours % 10;
+    runhours      = runhours / 10;
+    hund_digit    = runhours % 10;
+    runhours      = runhours / 10;
+    thnd_digit    = runhours % 10;
+    runhours      = runhours / 10;    
+    ten_th_digit  = runhours % 10;
+    runhours      = runhours / 10;
+
+    
+    lc.setDigit(0, 3, ten_th_digit, false);
+    lc.setDigit(0, 4, thnd_digit,   false);
+    lc.setDigit(0, 5, hund_digit,   false);
+    lc.setDigit(0, 6, tens_digit,   false);
+    lc.setDigit(0, 7, unit_digit,   false);   
+    
+}
+
 
 /*
 
@@ -121,6 +195,47 @@ void test_7segments (void) {
 
     }*/
 
+
+////// scratch pad ////////////////////////////
+
+/*
+ 
+ This method will display the characters for the
+ word "Arduino" one after the other on digit 0. 
+/*
+void display_banner (void) {
+
+    //
+     * a = 'a'      j = 
+     * b =          k = 
+     * c =          l = 
+     * d = 'd'      m =
+     * e =          n = 
+     * f =
+     * g =
+     * h =
+     * i = 
+     
+    
+    lc.setChar(0,0,'a',false);
+    delay(delaytime);
+    lc.setRow(0,0,0x05);
+    delay(delaytime);
+    lc.setChar(0,0,'d',false);
+    delay(delaytime);
+    lc.setRow(0,0,0x1c);
+    delay(delaytime);
+    lc.setRow(0,0,B00010000);
+    delay(delaytime);
+    lc.setRow(0,0,0x15);
+    delay(delaytime);
+    lc.setRow(0,0,0x1D);
+    delay(delaytime);
+    lc.clearDisplay(0);
+    delay(delaytime);
+    
+} 
+ */
 
 
     
