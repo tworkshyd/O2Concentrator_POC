@@ -43,8 +43,8 @@ void setup (void) {
 
     // temp
     test_7segments ();
-    display_o2 (93.5);
-    display_run_hours (3546);
+    display_o2 (00.0);
+    display_run_hours (total_run_time_secs);
 
 }
 
@@ -76,15 +76,13 @@ void loop (void) {
 
         o2_sensor_scan ();
         // read_pressure ();
-        display_o2 (o2_concentration);
-        
+        display_o2 (o2_concentration);       
         DBG_PRINT (".");
-
     }
     else if (f_1min) {
         f_1min = 0;
         // 1 minute tasks go here..
-
+        
     }
     else if (f_1hr) {
         f_1hr = 0;
@@ -141,15 +139,48 @@ void o2_cons_init (void)    {
 void o2_main_task (void)    {
 
     static unsigned long int time_tag;
+    static uint8_t           quadrant;
+    
 
     if (f_system_running != true) {
         return;
     }
+    
     if (f_sec_change_o2_task) {
         f_sec_change_o2_task = 0;
-        production_time_secs++;
-    }
+        current_run_time_secs++;
+        total_run_time_secs++;
 
+
+      // display run hours, 45 seconds current run hours, 15 seconds total runhours
+      int secs = ( current_run_time_secs %  60);
+      int mins = ((current_run_time_secs % (60 * 60)) / 60);
+      int hrs  = ( current_run_time_secs / (60 * 60));
+         
+      if ((current_run_time_secs % 15) == 0) {
+        quadrant++;
+        switch (quadrant) 
+        {
+            case 0:
+            case 1:
+            case 2:
+              display_run_time(hrs, mins);
+              break;
+           case 3:
+              // just to avoid divide by '0'
+              if (total_run_time_secs) {
+                 hrs = (total_run_time_secs / (60 * 60));
+              }
+              else {
+                hrs = 0;
+              }
+              display_run_hours(hrs);
+              quadrant = 0;
+              break;
+        }
+      }
+    }
+    
     if (time_elapsed (time_tag) < nb_delay)  {
         return;
     }
@@ -169,6 +200,7 @@ void o2_main_task (void)    {
         DBG_PRINT ("nb_delay : ");
         DBG_PRINTLN (nb_delay);
     }
+    
 
 }
 

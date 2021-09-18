@@ -57,9 +57,9 @@ void log_dump (void)  {
     Serial.print (lcd_temp_string);
 
     // 2. system run time
-    int secs = ( production_time_secs %  60);
-    int mins = ((production_time_secs % (60 * 60)) / 60);
-    int hrs  = ( production_time_secs / (60 * 60));
+    int secs = ( current_run_time_secs %  60);
+    int mins = ((current_run_time_secs % (60 * 60)) / 60);
+    int hrs  = ( current_run_time_secs / (60 * 60));
     sprintf(lcd_temp_string, "%02d:%02d:%02d ", hrs, mins, secs);
     Serial.print (lcd_temp_string);
 

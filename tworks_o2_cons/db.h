@@ -28,7 +28,10 @@ extern float           o2_concentration;
 extern float           output_pressure;
 extern float           prev_o2_concentration;
 extern float           prev_output_pressure;
-extern unsigned int    production_time_secs;
+
+extern unsigned int    current_run_time_secs;
+extern unsigned int    prev_current_run_time_secs;
+extern unsigned long   total_run_time_secs;
 
 
 extern unsigned long int Production_Delay;     // delay variable creation

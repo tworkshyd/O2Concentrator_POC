@@ -250,12 +250,12 @@ void ui_task_main (void)    {
             // blank for now
 
             // LCD Line 4
-            if (prev_production_time_secs ^ production_time_secs) {
-                prev_production_time_secs = production_time_secs;
+            if (prev_current_run_time_secs ^ current_run_time_secs) {
+                prev_current_run_time_secs = current_run_time_secs;
 
-                int secs = ( production_time_secs %  60);
-                int mins = ((production_time_secs % (60 * 60)) / 60);
-                int hrs  = ( production_time_secs / (60 * 60));
+                int secs = ( current_run_time_secs %  60);
+                int mins = ((current_run_time_secs % (60 * 60)) / 60);
+                int hrs  = ( current_run_time_secs / (60 * 60));
                 sprintf(lcd_temp_string, "RUN TIME  %02d:%02d:%02d", hrs, mins, secs);
                 DBG_PRINTLN(lcd_temp_string);
                 lcd.setCursor(0, 3);

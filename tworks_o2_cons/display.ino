@@ -167,6 +167,34 @@ void display_run_hours (uint32_t runhours) {
     
 }
 
+void display_run_time (uint16_t hours, uint16_t mins) {
+
+    uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
+
+    // validate parameters
+    mins  = mins % 60;
+    hours = hours % 999;
+
+    unit_digit    = mins % 10;
+    mins          = mins / 10;
+    tens_digit    = mins % 10;
+    // : 
+    hund_digit    = hours % 10;
+    hours         = hours / 10;
+    thnd_digit    = hours % 10;
+    hours         = hours / 10;    
+    ten_th_digit  = hours % 10;
+
+    
+    lc.setDigit(0, 3, ten_th_digit, false);
+    lc.setDigit(0, 4, thnd_digit,   false);
+    lc.setDigit(0, 5, hund_digit,   true);
+    // lc.setDigit(0, 6, tens_digit,   true);
+    lc.setDigit(0, 6, tens_digit,   false);
+    lc.setDigit(0, 7, unit_digit,   false);   
+    
+}
+
 
 /*
 

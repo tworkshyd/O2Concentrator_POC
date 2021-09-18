@@ -22,8 +22,10 @@ float           prev_o2_concentration;
 float           output_pressure  = 25.03;
 float           prev_output_pressure  = 25;
 
-unsigned int    production_time_secs;
-unsigned int    prev_production_time_secs;
+unsigned int    current_run_time_secs;
+unsigned int    prev_current_run_time_secs;
+unsigned long   total_run_time_secs;
+
 
 unsigned long int Production_Delay;     // delay variable creation
 volatile unsigned long int Flush_Delay;          // delay variable creation

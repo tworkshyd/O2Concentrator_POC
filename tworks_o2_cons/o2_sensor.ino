@@ -9,9 +9,10 @@
 
 #define NUM_OF_SAMPLES_O2   (3)
 
-float y_samples[NUM_OF_SAMPLES_O2]   = {0.0, 20.9, 100.0};
-//float x_samples[NUM_OF_SAMPLES_O2] = {28.375, 141.75, 633.75};
-float x_samples[NUM_OF_SAMPLES_O2]   = {224.0, 1083.0, 4888.0};
+float y_samples[NUM_OF_SAMPLES_O2]   = {  0.0,    20.9,  100.0};
+//float x_samples[NUM_OF_SAMPLES_O2] = { 28.375, 141.75, 633.75};
+float x_samples[NUM_OF_SAMPLES_O2]   = {  94.0, 1005.0, 4888.0};  // default calib values
+//float x_samples[NUM_OF_SAMPLES_O2] = {224.0,  1083.0, 4888.0};
 
 
 
