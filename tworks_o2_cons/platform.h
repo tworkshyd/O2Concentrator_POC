@@ -208,8 +208,8 @@
 // Relay OFF -> valve Close
 // The valves are NC (Normally Closed) type
 //------------------------------------------------
-#define OPEN_VALVE          (LOW)
-#define CLOSE_VALVE         (HIGH)
+#define OPEN_VALVE          (HIGH)
+#define CLOSE_VALVE         (LOW)
 
 //------------------------------------------------
 // Practical observations:

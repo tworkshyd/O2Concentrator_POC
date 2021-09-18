@@ -28,7 +28,7 @@ enum DO_CONTROLS_E {
 
 
 bool do_control (DO_CONTROLS_E do_id, bool bit_value);
-
+void tworks2_values_to_default_postion (void);
 
 
 

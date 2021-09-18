@@ -111,7 +111,7 @@ void ui_task_main (void)    {
     {
         case UI_START:
             //if (powerUpTimer.check())   {
-            if (state_time >= 5) {
+            if (state_time >= 10) {
                 ui_state = UI_SYS_INIT;
                 lcd.setCursor(0, 3);
                 button_press_count = 0;
@@ -145,7 +145,7 @@ void ui_task_main (void)    {
             lcd.setCursor(0, 1);
             lcd.print("O2 sensorCalibration");
             multi_beeps (5);
-
+            
             ui_state = UI_SYS_INIT;
             break;
         case UI_FACTORY_MODE:
@@ -282,6 +282,9 @@ void ui_task_main (void)    {
                 COMPRSSR_CNTRL (COMPRSSR_OFF);
                 beep_for (SYS_OFF_BEEP);   // msecs
 
+                // Bring values to default position
+                tworks2_values_to_default_postion ();
+
                 new_delay_msecs (1000);
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Stopping.. ");
@@ -321,13 +324,13 @@ void power_on_self_test (void) {
 
     // 1. Relay Z1TSOL
     lcd.setCursor(0, 2);
-    lcd.print("Z1TSOL - OPEN   ");
+    lcd.print("Z1TSOL - CLOSE  ");
     digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
     beep_for (HIGH_BEEP);   // msecs
     new_delay_msecs (5000);
 
     lcd.setCursor(0, 2);
-    lcd.print("Z1TSOL - CLOSE  ");
+    lcd.print("Z1TSOL - OPEN   ");
     digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
     beep_for (LOW_BEEP);   // msecs
 
@@ -336,25 +339,25 @@ void power_on_self_test (void) {
 
     // 2. Relay Z2TSOL
     lcd.setCursor(0, 2);
-    lcd.print("Z2TSOL - OPEN   ");
+    lcd.print("Z2TSOL - CLOSE  ");
     digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
     beep_for (HIGH_BEEP);   // msecs
     new_delay_msecs (5000);
     lcd.setCursor(0, 2);
-    lcd.print("Z2TSOL - CLOSE  ");
+    lcd.print("Z2TSOL - OPEN   ");
     digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
     beep_for (LOW_BEEP);   // msecs
     new_delay_msecs (2000);
 
     // 3. Relay BCKFSOL
     lcd.setCursor(0, 2);
-    lcd.print("BCKFSOL - OPEN  ");
+    lcd.print("BCKFSOL - CLOSE ");
     digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
     beep_for (HIGH_BEEP);   // msecs
     new_delay_msecs (5000);
 
     lcd.setCursor(0, 2);
-    lcd.print("BCKFSOL - CLOSE ");
+    lcd.print("BCKFSOL - OPEN  ");
     digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
     beep_for (LOW_BEEP);   // msecs
     new_delay_msecs (2000);
@@ -369,24 +372,24 @@ void power_on_self_test (void) {
     //        "...................."
     lcd.print("Opening releaseValvs");
     beep_for (HIGH_BEEP);   // msecs
-    digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
-    digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
+    digitalWrite(Sieve_A_Valve_Z1,      CLOSE_VALVE);
+    digitalWrite(Sieve_B_Valve_Z2,      CLOSE_VALVE);
     new_delay_msecs (1000);
 
     lcd.setCursor(0, 2);
     lcd.print("Compressor - ON     ");
-    digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
+    COMPRSSR_CNTRL (COMPRSSR_ON);
     beep_for (HIGH_BEEP);   // msecs
     new_delay_msecs (5000);
-    COMPRSSR_CNTRL (COMPRSSR_ON);
+    
 
     BUUZZER_CNTRL (BUZZ_OFF);
-    COMPRSSR_CNTRL (COMPRSSR_OFF);
-    lcd.setCursor(0, 2);
-    lcd.print("Compressor - OFF    ");
-    digitalWrite(PreCharge_Valve_BCKF,  CLOSE_VALVE);
+
     beep_for (LOW_BEEP);   // msecs
     new_delay_msecs (1000);
+    lcd.setCursor(0, 2);
+    lcd.print("Compressor - OFF    ");
+    COMPRSSR_CNTRL (COMPRSSR_OFF);
 
     lcd.clear();
     lcd.setCursor(0, 3);

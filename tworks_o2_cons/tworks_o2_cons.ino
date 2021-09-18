@@ -33,9 +33,8 @@ void setup (void) {
     Serial.begin (115200);
     DBG_PRINTLN ("Serial port initialized..!!");
     platform_init ();
-    db_init ();
-    ui_init ();
     ads_init ();
+    db_init ();
     //temp
     // test_ads1115 ();
     o2_cons_init ();
@@ -43,8 +42,10 @@ void setup (void) {
 
     // temp
     test_7segments ();
+    
     display_o2 (00.0);
-    display_run_hours (total_run_time_secs);
+    display_run_hours (total_run_time_secs);    
+    ui_init ();
 
 }
 
@@ -123,12 +124,12 @@ void o2_cons_init (void)    {
 
     // STARTUP PURGE
     //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
-    do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);
+    do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);
     //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
-    do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
+    do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
     //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
-    // do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
-    do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
+    // do_control (SIEVE_FLUSH_VLV_CNTRL, CLOSE_VALVE);
+    do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
     new_delay_msecs (500);
 
 
@@ -268,6 +269,18 @@ void tworks3_PSA_logic (void)  {
 
 }
 
+
+void tworks2_values_to_default_postion (void)  {
+
+
+    //**************************************************************************
+    do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
+    do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE); 
+
+
+}
+
+            
 void tworks2_PSA_logic (void)  {
 
     switch (cycle)
