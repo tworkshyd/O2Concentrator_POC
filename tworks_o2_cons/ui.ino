@@ -190,13 +190,14 @@ void ui_task_main (void)    {
                 lcd.print("Start Button Pressed");
                 beep_for (SYS_ON_BEEP);   // msecs
 
-                COMPRSSR_CNTRL (COMPRSSR_ON);
-                new_delay_msecs (1000);
+                
+                // new_delay_msecs (1000);
 
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Starting... ");
                 new_delay_msecs (1000);
-
+                // COMPRSSR_CNTRL (COMPRSSR_ON);
+                
                 ui_state = UI_SYS_RUNNING;
             }
             break;

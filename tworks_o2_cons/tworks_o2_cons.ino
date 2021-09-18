@@ -141,10 +141,18 @@ void o2_main_task (void)    {
 
     static unsigned long int time_tag;
     static uint8_t           quadrant;
+    static uint8_t           once_done;
     
 
     if (f_system_running != true) {
+        once_done = 0;
         return;
+    }
+    else {
+        if (!once_done) {
+          once_done = 1;
+          COMPRSSR_CNTRL (COMPRSSR_ON);
+        }
     }
     
     if (f_sec_change_o2_task) {
