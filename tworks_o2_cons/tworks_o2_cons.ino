@@ -167,13 +167,7 @@ void o2_main_task (void)    {
               display_run_time(hrs, mins);
               break;
            case 3:
-              // just to avoid divide by '0'
-              if (total_run_time_secs) {
-                 hrs = (total_run_time_secs / (60 * 60));
-              }
-              else {
-                hrs = 0;
-              }
+              hrs = (total_run_time_secs / (60 * 60));
               display_run_hours(hrs);
               quadrant = 0;
               break;

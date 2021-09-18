@@ -6,7 +6,7 @@
 
 char     lcd_temp_string[LCD_COLS + 1];
 /* we always wait a bit between updates of the display */
-unsigned long delaytime = 250;
+unsigned long delaytime = 50;
 
 
 
@@ -163,8 +163,46 @@ void display_run_hours (uint32_t runhours) {
     lc.setDigit(0, 4, thnd_digit,   false);
     lc.setDigit(0, 5, hund_digit,   false);
     lc.setDigit(0, 6, tens_digit,   false);
+    lc.setDigit(0, 7, unit_digit,   false);  
+     
+    // 10,000th digit
+    if (ten_th_digit) {
+      lc.setDigit(0, 3, ten_th_digit, false);
+    }
+    else {
+      lc.setRow(0, 3, 0b00000000);
+    }
+    // 1000th digit
+    if (thnd_digit) {
+      lc.setDigit(0, 4, thnd_digit, false);
+    }
+    else {
+      lc.setRow(0, 4, 0b00000000);
+    }
+
+    // 100th digit
+    //lc.setDigit(0, 5, hund_digit,   true);
+    if (hund_digit) {
+      lc.setDigit(0, 5, hund_digit, false);
+    }
+    else {
+      lc.setRow(0, 5, 0b00000000);
+    }
+
+    // 10th digit
+    // lc.setDigit(0, 6, tens_digit,   true);
+    //lc.setDigit(0, 6, tens_digit,   false);
+    if (tens_digit) {
+      lc.setDigit(0, 6, tens_digit, false);
+    }
+    else {
+      lc.setRow(0, 6, 0b00000000);
+    }
+
+    // unit's digit
     lc.setDigit(0, 7, unit_digit,   false);   
-    
+
+        
 }
 
 void display_run_time (uint16_t hours, uint16_t mins) {
@@ -186,11 +224,29 @@ void display_run_time (uint16_t hours, uint16_t mins) {
     ten_th_digit  = hours % 10;
 
     
-    lc.setDigit(0, 3, ten_th_digit, false);
-    lc.setDigit(0, 4, thnd_digit,   false);
+    // 10,000th digit
+    if (ten_th_digit) {
+      lc.setDigit(0, 3, ten_th_digit, false);
+    }
+    else {
+      lc.setRow(0, 3, 0b00000000);
+    }
+    // 1000th digit
+    if (thnd_digit) {
+      lc.setDigit(0, 4, thnd_digit, false);
+    }
+    else {
+      lc.setRow(0, 4, 0b00000000);
+    }
+
+    // 100th digit
     lc.setDigit(0, 5, hund_digit,   true);
+
+    // 10th digit
     // lc.setDigit(0, 6, tens_digit,   true);
     lc.setDigit(0, 6, tens_digit,   false);
+
+    // unit's digit
     lc.setDigit(0, 7, unit_digit,   false);   
     
 }

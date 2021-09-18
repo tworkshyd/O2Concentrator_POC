@@ -168,8 +168,8 @@
 //#define LM35_Out_adc      (A1)
 
 // 6. Button input
-#define startButtonPin      (4)    
-#define configButtonPin     (3)    
+#define startButtonPin      (3)    
+#define configButtonPin     (4)    
 
 // Serial 7-segment display signals
 #define dataPin_7segment    (5)     
