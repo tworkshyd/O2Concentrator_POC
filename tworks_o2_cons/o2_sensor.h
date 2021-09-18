@@ -6,7 +6,7 @@
 
 
 
-#define   O2_SENSOR_ADS_ADDR  (0x49)  // for O2 sensor board of Ventilator project
+#define   O2_SENSOR_ADS_ADDR  (0x48)  // for O2 sensor board of Ventilator project
 
 
 /**
@@ -25,9 +25,14 @@
 
 
 #define O2_SENSOR_CHANNEL_NO      (0)
+#define TEMPR_SENSOR_1_CHANNEL_NO (1)
+#define TEMPR_SENSOR_2_CHANNEL_NO (2)
+#define PRESSURE_SENSOR_CHANNL_NO (3)
 
-int sensor_zero_calibration (void);
 
+
+int  sensor_zero_calibration  (void);
+void test_ads1115             (void);
 
 
 

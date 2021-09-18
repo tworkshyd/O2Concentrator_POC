@@ -36,6 +36,8 @@ void setup (void) {
     db_init ();
     ui_init ();
     ads_init ();
+    //temp
+    // test_ads1115 ();
     o2_cons_init ();
     init_7segments ();
 
@@ -74,7 +76,8 @@ void loop (void) {
 
         o2_sensor_scan ();
         // read_pressure ();
-
+        display_o2 (o2_concentration);
+        
         DBG_PRINT (".");
 
     }
