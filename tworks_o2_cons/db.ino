@@ -41,6 +41,12 @@ volatile float    o2_const_val;
 volatile float    m_raw_voltage;
 
 
+uint8_t year, month, weekday, day, hour, minute, second;
+bool    period = 0;
+String  m[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "Septumber", "October", "November", "December"};
+String  w[7]  = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
+
 void db_init (void) {
 
     f_system_running = 0;

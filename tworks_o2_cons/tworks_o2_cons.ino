@@ -6,6 +6,8 @@
 
 //#include <UniversalTimer.h>
 #include <extEEPROM.h>
+#include "RTCDS1307.h"
+
 
 #include "o2_sensor.h"
 #include "platform.h"
@@ -20,16 +22,14 @@
 // Sytem tick time
 #define TICK_time (10)
 
-extEEPROM eep(kbits_64, 1, 8);         //device size, number of devices, page size
-
+extEEPROM eep(kbits_64, 1, 8);        // device size, number of devices, page size
+RTCDS1307 rtc (0x68);                 // address of RTC DS1307
 
 unsigned char cycle;
 
 
-
 void o2_cons_init (void);
 void o2_main_task (void);
-
 
 
 void setup (void) {
@@ -43,6 +43,10 @@ void setup (void) {
     //temp
     // test_ads1115 ();
 
+    // RTC DS1307 initialization
+    rtc.begin();
+    rtc.setDate(21, 9, 20);
+    rtc.setTime(21, 35, 55);
 
     uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
     if (eepStatus) {
@@ -51,10 +55,14 @@ void setup (void) {
       while (1);
     }
 
+    
     eeprom_init ();
     // temp
     // eeptest ();
-    
+    while (1)
+    {
+      rtc_test ();
+    }
     
     o2_cons_init ();
     init_7segments ();
