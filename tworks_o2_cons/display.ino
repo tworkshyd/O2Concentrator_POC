@@ -118,18 +118,6 @@ void test_7segments (void) {
  *   From host controller 3 pins are used for interface 
  *    MISO, PD6 & PD7, these are connected from display board JP5 connector to 
  *    J1 connector of LED Board1, LED Board2 is cascaed with LED Board1
- *   
- *   LED orientation for data 000 to 111 on these control bits is ..
- *   
- *   PD7  PD6   MISO          A0  A1  A2  A3  A4  a0  a1
- *    0    0     0            -   -   -   -   -   -   1 
- *    0    0     1            -   -   -   1   -   -   - 
- *    0    1     0            -   1   -   -   -   -   - 
- *    0    1     1            -   -   -   -   -   1   - 
- *    1    0     0            1   -   -   -   -   -   - 
- *    1    0     1            -   -   -   -   1   -   - 
- *    1    1     0            -   -   1   -   -   -   - 
- *    1    1     1            -   -   -   -   -   -   - 
  *    
  */
 
@@ -137,19 +125,28 @@ void test_7segments (void) {
 #define NEO_PIXCELL_LED_COUNT   (7)
 void test_neo_pixcell_leds (void) {
 
-    static int    count;
+    int    count;
 
+    Serial.println("Testing Neo LEDs..");
+
+    count = 0;
+    for (count = 0; count <= 7; count++)
+    {
     
-
-    count++;
-    if (count > NEO_PIXCELL_LED_COUNT) {
-        count = 0;
+        digitalWrite(MISO_pin,    count & 0x04);
+        digitalWrite(PD6_pin,     count & 0x02);
+        digitalWrite(PD7_pin,     count & 0x01);
+    
+        delay(200);
+        Serial.print("NEO LED no: ");
+        Serial.println(count);
     }
-    
-    digitalWrite(MISO_pin,    count & 0x01);
-    digitalWrite(PD6_pin,     count & 0x02);
-    digitalWrite(PD7_pin,     count & 0x04);
-    
+
+    Serial.println("Testing Neo LEDs.. done");
+    // OFF all be fore leaving
+    digitalWrite(MISO_pin,    0);
+    digitalWrite(PD6_pin,     0);
+    digitalWrite(PD7_pin,     0);
 }
 
 
@@ -161,14 +158,19 @@ void neo_pixcel_data (enum ERROR_CODE_E error_no, uint8_t  on_off) {
 
     switch (error_no)
     {
-        case TRN_DISPLAY:           code_bit = a0;   break;          
-        case CRN_DISPLAY:           code_bit = a1;   break;
-        
-        case LOW_O2_PURITY:         code_bit = A4;   break;
-        case OUTPUT_FLOW_OBSTRUCT:  code_bit = A3;   break;
-        case POWER_FAIL:            code_bit = A2;   break;
-        case UNIT_OVER_HEAT:        code_bit = A1;   break;
         case UNUSED_LED:            code_bit = A0;   break;
+        case UNIT_OVER_HEAT:        code_bit = A1;   break;
+        case POWER_FAIL:            code_bit = A2;   break;
+        case OUTPUT_FLOW_OBSTRUCT:  code_bit = A3;   break;
+        case LOW_O2_PURITY:         code_bit = A4;   break;
+        
+        case CRN_DISPLAY:           code_bit = a0;   break;
+        case TRN_DISPLAY:           code_bit = a1;   break;          
+
+        case ALL_LEDs_OFF:              
+            code_bit = 0;    
+            led_byte = 0;
+            break;   // temp fix, need to revisit here
         default:
           // nop
           break;
@@ -181,10 +183,10 @@ void neo_pixcel_data (enum ERROR_CODE_E error_no, uint8_t  on_off) {
         led_byte &= ~code_bit;   
     }
             
-    digitalWrite(MISO_pin,    led_byte & 0x01);
+    digitalWrite(MISO_pin,    led_byte & 0x04);
     digitalWrite(PD6_pin,     led_byte & 0x02);
-    digitalWrite(PD7_pin,     led_byte & 0x04);
-  
+    digitalWrite(PD7_pin,     led_byte & 0x01);  
+    
 }
 
 void disp_digit_on_7seg (uint8_t place, uint8_t value)   {

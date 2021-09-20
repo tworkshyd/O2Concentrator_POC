@@ -50,25 +50,25 @@ LedControl      lc = LedControl(dataPin_7segment, clckPin_7segment, loadPin_7seg
  *   
  *   LED orientation for data 000 to 111 on these control bits is ..
  *   
- *   PD7  PD6   MISO          A0  A1  A2  A3  A4  a0  a1
- *    0    0     0            -   -   -   -   -   -   1 
- *    0    0     1            -   -   -   1   -   -   - 
- *    0    1     0            -   1   -   -   -   -   - 
- *    0    1     1            -   -   -   -   -   1   - 
- *    1    0     0            1   -   -   -   -   -   - 
- *    1    0     1            -   -   -   -   1   -   - 
- *    1    1     0            -   -   1   -   -   -   - 
- *    1    1     1            -   -   -   -   -   -   - 
+ *   MISO  PD6  PD7          a1  a0  A4  A3  A2  A1  A0   
+ *    0    0     0            -   -   -   -   -   -   - 
+ *    0    0     1            -   -   -   -   -   -   1 
+ *    0    1     0            -   -   -   -   -   1   - 
+ *    0    1     1            -   -   -   -   1   -   - 
+ *    1    0     0            -   -   -   1   -   -   - 
+ *    1    0     1            -   -   1   -   -   -   - 
+ *    1    1     0            -   1   -   -   -   -   - 
+ *    1    1     1            1   -   -   -   -   -   - 
  *    
  */
-#define   a0  (0b011)
-#define   a1  (0b000)
-#define   A0  (0b100)
-#define   A1  (0b010)
-#define   A2  (0b110)
-#define   A3  (0b001)
-#define   A4  (0b101)
-
+#define   A0        (0b001)
+#define   A1        (0b010) 
+#define   A2        (0b011)
+#define   A3        (0b100)
+#define   A4        (0b101) 
+#define   a0        (0b110)
+#define   a1        (0b111)
+#define   ALL_OFF   (0b000)
 
 enum ALIGN {LEFT, CENTER, RIGHT};
 
@@ -81,7 +81,8 @@ enum ERROR_CODE_E {
     POWER_FAIL,
     UNIT_OVER_HEAT,
     UNUSED_LED,
-    
+
+    ALL_LEDs_OFF
 };
 
 

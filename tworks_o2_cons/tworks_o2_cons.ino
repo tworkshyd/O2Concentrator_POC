@@ -45,10 +45,13 @@ void setup (void) {
 
     // temp
     test_7segments ();
+    test_neo_pixcell_leds ();
+
     
     display_o2 (00.0);
     display_total_run_hours (total_run_time_secs);    
     ui_init ();
+
 
 }
 
@@ -136,6 +139,10 @@ void o2_cons_init (void)    {
     do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
     new_delay_msecs (500);
 
+    // start with TRN display hence light-up TRN LED
+    neo_pixcel_data (ALL_LEDs_OFF, 0);
+    neo_pixcel_data (TRN_DISPLAY, 1); 
+
 
 }
 
@@ -177,6 +184,21 @@ void o2_main_task (void)    {
           if (quadrant > 3) {
               quadrant = 0;
           }
+          switch (quadrant) 
+          {
+              case 0:
+              case 1:
+              case 2:
+                neo_pixcel_data (ALL_LEDs_OFF, 0);
+                delay(333);              
+                neo_pixcel_data (CRN_DISPLAY, 1);
+                break;
+             case 3: 
+                neo_pixcel_data (ALL_LEDs_OFF, 0);
+                delay(333);
+                neo_pixcel_data (TRN_DISPLAY,  1); 
+                break;
+          }          
       }
 
       lc.shutdown (0, false);
@@ -193,14 +215,10 @@ void o2_main_task (void)    {
             case 1:
             case 2:
               display_current_run_time(hrs, mins);
-              neo_pixcel_data (TRN_DISPLAY, 0); 
-              neo_pixcel_data (CRN_DISPLAY, 1);
               break;
            case 3:
               hrs = (total_run_time_secs / (60 * 60));
               display_total_run_hours(hrs);       
-              neo_pixcel_data (TRN_DISPLAY, 1); 
-              neo_pixcel_data (CRN_DISPLAY, 0);   
               break;
         }
       
