@@ -53,8 +53,11 @@ void display_banner (void);
 void scrollDigits   (void);
 void test_7segments (void);
 void display_o2     (float o2value);
-void display_run_time  (uint16_t hours, uint16_t mins);
-void display_run_hours (uint32_t runhours);
+void display_current_run_time_1  (uint16_t hours, uint16_t mins);	// with decimal point after hours
+void display_current_run_time_2  (uint16_t hours, uint16_t mins);	// without decimal point and one digit gap between hours & minutes
+void display_current_run_time_3  (uint16_t hours, uint16_t mins);	// with colon between run hours and minutes by flipping digit2 (from right) of row2
+
+void display_total_run_hours (uint32_t runhours);
 
 
 // initialize the library by associating any needed LCD interface pin

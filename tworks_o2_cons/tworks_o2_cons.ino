@@ -44,7 +44,7 @@ void setup (void) {
     test_7segments ();
     
     display_o2 (00.0);
-    display_run_hours (total_run_time_secs);    
+    display_total_run_hours (total_run_time_secs);    
     ui_init ();
 
 }
@@ -143,7 +143,8 @@ void o2_main_task (void)    {
     static uint8_t           quadrant;
     static uint8_t           once_done;
     
-
+    int secs, mins, hrs;
+    
     if (f_system_running != true) {
         once_done = 0;
         return;
@@ -162,26 +163,37 @@ void o2_main_task (void)    {
 
 
       // display run hours, 45 seconds current run hours, 15 seconds total runhours
-      int secs = ( current_run_time_secs %  60);
-      int mins = ((current_run_time_secs % (60 * 60)) / 60);
-      int hrs  = ( current_run_time_secs / (60 * 60));
+      secs = ( current_run_time_secs %  60);
+      mins = ((current_run_time_secs % (60 * 60)) / 60);
+      hrs  = ( current_run_time_secs / (60 * 60));
          
       if ((current_run_time_secs % 15) == 0) {
+//      if ((current_run_time_secs % 5) == 0) {   // temp to speed up the testing
         quadrant++;
+      }
+
+      //lc.shutdown (0, false);
+      /* Set the brightness to a medium values */
+      lc.setIntensity (0, 0x8);
+      /* and clear the display */
+      lc.clearDisplay (0);
+	  
+	  display_o2 (o2_concentration);  
+      
         switch (quadrant) 
         {
             case 0:
             case 1:
             case 2:
-              display_run_time(hrs, mins);
+              display_current_run_time(hrs, mins);
               break;
            case 3:
               hrs = (total_run_time_secs / (60 * 60));
-              display_run_hours(hrs);
+              display_total_run_hours(hrs);
               quadrant = 0;
               break;
         }
-      }
+      
     }
     
     if (time_elapsed (time_tag) < nb_delay)  {
@@ -203,8 +215,21 @@ void o2_main_task (void)    {
         DBG_PRINT ("nb_delay : ");
         DBG_PRINTLN (nb_delay);
     }
-    
 
+    // repeating display refresh after valves operation..
+//    switch (quadrant) 
+//    {
+//        case 0:
+//        case 1:
+//        case 2:
+//          display_current_run_time(hrs, mins);
+//          break;
+//       case 3:
+//          hrs = (total_run_time_secs / (60 * 60));
+//          display_total_run_hours(hrs);
+//          quadrant = 0;
+//          break;
+//    }
 }
 
 

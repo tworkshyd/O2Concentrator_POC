@@ -283,6 +283,9 @@ void ui_task_main (void)    {
                 COMPRSSR_CNTRL (COMPRSSR_OFF);
                 beep_for (SYS_OFF_BEEP);   // msecs
 
+				// clear current run time counter
+				current_run_time_secs = 0;
+				
                 // Bring values to default position
                 tworks2_values_to_default_postion ();
 

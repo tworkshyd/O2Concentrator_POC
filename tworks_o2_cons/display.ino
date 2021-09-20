@@ -143,7 +143,7 @@ void display_o2 (float o2value) {
     
 }
 
-void display_run_hours (uint32_t runhours) {
+void display_total_run_hours (uint32_t runhours) {
 
     uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
 
@@ -205,7 +205,9 @@ void display_run_hours (uint32_t runhours) {
         
 }
 
-void display_run_time (uint16_t hours, uint16_t mins) {
+
+// 1. with decimal point after hours	
+void display_current_run_time_1 (uint16_t hours, uint16_t mins) {
 
     uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
 
@@ -249,6 +251,58 @@ void display_run_time (uint16_t hours, uint16_t mins) {
     // unit's digit
     lc.setDigit(0, 7, unit_digit,   false);   
     
+}
+
+
+// 2. without decimal point and one digit gap between hours & minutes
+void display_current_run_time_2 (uint16_t hours, uint16_t mins) {
+
+	uint8_t     digit5, digit4, digit3, digit2, digit1;
+
+	// validate parameters
+	mins  = mins % 60;
+	hours = hours % 99;
+
+	digit1	= mins % 10;
+	mins	= mins / 10;
+	digit2	= mins % 10;
+	// blank
+	digit3	= 0b00000000;
+	digit4	= hours % 10;
+	hours	= hours / 10;
+	digit5	= hours % 10;
+
+
+	
+	// digit5
+	if (digit5) {
+		lc.setDigit(0, 3, digit5, false);
+	}
+	else {
+		lc.setRow(0, 3, 0b00000000);
+	}
+	// digit4
+	lc.setDigit(0, 4, digit4, false);
+	
+
+	// digit3
+	lc.setRow(0, 5, 0b00000000);
+	
+	// digit2
+	// lc.setDigit(0, 6, digit2,   true);
+	lc.setDigit(0, 6, digit2,   false);
+
+	// digit1
+	lc.setDigit(0, 7, digit1,   false);
+	
+}
+
+
+// 3. with colon between run hours and minutes by flipping digit2 (from right) of row2
+void display_current_run_time_3  (uint16_t hours, uint16_t mins)	{
+	
+	// todo
+	
 }
 
 

@@ -24,8 +24,13 @@
 #define CHANGE_IN_TEMPERATURE    
 
 
+// void display_current_run_time_1  (uint16_t hours, uint16_t mins);	// with decimal point after hours
+// void display_current_run_time_2  (uint16_t hours, uint16_t mins);	// without decimal point and one digit gap between hours & minutes
+// void display_current_run_time_3  (uint16_t hours, uint16_t mins);	// with colon between run hours and minutes by flipping digit2 (from right) of row2
 
-
+//#define display_current_run_time	display_current_run_time_1
+#define display_current_run_time	display_current_run_time_2
+//#define display_current_run_time	display_current_run_time_3
 
 
 
