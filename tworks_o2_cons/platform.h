@@ -236,4 +236,10 @@ unsigned long time_elapsed    (unsigned long time_delay);
 void          new_delay_msecs (unsigned int  time_delay);
 
 
+////////////////// external eeprom driver //////////////////
+void eeprom_init (void);
+
+
+
+
 #endif

@@ -20,6 +20,7 @@
 // Sytem tick time
 #define TICK_time (10)
 
+extEEPROM eep(kbits_64, 1, 8);         //device size, number of devices, page size
 
 
 unsigned char cycle;
@@ -34,6 +35,16 @@ void o2_main_task (void);
 void setup (void) {
 
     Serial.begin (115200);
+
+    uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
+    if (eepStatus) {
+      Serial.print(F("extEEPROM.begin() failed, status = "));
+      Serial.println(eepStatus);
+      while (1);
+    }
+
+    eeprom_init ();
+        
     DBG_PRINTLN ("Serial port initialized..!!");
     platform_init ();
     ads_init ();
@@ -52,6 +63,8 @@ void setup (void) {
     display_total_run_hours (total_run_time_secs);    
     ui_init ();
 
+
+  
 
 }
 

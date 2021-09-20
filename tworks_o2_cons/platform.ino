@@ -210,6 +210,36 @@ unsigned long int time_elapsed (unsigned long int time_delay)  {
 
 
 
+
+
+
+////////////////// external eeprom driver //////////////////
+void eeprom_init (void) {
+
+    DBG_PRINTLN();
+    DBG_PRINT ("extEEPROM_START_ADDRESS : ");
+    DBG_PRINTLN(extEEPROM_START_ADDRESS);
+    DBG_PRINT ("extEEPROM_SIZE_IN_BITS : ");
+    DBG_PRINTLN(extEEPROM_SIZE_IN_BITS);
+    DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES : ");
+    DBG_PRINTLN(extEEPROM_PAGE_SIZE_IN_BYTES);
+    DBG_PRINT ("extEEPROM_SIZE_IN_BYTES : ");
+    DBG_PRINTLN(extEEPROM_SIZE_IN_BYTES);    
+    DBG_PRINT ("extEEPROM_LAST_ADDRESS : ");
+    DBG_PRINTLN(extEEPROM_LAST_ADDRESS);
+
+    
+  
+}
+
+
+
+
+
+
+
+
+
 /////////////////// scrap area /////////////////////////////////
 /*
     // temp : test for LCD pins
