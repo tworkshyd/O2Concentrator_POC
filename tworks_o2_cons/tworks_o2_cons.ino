@@ -170,14 +170,17 @@ void o2_main_task (void)    {
       mins = ((current_run_time_secs % (60 * 60)) / 60);
       hrs  = ( current_run_time_secs / (60 * 60));
          
-      if ((current_run_time_secs % 15) == 0) {
-//      if ((current_run_time_secs % 5) == 0) {   // temp to speed up the testing
-        quadrant++;
+      // if ((current_run_time_secs % 15) == 0) {
+      if ((current_run_time_secs % 5) == 0) {   // temp to speed up the testing
+          quadrant++;
+          if (quadrant > 3) {
+              quadrant = 0;
+          }
       }
 
       //lc.shutdown (0, false);
       /* Set the brightness to a medium values */
-      lc.setIntensity (0, 0x8);
+      lc.setIntensity (0, _7_SEGMENT_INTENSITY);  // 0x0 TO 0xF
       /* and clear the display */
       lc.clearDisplay (0);
 	  
@@ -192,8 +195,7 @@ void o2_main_task (void)    {
               break;
            case 3:
               hrs = (total_run_time_secs / (60 * 60));
-              display_total_run_hours(hrs);
-              quadrant = 0;
+              display_total_run_hours(hrs);             
               break;
         }
       

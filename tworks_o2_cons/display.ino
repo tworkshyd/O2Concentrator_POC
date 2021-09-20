@@ -32,7 +32,7 @@ void init_7segments (void) {
   lc.shutdown (0, false);
   /* Set the brightness to a medium values */
   //  lc.setIntensity (0, 0x8);
-  lc.setIntensity (0, 0x0F);    // maximum brightness
+  lc.setIntensity (0, _7_SEGMENT_INTENSITY);    // 0xF = maximum brightness
   /* and clear the display */
   lc.clearDisplay (0);
   
