@@ -35,6 +35,14 @@ void o2_main_task (void);
 void setup (void) {
 
     Serial.begin (115200);
+        
+    DBG_PRINTLN ("Serial port initialized..!!");
+    platform_init ();
+    ads_init ();
+    db_init ();
+    //temp
+    // test_ads1115 ();
+
 
     uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
     if (eepStatus) {
@@ -44,13 +52,10 @@ void setup (void) {
     }
 
     eeprom_init ();
-        
-    DBG_PRINTLN ("Serial port initialized..!!");
-    platform_init ();
-    ads_init ();
-    db_init ();
-    //temp
-    // test_ads1115 ();
+    // temp
+    // eeptest ();
+    
+    
     o2_cons_init ();
     init_7segments ();
 
