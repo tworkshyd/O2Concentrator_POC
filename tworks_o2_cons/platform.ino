@@ -132,6 +132,16 @@ void platform_init (void) {
     digitalWrite(loadPin_7segment,   LOW );
 
 
+
+    // Neo pixcel LEDs interface
+    pinMode(MISO_pin,         OUTPUT);
+    pinMode(PD6_pin,          OUTPUT);
+    pinMode(PD7_pin,          OUTPUT);
+    digitalWrite(MISO_pin,    LOW );
+    digitalWrite(PD6_pin,     LOW );
+    digitalWrite(PD7_pin,     LOW );
+
+
     DBG_PRINTLN("GPIO init done..");
 
     

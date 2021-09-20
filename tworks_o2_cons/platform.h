@@ -88,47 +88,47 @@
 		dated 2021-05-18, developed @ Tworks
  
 
-	PB5(PCINT13/ICP3/MOSI)	 1  |	MOSI --> MOSI --> Din ================> 5
-	PB6(PCINT14/OC3A/MISO)	 2  |	MISO  
-	PB7(PCINT15/OC3B/SCK)	 3  |	SCK  --> SCK  --> sck ================> 7 
-	#RESET                	 4  |	RESET 
-	VCC                  	 5  |	VCC   
-										  
-	PD0(PCINT24/RXD0/T3*)	 9  |	RXD   
-	PD1(PCINT25/TXD0)		10  |	TXD   
-	PD2(PCINT26/RXD1/INT0)	11  |	INT0  
-										  
-	PD3(PCINT27/TXD1/INT1)  12 	|	INT1  
-	PD4(PCINT28/XCK1/OC1B)  13  |	DDIR  ================================> 12 
-	PD5(PCINT29/OC1A)       14  |	PD5 --> PD5  --> PD5 --> LOAD ========> 13
-	PD6(PCINT30/OC2B/ICP)   15  |	PD6   
-	PD7(PCINT31/OC2A)       16  |	PD7   
-										  
-	PC0(PCINT16/SCL)		19  |	SCL   
-	PC1(PCINT17/SDA)        20  |   SDA   
-	PC2(PCINT18/TCK)        21  |   RS    ================================> 18
-	PC3(PCINT19/TMS)        22  |   EN    ================================> 19
-										  
+    PB5(PCINT13/ICP3/MOSI)	 1  |	MOSI --> MOSI --> Din ================> 5
+    PB6(PCINT14/OC3A/MISO)	 2  |	MISO =================================> 6
+    PB7(PCINT15/OC3B/SCK)	   3  |	SCK  --> SCK  --> sck ================> 7 
+    #RESET                	 4  |	RESET 
+    VCC                  	   5  |	VCC   
+    								  
+    PD0(PCINT24/RXD0/T3*)	 9  |	RXD   
+    PD1(PCINT25/TXD0)		10  |	TXD   
+    PD2(PCINT26/RXD1/INT0)	11  |	INT0  
+    								  
+    PD3(PCINT27/TXD1/INT1)  12 	|	INT1  
+    PD4(PCINT28/XCK1/OC1B)  13  |	DDIR  ================================> 12 
+    PD5(PCINT29/OC1A)       14  |	PD5 --> PD5  --> PD5 --> LOAD ========> 13
+    PD6(PCINT30/OC2B/ICP)   15  |	PD6   ================================> 14  
+    PD7(PCINT31/OC2A)       16  |	PD7   ================================> 15 
+    								  
+    PC0(PCINT16/SCL)		19  |	SCL   
+    PC1(PCINT17/SDA)        20  |   SDA   
+    PC2(PCINT18/TCK)        21  |   RS    ================================> 18
+    PC3(PCINT19/TMS)        22  |   EN    ================================> 19
+    								  
     PA0(ADC0/PCINT0) 		37  | 	OUT1  --> SOL1 --> RLY1 ==> ZT1     ==> A0
     PA1(ADC1/PCINT1) 		36  | 	OUT2  --> SOL2 --> RLY2 ==> ZT2     ==> A1
     PA2(ADC2/PCINT2) 		35  | 	OUT3  --> SOL3 --> RLY3 ==> BCF     ==> A2
     PA3(ADC3/PCINT3) 		34  | 	OUT4  --> SPR  --> RLY4 ==> SPRR --> Compressor SSR  ==> A3
-	PA4(ADC4/PCINT4) 		33	| 	OUT5  --> CMP  =======================> A4 (not in use for now)
-	PA5(ADC5/PCINT5) 		32  | 	OUT8  --> BZR  =======================> A5
-	PA6(ADC6/PCINT6) 		31  | 	OUT6  --> x 
-	PA7(ADC7/PCINT7) 		30  | 	OUT7  --> x 
-										  
-	PC7(TOSC2/PCINT23) 		26  |	DB7   ================================> 23
-	PC6(TOSC1/PCINT22) 		25  |	DB6   ================================> 22
-	PC5(TDI/PCINT21)   		24  |	DB5   ================================> 21
-	PC4(TDO/PCINT20)   		23  |	DB4   ================================> 20
-
+    PA4(ADC4/PCINT4) 		33	| 	OUT5  --> CMP  =======================> A4 (not in use for now)
+    PA5(ADC5/PCINT5) 		32  | 	OUT8  --> BZR  =======================> A5
+    PA6(ADC6/PCINT6) 		31  | 	OUT6  --> x 
+    PA7(ADC7/PCINT7) 		30  | 	OUT7  --> x 
+    								  
+    PC7(TOSC2/PCINT23) 		26  |	DB7   ================================> 23
+    PC6(TOSC1/PCINT22) 		25  |	DB6   ================================> 22
+    PC5(TDI/PCINT21)   		24  |	DB5   ================================> 21
+    PC4(TDO/PCINT20)   		23  |	DB4   ================================> 20
+    
     PB4(#SS/OC0B/PCINT12)   44	| 	SW5   ================================>  4
     PB3(AIN1/OC0A7PCINT11)  43  | 	sw4   ================================>  3
     PB2(AIN0/INT2/PCINT10)  42  | 	DT    ================================>  2
     PB1(T1/CLK0/PCINT9)     41  | 	CLK   ================================>  9
     PB0(XCK0/T0/PCINT8)     40  | 	SW    ================================>  8
-
+    
 
  */
 
@@ -180,6 +180,11 @@
 #define encoderButtonPin    (8)    
 #define encoderClk          (9)    
 #define encoderData         (10)    
+
+// 9. Neo LED interface
+#define MISO_pin            (6)    
+#define PD6_pin             (14)    
+#define PD7_pin             (15)    
 
 
 

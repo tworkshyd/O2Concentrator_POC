@@ -80,6 +80,7 @@ void loop (void) {
 
         o2_sensor_scan ();
         // read_pressure ();
+        // test_neo_pixcell_leds ();
         display_o2 (o2_concentration);       
         DBG_PRINT (".");
     }
@@ -170,15 +171,15 @@ void o2_main_task (void)    {
       mins = ((current_run_time_secs % (60 * 60)) / 60);
       hrs  = ( current_run_time_secs / (60 * 60));
          
-      // if ((current_run_time_secs % 15) == 0) {
-      if ((current_run_time_secs % 5) == 0) {   // temp to speed up the testing
+      if ((current_run_time_secs % 15) == 0) {
+      // if ((current_run_time_secs % 5) == 0) {   // temp to speed up the testing
           quadrant++;
           if (quadrant > 3) {
               quadrant = 0;
           }
       }
 
-      //lc.shutdown (0, false);
+      lc.shutdown (0, false);
       /* Set the brightness to a medium values */
       lc.setIntensity (0, _7_SEGMENT_INTENSITY);  // 0x0 TO 0xF
       /* and clear the display */
@@ -192,10 +193,14 @@ void o2_main_task (void)    {
             case 1:
             case 2:
               display_current_run_time(hrs, mins);
+              neo_pixcel_data (TRN_DISPLAY, 0); 
+              neo_pixcel_data (CRN_DISPLAY, 1);
               break;
            case 3:
               hrs = (total_run_time_secs / (60 * 60));
-              display_total_run_hours(hrs);             
+              display_total_run_hours(hrs);       
+              neo_pixcel_data (TRN_DISPLAY, 1); 
+              neo_pixcel_data (CRN_DISPLAY, 0);   
               break;
         }
       
