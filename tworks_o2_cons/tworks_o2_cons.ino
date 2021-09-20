@@ -1,8 +1,11 @@
 
 
+
+
 // tworks_o2_cons.c
 
 //#include <UniversalTimer.h>
+#include <extEEPROM.h>
 
 #include "o2_sensor.h"
 #include "platform.h"

@@ -13,6 +13,7 @@ tworks_o2_cons/Release/board.buildinfo
 *.map
 *.srec
 *.mk
+*.lst
 
 *.cppproj
 <<<<<<< HEAD
