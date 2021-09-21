@@ -31,8 +31,7 @@ void init_7segments (void) {
    */
   lc.shutdown (0, false);
   /* Set the brightness to a medium values */
-  //  lc.setIntensity (0, 0x8);
-  lc.setIntensity (0, _7_SEGMENT_INTENSITY);    // 0xF = maximum brightness
+  lc.setIntensity (0, 0x8);
   /* and clear the display */
   lc.clearDisplay (0);
   
@@ -111,84 +110,6 @@ void test_7segments (void) {
 #define DIGIT_VALUE_MAX (9)
 
 
-/*
- *  Two LED boards Board 1 with 5 LEDs A0 to A4
- *   and  Board 2 with 2 LEDs A0 & A1 (will refere these as a0 & a1)
- *   
- *   From host controller 3 pins are used for interface 
- *    MISO, PD6 & PD7, these are connected from display board JP5 connector to 
- *    J1 connector of LED Board1, LED Board2 is cascaed with LED Board1
- *    
- */
-
- 
-#define NEO_PIXCELL_LED_COUNT   (7)
-void test_neo_pixcell_leds (void) {
-
-    int    count;
-
-    Serial.println("Testing Neo LEDs..");
-
-    count = 0;
-    for (count = 0; count <= 7; count++)
-    {
-    
-        digitalWrite(MISO_pin,    count & 0x04);
-        digitalWrite(PD6_pin,     count & 0x02);
-        digitalWrite(PD7_pin,     count & 0x01);
-    
-        delay(200);
-        Serial.print("NEO LED no: ");
-        Serial.println(count);
-    }
-
-    Serial.println("Testing Neo LEDs.. done");
-    // OFF all be fore leaving
-    digitalWrite(MISO_pin,    0);
-    digitalWrite(PD6_pin,     0);
-    digitalWrite(PD7_pin,     0);
-}
-
-
-
-void neo_pixcel_data (enum ERROR_CODE_E error_no, uint8_t  on_off) {
-
-    static uint8_t  led_byte;
-    uint8_t         code_bit;
-
-    switch (error_no)
-    {
-        case UNUSED_LED:            code_bit = A0;   break;
-        case UNIT_OVER_HEAT:        code_bit = A1;   break;
-        case POWER_FAIL:            code_bit = A2;   break;
-        case OUTPUT_FLOW_OBSTRUCT:  code_bit = A3;   break;
-        case LOW_O2_PURITY:         code_bit = A4;   break;
-        
-        case CRN_DISPLAY:           code_bit = a0;   break;
-        case TRN_DISPLAY:           code_bit = a1;   break;          
-
-        case ALL_LEDs_OFF:              
-            code_bit = 0;    
-            led_byte = 0;
-            break;   // temp fix, need to revisit here
-        default:
-          // nop
-          break;
-    }
-
-    if (on_off) {
-        led_byte |= code_bit;   
-    }
-    else {
-        led_byte &= ~code_bit;   
-    }
-            
-    digitalWrite(MISO_pin,    led_byte & 0x04);
-    digitalWrite(PD6_pin,     led_byte & 0x02);
-    digitalWrite(PD7_pin,     led_byte & 0x01);  
-    
-}
-
 void disp_digit_on_7seg (uint8_t place, uint8_t value)   {
 
     if (place > TOTAL_DIGITS  &&  value > DIGIT_VALUE_MAX)  {
@@ -222,7 +143,7 @@ void display_o2 (float o2value) {
     
 }
 
-void display_total_run_hours (uint32_t runhours) {
+void display_run_hours (uint32_t runhours) {
 
     uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
 
@@ -284,9 +205,7 @@ void display_total_run_hours (uint32_t runhours) {
         
 }
 
-
-// 1. with decimal point after hours	
-void display_current_run_time_1 (uint16_t hours, uint16_t mins) {
+void display_run_time (uint16_t hours, uint16_t mins) {
 
     uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
 
@@ -330,60 +249,6 @@ void display_current_run_time_1 (uint16_t hours, uint16_t mins) {
     // unit's digit
     lc.setDigit(0, 7, unit_digit,   false);   
     
-}
-
-
-// 2. without decimal point and one digit gap between hours & minutes
-void display_current_run_time_2 (uint16_t hours, uint16_t mins) {
-  
-  	uint8_t     digit5, digit4, digit3, digit2, digit1;
-  
-  	// validate parameters
-  	mins  = mins % 60;
-  	hours = hours % 99;
-  
-  	digit1	= mins % 10;
-  	mins	= mins / 10;
-  	digit2	= mins % 10;
-  	// blank
-  	digit3	= 0b00000000;
-  	digit4	= hours % 10;
-  	hours	= hours / 10;
-  	digit5	= hours % 10;
-
-
-  	
-  	// digit5
-    //	if (digit5) {
-    //		lc.setDigit(0, 3, digit5, false);
-    //	}
-    //	else {
-    //		lc.setRow(0, 3, 0b00000000);
-    //	}
-    lc.setDigit(0, 3, digit5, false);
-  
-  	// digit4
-  	lc.setDigit(0, 4, digit4, false);
-  	
-  
-  	// digit3
-  	lc.setRow(0, 5, 0b10000000);
-  	
-  	// digit2
-  	// lc.setDigit(0, 6, digit2,   true);
-  	lc.setDigit(0, 6, digit2,   false);
-  
-  	// digit1
-  	lc.setDigit(0, 7, digit1,   false);
-	
-}
-
-
-// 3. with colon between run hours and minutes by flipping digit2 (from right) of row2
-void display_current_run_time_3  (uint16_t hours, uint16_t mins)	{
-	
-	// todo
-	
 }
 
 

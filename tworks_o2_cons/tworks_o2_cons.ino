@@ -1,11 +1,8 @@
 
 
-
-
 // tworks_o2_cons.c
 
 //#include <UniversalTimer.h>
-#include <extEEPROM.h>
 
 #include "o2_sensor.h"
 #include "platform.h"
@@ -20,7 +17,6 @@
 // Sytem tick time
 #define TICK_time (10)
 
-extEEPROM eep(kbits_64, 1, 8);         //device size, number of devices, page size
 
 
 unsigned char cycle;
@@ -35,41 +31,21 @@ void o2_main_task (void);
 void setup (void) {
 
     Serial.begin (115200);
-        
     DBG_PRINTLN ("Serial port initialized..!!");
     platform_init ();
     ads_init ();
     db_init ();
     //temp
     // test_ads1115 ();
-
-
-    uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
-    if (eepStatus) {
-      Serial.print(F("extEEPROM.begin() failed, status = "));
-      Serial.println(eepStatus);
-      while (1);
-    }
-
-    eeprom_init ();
-    // temp
-    // eeptest ();
-    
-    
     o2_cons_init ();
     init_7segments ();
 
     // temp
     test_7segments ();
-    test_neo_pixcell_leds ();
-
     
     display_o2 (00.0);
-    display_total_run_hours (total_run_time_secs);    
+    display_run_hours (total_run_time_secs);    
     ui_init ();
-
-
-  
 
 }
 
@@ -101,7 +77,6 @@ void loop (void) {
 
         o2_sensor_scan ();
         // read_pressure ();
-        // test_neo_pixcell_leds ();
         display_o2 (o2_concentration);       
         DBG_PRINT (".");
     }
@@ -130,7 +105,18 @@ void loop (void) {
 void o2_cons_init (void)    {
 
     // compute slope and constant values
-    sensor_zero_calibration ();
+//    sensor_zero_calibration ();
+
+    // temp
+    DBG_PRINTLN ("Wsrning..: Hard coding slope and constant for Fio2");
+    o2_slope = 0.1734;
+    o2_const_val = 0.9393;
+    
+    DBG_PRINTLN ("");
+    DBG_PRINT   ("o2_slope : ");
+    DBG_PRINT   (o2_slope);
+    DBG_PRINT   (", o2_const_val : ");
+    DBG_PRINT   (o2_const_val);    
 
     //  SET DELAY TIMING HERE
     //**************************************************************************
@@ -157,10 +143,6 @@ void o2_cons_init (void)    {
     do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
     new_delay_msecs (500);
 
-    // start with TRN display hence light-up TRN LED
-    neo_pixcel_data (ALL_LEDs_OFF, 0);
-    neo_pixcel_data (TRN_DISPLAY, 1); 
-
 
 }
 
@@ -172,8 +154,7 @@ void o2_main_task (void)    {
     static uint8_t           quadrant;
     static uint8_t           once_done;
     
-    int secs, mins, hrs;
-    
+
     if (f_system_running != true) {
         once_done = 0;
         return;
@@ -192,54 +173,26 @@ void o2_main_task (void)    {
 
 
       // display run hours, 45 seconds current run hours, 15 seconds total runhours
-      secs = ( current_run_time_secs %  60);
-      mins = ((current_run_time_secs % (60 * 60)) / 60);
-      hrs  = ( current_run_time_secs / (60 * 60));
+      int secs = ( current_run_time_secs %  60);
+      int mins = ((current_run_time_secs % (60 * 60)) / 60);
+      int hrs  = ( current_run_time_secs / (60 * 60));
          
       if ((current_run_time_secs % 15) == 0) {
-      // if ((current_run_time_secs % 5) == 0) {   // temp to speed up the testing
-          quadrant++;
-          if (quadrant > 3) {
-              quadrant = 0;
-          }
-          switch (quadrant) 
-          {
-              case 0:
-              case 1:
-              case 2:
-                neo_pixcel_data (ALL_LEDs_OFF, 0);
-                delay(333);              
-                neo_pixcel_data (CRN_DISPLAY, 1);
-                break;
-             case 3: 
-                neo_pixcel_data (ALL_LEDs_OFF, 0);
-                delay(333);
-                neo_pixcel_data (TRN_DISPLAY,  1); 
-                break;
-          }          
-      }
-
-      lc.shutdown (0, false);
-      /* Set the brightness to a medium values */
-      lc.setIntensity (0, _7_SEGMENT_INTENSITY);  // 0x0 TO 0xF
-      /* and clear the display */
-      lc.clearDisplay (0);
-	  
-	  display_o2 (o2_concentration);  
-      
+        quadrant++;
         switch (quadrant) 
         {
             case 0:
             case 1:
             case 2:
-              display_current_run_time(hrs, mins);
+              display_run_time(hrs, mins);
               break;
            case 3:
               hrs = (total_run_time_secs / (60 * 60));
-              display_total_run_hours(hrs);       
+              display_run_hours(hrs);
+              quadrant = 0;
               break;
         }
-      
+      }
     }
     
     if (time_elapsed (time_tag) < nb_delay)  {
@@ -261,21 +214,8 @@ void o2_main_task (void)    {
         DBG_PRINT ("nb_delay : ");
         DBG_PRINTLN (nb_delay);
     }
+    
 
-    // repeating display refresh after valves operation..
-//    switch (quadrant) 
-//    {
-//        case 0:
-//        case 1:
-//        case 2:
-//          display_current_run_time(hrs, mins);
-//          break;
-//       case 3:
-//          hrs = (total_run_time_secs / (60 * 60));
-//          display_total_run_hours(hrs);
-//          quadrant = 0;
-//          break;
-//    }
 }
 
 

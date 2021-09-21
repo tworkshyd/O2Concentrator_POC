@@ -13,8 +13,6 @@ tworks_o2_cons/Release/board.buildinfo
 *.map
 *.srec
 *.mk
-*.lst
-*.xml
 
 *.cppproj
 <<<<<<< HEAD
@@ -56,4 +54,3 @@ tworks_o2_cons/Release/tworks_o2_cons.srec
 *.sisc
 O2c_browse.si4project/
 >>>>>>> board_bringup
-*.lst
