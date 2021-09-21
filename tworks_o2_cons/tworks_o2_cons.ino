@@ -59,10 +59,10 @@ void setup (void) {
     eeprom_init ();
     // temp
     // eeptest ();
-    while (1)
-    {
-      rtc_test ();
-    }
+    //while (1)
+    //{
+    //  rtc_test ();
+    //}
     
     o2_cons_init ();
     init_7segments ();
