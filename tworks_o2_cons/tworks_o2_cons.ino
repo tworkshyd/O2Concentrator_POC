@@ -38,13 +38,18 @@ void setup (void) {
     //temp
     // test_ads1115 ();
     o2_cons_init ();
+
+    //    while (1)
+    //    {
     init_7segments ();
+    //      delay(100);
+    //    }
 
     // temp
     //test_7segments ();
     
     display_o2 (00.0);
-    display_run_hours (total_run_time_secs);    
+    display_total_run_hours (total_run_time_secs);    
     ui_init ();
 
 }
@@ -184,11 +189,11 @@ void o2_main_task (void)    {
             case 0:
             case 1:
             case 2:
-              display_run_time(hrs, mins);
+              display_current_run_hours(hrs, mins);
               break;
            case 3:
               hrs = (total_run_time_secs / (60 * 60));
-              display_run_hours(hrs);
+              display_total_run_hours(hrs);
               quadrant = 0;
               break;
         }

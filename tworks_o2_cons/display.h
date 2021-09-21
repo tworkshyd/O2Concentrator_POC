@@ -53,8 +53,8 @@ void display_banner (void);
 void scrollDigits   (void);
 void test_7segments (void);
 void display_o2     (float o2value);
-void display_run_time  (uint16_t hours, uint16_t mins);
-void display_run_hours (uint32_t runhours);
+void display_current_run_hours   (uint16_t hours, uint16_t mins);
+void display_total_run_hours    (uint32_t runhours);
 
 
 // initialize the library by associating any needed LCD interface pin

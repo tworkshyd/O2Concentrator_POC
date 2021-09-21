@@ -23,6 +23,82 @@ void lcd_clear_buf (char * bufp) {
 
 
 
+//==================== 7 segment driver ========================
+#define NO_OP     (0x00)
+#define DIGIT_0   (0x01)
+#define DIGIT_1   (0x02)
+#define DIGIT_2   (0x03)
+#define DIGIT_3   (0x04)
+#define DIGIT_4   (0x05)
+#define DIGIT_5   (0x06)
+#define DIGIT_6   (0x07)
+#define DIGIT_7   (0x08)
+#define DECODE_MODE   (0x09)
+#define INTENSITY     (0x0A)
+#define SCAN_LIMIT    (0x0B)
+#define SHUT_DOWN     (0x0C)
+#define DISPLAY_TEST  (0x0F)
+
+
+
+#define BLANK         (0x0F)
+
+// Local driver defines
+#define DECIMAL_POINT (0x0A)
+#define BLANK_DIGIT   (0x0B)
+
+
+uint8_t   digit_to_seg_value[] = {
+  
+    0b01111110,  // '0' 
+    0b00110000,  // '1' 
+    0b01101101,  // '2' 
+    0b01111001,  // '3' 
+    0b00110011,  // '4' 
+    0b01011011,  // '5' 
+    0b01011111,  // '6' 
+    0b01110000,  // '7' 
+    0b01111111,  // '8' 
+    0b01111011,  // '9' 
+    0b10000000,  // '.' -- 0x0A prints decimal point
+    0b10000000,  // ' ' -- 0x0B blanks digit
+  
+};
+
+//#define  DIGIT_0    0b01111110  // '0' 
+//#define  DIGIT_1    0b00110000  // '1' 
+//#define  DIGIT_2    0b01101101  // '2' 
+//#define  DIGIT_3    0b01111001  // '3' 
+//#define  DIGIT_4    0b00110011  // '4' 
+//#define  DIGIT_5    0b01011011  // '5' 
+//#define  DIGIT_6    0b01011111  // '6' 
+//#define  DIGIT_7    0b01110000  // '7' 
+//#define  DIGIT_8    0b01111111  // '8' 
+//#define  DIGIT_9    0b01111011  // '9' 
+//#define  POINT      0b10000000  // '.' -- 0x0A prints decimal point
+//#define  BLANK      0b10000000  // ' ' -- 0x0B blanks digit
+
+    
+void  set7segmentDigit (int digit, int value, uint8_t  point) {
+
+    if (point == true)
+        point = 0x80;
+    else 
+        point = 0;
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     
+    digitalWrite(loadPin_7segment,   LOW);
+    digitalWrite(loadPin_7segment,   HIGH);         
+}
+
+void  set7segmentRegister (int reg, int value) {
+  
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, reg);
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, value);     
+    digitalWrite(loadPin_7segment,   LOW);
+    digitalWrite(loadPin_7segment,   HIGH);         
+}
+
 
 void init_7segments (void) {
   /*
@@ -34,6 +110,34 @@ void init_7segments (void) {
 //  lc.setIntensity (0, 0x8);
 //  /* and clear the display */
 //  lc.clearDisplay (0);
+
+
+
+/*
+ * D15 D14 D13 D12 D11 D10 D9 D8 D7 D6 D5 D4 D3 D2 D1 D0
+   X   X   X   X   ADDRESS-----| MSB     DATA        LSB
+ */
+
+    //shiftOut(dataPin, clockPin, bitOrder, value);
+
+ //DBG_PRINTLN("shifting bits...");
+ 
+    
+    set7segmentRegister (INTENSITY, 0x07);
+    set7segmentRegister (SHUT_DOWN, 1);
+
+
+//    set7segmentDigit (1, 0); 
+//    set7segmentDigit (2, 1);
+//    set7segmentDigit (3, 2);
+//    set7segmentDigit (4, 3);
+//    set7segmentDigit (5, 4);
+//    set7segmentDigit (6, 5);
+//    set7segmentDigit (7, 6);
+//    set7segmentDigit (8, 7);
+
+
+  //DBG_PRINTLN("shifting done..");   
   
 }
 
@@ -121,6 +225,9 @@ void init_7segments (void) {
 //    
 //}
 
+
+
+
 void display_o2 (float o2value) {
 
     uint16_t     int_o2value;
@@ -136,14 +243,18 @@ void display_o2 (float o2value) {
     tens_digit    = int_o2value % 10;
     
     
-    lc.setDigit(0, 0, tens_digit,    false);
-    lc.setDigit(0, 1, unit_digit,    true);
-    lc.setDigit(0, 2, decimal_digit, false);
-   
+//    lc.setDigit(0, 0, tens_digit,    false);
+//    lc.setDigit(0, 1, unit_digit,    true);
+//    lc.setDigit(0, 2, decimal_digit, false);
+    set7segmentDigit (1, tens_digit, false);
+    //set7segmentDigit (2, BLANK_DIGIT);    
+    set7segmentDigit (2, unit_digit, true);
+    set7segmentDigit (3, decimal_digit, false);
+    
     
 }
 
-void display_run_hours (uint32_t runhours) {
+void display_total_run_hours (uint32_t runhours) {
 
     uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
 
@@ -158,97 +269,94 @@ void display_run_hours (uint32_t runhours) {
     ten_th_digit  = runhours % 10;
     runhours      = runhours / 10;
 
-    
-    lc.setDigit(0, 3, ten_th_digit, false);
-    lc.setDigit(0, 4, thnd_digit,   false);
-    lc.setDigit(0, 5, hund_digit,   false);
-    lc.setDigit(0, 6, tens_digit,   false);
-    lc.setDigit(0, 7, unit_digit,   false);  
-     
-    // 10,000th digit
-    if (ten_th_digit) {
-      lc.setDigit(0, 3, ten_th_digit, false);
-    }
-    else {
-      lc.setRow(0, 3, 0b00000000);
-    }
-    // 1000th digit
-    if (thnd_digit) {
-      lc.setDigit(0, 4, thnd_digit, false);
-    }
-    else {
-      lc.setRow(0, 4, 0b00000000);
-    }
 
-    // 100th digit
-    //lc.setDigit(0, 5, hund_digit,   true);
-    if (hund_digit) {
-      lc.setDigit(0, 5, hund_digit, false);
-    }
-    else {
-      lc.setRow(0, 5, 0b00000000);
-    }
-
-    // 10th digit
-    // lc.setDigit(0, 6, tens_digit,   true);
-    //lc.setDigit(0, 6, tens_digit,   false);
-    if (tens_digit) {
-      lc.setDigit(0, 6, tens_digit, false);
-    }
-    else {
-      lc.setRow(0, 6, 0b00000000);
-    }
-
-    // unit's digit
-    lc.setDigit(0, 7, unit_digit,   false);   
-
+    set7segmentDigit (4, ten_th_digit, false);
+    set7segmentDigit (5, thnd_digit, false);
+    set7segmentDigit (6, hund_digit, false);
+    set7segmentDigit (7, tens_digit, false);
+    set7segmentDigit (8, unit_digit, false);
+         
+//    // 10,000th digit
+//    if (ten_th_digit) {
+//
+//    }
+//    else {
+//      set7segmentDigit (4, BLANK, false);
+//    }
+//    
+//    // 1000th digit
+//    if (thnd_digit) {
+//      // lc.setDigit(0, 5, thnd_digit, false);
+//      set7segmentDigit (5, thnd_digit, false);
+//    }
+//    else {
+//      //lc.setRow(0, 5, 0b00000000);
+//      set7segmentDigit (5, BLANK, false);
+//    }
+//
+//    // 100th digit
+//    //lc.setDigit(0, 5, hund_digit,   true);
+//    if (hund_digit) {
+//      //lc.setDigit(0, 6, hund_digit, false);
+//      set7segmentDigit (6, hund_digit, false);
+//    }
+//    else {
+//      //lc.setRow(0, 6, 0b00000000);
+//      set7segmentDigit (6, BLANK, false);
+//    }
+//
+//    // 10th digit
+//    // lc.setDigit(0, 6, tens_digit,   true);
+//    //lc.setDigit(0, 6, tens_digit,   false);
+//    if (tens_digit) {
+//      //lc.setDigit(0, 7, tens_digit, false);
+//      set7segmentDigit (7, tens_digit, false);
+//    }
+//    else {
+//      //lc.setRow(0, 7, 0b00000000);
+//      set7segmentDigit (7, BLANK_DIGIT, false);
+//    }
+//
+//    // unit's digit
+//    // lc.setDigit(0, 8, unit_digit,   false);   
+//    set7segmentDigit (8, unit_digit, false);
         
 }
 
-void display_run_time (uint16_t hours, uint16_t mins) {
+void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
-    uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
+    uint8_t     digit1, digit2, digit3, digit4, digit5;
 
     // validate parameters
     mins  = mins % 60;
-    hours = hours % 999;
+    hours = hours % 99;
 
-    unit_digit    = mins % 10;
-    mins          = mins / 10;
-    tens_digit    = mins % 10;
+
+    digit1    = hours % 10;
+    hours     = hours / 10;
+    digit2    = hours % 10;
+
+    // digit3 = blank
     // : 
-    hund_digit    = hours % 10;
-    hours         = hours / 10;
-    thnd_digit    = hours % 10;
-    hours         = hours / 10;    
-    ten_th_digit  = hours % 10;
+    digit4    = mins % 10;
+    mins      = mins / 10;
+    digit5    = mins % 10;
 
     
-    // 10,000th digit
-    if (ten_th_digit) {
-      lc.setDigit(0, 3, ten_th_digit, false);
-    }
-    else {
-      lc.setRow(0, 3, 0b00000000);
-    }
-    // 1000th digit
-    if (thnd_digit) {
-      lc.setDigit(0, 4, thnd_digit, false);
-    }
-    else {
-      lc.setRow(0, 4, 0b00000000);
-    }
 
-    // 100th digit
-    lc.setDigit(0, 5, hund_digit,   true);
-
-    // 10th digit
-    // lc.setDigit(0, 6, tens_digit,   true);
-    lc.setDigit(0, 6, tens_digit,   false);
-
-    // unit's digit
-    lc.setDigit(0, 7, unit_digit,   false);   
     
+    // digit 1
+    set7segmentDigit (4, digit1, false);
+    // digit 2
+    set7segmentDigit (5, digit2, false);
+    // digit 3
+    set7segmentDigit (6, BLANK_DIGIT, true);
+    // digit 4
+    set7segmentDigit (7, digit4, false);
+    // digit 5
+    set7segmentDigit (8, digit5, false);
+
+
 }
 
 
