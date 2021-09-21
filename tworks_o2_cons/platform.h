@@ -181,6 +181,10 @@
 #define encoderClk          (9)    
 #define encoderData         (10)    
 
+// 9. Neo LED interface
+#define MISO_pin            (6)    
+#define PD6_pin             (14)    
+#define PD7_pin             (15)    
 
 
 // RELAY PIN ASSIGNMENT
