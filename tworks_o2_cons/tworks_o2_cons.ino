@@ -20,7 +20,8 @@
 
 
 unsigned char cycle;
-
+unsigned char f_crn;
+unsigned char f_trn;
 
 
 void o2_cons_init (void);
@@ -71,6 +72,7 @@ void loop (void) {
     else if (f_100msec) {
         f_100msec = 0;
         // 100 milli second tasks go here..
+
     }
     else if (f_1sec) {
         f_1sec = 0;
@@ -101,6 +103,19 @@ void loop (void) {
         o2_main_task ();
         ui_task_main ();
         logs_task ();
+        
+        init_7segments ();
+        display_o2 (o2_concentration);
+        if (f_crn == 1) {
+            int secs = ( current_run_time_secs %  60);
+            int mins = ((current_run_time_secs % (60 * 60)) / 60);
+            int hrs  = ( current_run_time_secs / (60 * 60));
+            display_current_run_hours(hrs, mins);
+        }
+        if (f_trn == 1) {
+            int hrs = (total_run_time_secs / (60 * 60));
+            display_total_run_hours(hrs);
+        }
     }
 
 }
@@ -190,11 +205,15 @@ void o2_main_task (void)    {
             case 1:
             case 2:
               display_current_run_hours(hrs, mins);
+              f_crn = 1;
+              f_trn = 0;
               break;
            case 3:
               hrs = (total_run_time_secs / (60 * 60));
               display_total_run_hours(hrs);
               quadrant = 0;
+              f_crn = 0;
+              f_trn = 1;             
               break;
         }
       }

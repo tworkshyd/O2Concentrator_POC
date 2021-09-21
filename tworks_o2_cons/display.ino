@@ -346,15 +346,15 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
     
     // digit 1
-    set7segmentDigit (4, digit1, false);
+    set7segmentDigit (4, digit2, false);
     // digit 2
-    set7segmentDigit (5, digit2, false);
+    set7segmentDigit (5, digit1, false);
     // digit 3
     set7segmentDigit (6, BLANK_DIGIT, true);
     // digit 4
-    set7segmentDigit (7, digit4, false);
+    set7segmentDigit (7, digit5, false);
     // digit 5
-    set7segmentDigit (8, digit5, false);
+    set7segmentDigit (8, digit4, false);
 
 
 }
