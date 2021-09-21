@@ -1,7 +1,7 @@
 
 
 #include "display.h"
-#include "LedControl.h"
+//#include "LedControl.h"
 
 
 char     lcd_temp_string[LCD_COLS + 1];
@@ -29,97 +29,97 @@ void init_7segments (void) {
    The MAX72XX is in power-saving mode on startup,
    we have to do a wakeup call
    */
-  lc.shutdown (0, false);
-  /* Set the brightness to a medium values */
-  lc.setIntensity (0, 0x8);
-  /* and clear the display */
-  lc.clearDisplay (0);
+//  lc.shutdown (0, false);
+//  /* Set the brightness to a medium values */
+//  lc.setIntensity (0, 0x8);
+//  /* and clear the display */
+//  lc.clearDisplay (0);
   
 }
 
-/*
- This method will display the characters for the
- word "Arduino" one after the other on digit 0. 
- */
-void display_banner (void) {
+///*
+// This method will display the characters for the
+// word "Arduino" one after the other on digit 0. 
+// */
+//void display_banner (void) {
+//
+//    /*
+//     * a = 'a'      j = 
+//     * b =          k = 
+//     * c =          l = 
+//     * d = 'd'      m =
+//     * e =          n = 
+//     * f =
+//     * g =
+//     * h =
+//     * i = 
+//     */
+//    
+//    lc.setRow(0,0,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,1,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,2,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,3,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,4,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,5,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,6,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,7,B00010000);
+//    delay(delaytime);
+//    
+//} 
+//
+///*
+//  This method will scroll all the hexa-decimal
+// numbers and letters on the display. You will need at least
+// four 7-Segment digits. otherwise it won't really look that good.
+// */
+//void scrollDigits (void) {
+//    
+//    for(int i = 0; i < 13; i++) 
+//    {
+//        lc.setDigit(0, 7, 8, false);
+//        lc.setDigit(0, 6, 8, false);
+//        lc.setDigit(0, 5, 8, false);
+//        lc.setDigit(0, 4, 8, false);
+//        lc.setDigit(0, 3, 8, false);
+//        lc.setDigit(0, 2, 8, false);
+//        lc.setDigit(0, 1, 8, false);
+//        lc.setDigit(0, 0, 8, false);
+//        delay(delaytime);
+//    }
+//    
+//    lc.clearDisplay(0);
+//    delay(delaytime);
+//  
+//}
+//
+//void test_7segments (void) { 
+//    
+//  display_banner();
+//  scrollDigits();
+//  
+//}
 
-    /*
-     * a = 'a'      j = 
-     * b =          k = 
-     * c =          l = 
-     * d = 'd'      m =
-     * e =          n = 
-     * f =
-     * g =
-     * h =
-     * i = 
-     */
-    
-    lc.setRow(0,0,B00010000);
-    delay(delaytime);
-    lc.setRow(0,1,B00010000);
-    delay(delaytime);
-    lc.setRow(0,2,B00010000);
-    delay(delaytime);
-    lc.setRow(0,3,B00010000);
-    delay(delaytime);
-    lc.setRow(0,4,B00010000);
-    delay(delaytime);
-    lc.setRow(0,5,B00010000);
-    delay(delaytime);
-    lc.setRow(0,6,B00010000);
-    delay(delaytime);
-    lc.setRow(0,7,B00010000);
-    delay(delaytime);
-    
-} 
-
-/*
-  This method will scroll all the hexa-decimal
- numbers and letters on the display. You will need at least
- four 7-Segment digits. otherwise it won't really look that good.
- */
-void scrollDigits (void) {
-    
-    for(int i = 0; i < 13; i++) 
-    {
-        lc.setDigit(0, 7, 8, false);
-        lc.setDigit(0, 6, 8, false);
-        lc.setDigit(0, 5, 8, false);
-        lc.setDigit(0, 4, 8, false);
-        lc.setDigit(0, 3, 8, false);
-        lc.setDigit(0, 2, 8, false);
-        lc.setDigit(0, 1, 8, false);
-        lc.setDigit(0, 0, 8, false);
-        delay(delaytime);
-    }
-    
-    lc.clearDisplay(0);
-    delay(delaytime);
-  
-}
-
-void test_7segments (void) { 
-    
-  display_banner();
-  scrollDigits();
-  
-}
-
-#define TOTAL_DIGITS    (7)
-#define DIGIT_VALUE_MAX (9)
-
-
-void disp_digit_on_7seg (uint8_t place, uint8_t value)   {
-
-    if (place > TOTAL_DIGITS  &&  value > DIGIT_VALUE_MAX)  {
-        // invalid parameters
-        return;
-    }
-
-    lc.setDigit (0, place, value, false);
-    
-}
+//#define TOTAL_DIGITS    (7)
+//#define DIGIT_VALUE_MAX (9)
+//
+//
+//void disp_digit_on_7seg (uint8_t place, uint8_t value)   {
+//
+//    if (place > TOTAL_DIGITS  &&  value > DIGIT_VALUE_MAX)  {
+//        // invalid parameters
+//        return;
+//    }
+//
+//    lc.setDigit (0, place, value, false);
+//    
+//}
 
 void display_o2 (float o2value) {
 
