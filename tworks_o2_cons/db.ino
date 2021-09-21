@@ -18,12 +18,9 @@ bool            f_sec_change_o2_task;
 bool            f_sec_change_sensor_task;
 
 
+uint8_t         start_switch_pressed;
+uint8_t         alarm_clear_button_pressed;
 
-int             bttn_press_detected;
-int             bttn_long_press_detected;
-int             bttn_press_cnt;
-int             bttn_hold_time;
-int             bttn_dbnc_dly;
 
 float           o2_concentration = 93.50;
 float           prev_o2_concentration;

@@ -137,67 +137,7 @@ void ui_task_main (void)    {
     switch (ui_state)
     {
         case UI_START:
-            //if (powerUpTimer.check())   {
-            if (state_time >= TIME_TO_ENTER_FACTORY_MODE) {
-                ui_state = UI_SYS_INIT;
-                lcd.setCursor(0, 3);
-                bttn_press_cnt = 0;
-                lcd.print("Press ButtonToStart!");
-            }
-            //else if (time_elapsed (time_tag) > 1500) {
-            else if (state_time > (( 2 * TIME_TO_ENTER_FACTORY_MODE) / 3)) {
-                if (bttn_press_cnt >= CALIBRATION_MODE_ENTRY_CHECK)  {
-                    bttn_press_cnt = 0;
-                    ui_state = UI_CALIB_MODE;
-                }
-                else if (bttn_press_cnt >= FACTORY_MODE_ENTRY_CHECK)  {
-                    bttn_press_cnt = 0;
-                    ui_state = UI_FACTORY_MODE;
-                }
-                if (bttn_press_cnt >= CONFIG_MODE_ENTRY_CHECK)  {
-                    bttn_press_cnt = 0;
-                    ui_state = UI_CONFIG_MODE;
-                }
-            }
-            else {
-                if (f_state_changed)  {
-                    ui_print_welcome ();
-                }
-            }
-            break;
-        case UI_CALIB_MODE:
-            DBG_PRINTLN("Entered Calibration Mode..");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Calibration Mode..");
-            lcd.setCursor(0, 1);
-            lcd.print("O2 sensorCalibration");
-            multi_beeps (5);
-
-            ui_state = UI_SYS_INIT;
-            break;
-        case UI_FACTORY_MODE:
-            DBG_PRINTLN("Factory Mode..");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Factory Mode..");
-
-            multi_beeps (3);
-
-            // Power On self test - on demand
-            power_on_self_test ();
-            ui_state = UI_SYS_INIT;
-            break;
-
-        case UI_CONFIG_MODE:
-            DBG_PRINTLN("Entered Configuration Mode..");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Configuration Mode..");
-            lcd.setCursor(0, 1);
-
-            multi_beeps (2);
-            ui_state = UI_SYS_INIT;
+			ui_state = UI_SYS_INIT;
             break;
 
         case UI_SYS_INIT:
@@ -209,8 +149,7 @@ void ui_task_main (void)    {
             break;
         case UI_SYS_ON_CHECK:
             // System ON check
-            if (bttn_press_detected == true)  {
-                bttn_press_detected = false;
+            if (start_switch_pressed == true)  {
                 f_system_running = true;
 
                 DBG_PRINTLN("Start Button Pressed..!");
@@ -219,11 +158,11 @@ void ui_task_main (void)    {
                 beep_for (SYS_ON_BEEP);   // msecs
 
                 COMPRSSR_CNTRL (COMPRSSR_ON);
-                new_delay_msecs (1000);
+                // new_delay_msecs (1000);
 
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Starting... ");
-                new_delay_msecs (1000);
+                // new_delay_msecs (1000);
 
                 ui_state = UI_SYS_RUNNING;
             }
@@ -232,94 +171,25 @@ void ui_task_main (void)    {
 
         case UI_SYS_RUNNING:
             // system running
-            // LCD Line 1
-            if (f_state_changed)  {
-                f_state_changed = 0;
-                lcd_clear_buf (lcd_temp_string);
-
-
-                lcd.clear();
-                lcd.setCursor(0, 0);
-                sprintf(lcd_temp_string, "O2 CONC   PRESSURE ");
-                DBG_PRINTLN(lcd_temp_string);
-                //        "...................."
-                lcd.print(lcd_temp_string);
-
-                // temp : just to trigger LCD refresh for O2 values
-                prev_o2_concentration = 0;
-            }
-
-            // LCD Line 2
-            // O2 concentration / output pressure
-            if (prev_o2_concentration != o2_concentration || prev_output_pressure != output_pressure)  {
-                prev_o2_concentration  = o2_concentration;
-                prev_output_pressure = output_pressure;
-                // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
-                // DBG_PRINTLN(lcd_temp_string);
-                /* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
-                dtostrf(o2_concentration, 4, 2, str_temp);
-
-
-                dtostrf(output_pressure, 5, 2, str_temp2);
-                // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
-                sprintf(lcd_temp_string, "%s %%   %s psi", str_temp, str_temp2);
-
-                DBG_PRINTLN(lcd_temp_string);
-                lcd.setCursor(0, 1);
-                lcd.print(lcd_temp_string);
-
-            }
-
-            // LCD Line 3
-            // lcd.setCursor(0, 2);
-            // blank for now
-
-            // LCD Line 4
-            if (prev_production_time_secs ^ production_time_secs) {
-                prev_production_time_secs = production_time_secs;
-
-                int secs = ( production_time_secs %  60);
-                int mins = ((production_time_secs % (60 * 60)) / 60);
-                int hrs  = ( production_time_secs / (60 * 60));
-                sprintf(lcd_temp_string, "RUN TIME  %02d:%02d:%02d", hrs, mins, secs);
-                DBG_PRINTLN(lcd_temp_string);
-                lcd.setCursor(0, 3);
-                lcd.print(lcd_temp_string);
-            }
-
             // System OFF check
-            if (bttn_press_detected == true)  {
-                ui_state = UI_SYS_OFF_CHECK;
+            if (start_switch_pressed == false)  {
+                f_system_running = false;
+                ui_state = UI_SYS_SHUT_OFF;
             }
             else {
                 // no state change
             }
             break;
 
-        case UI_SYS_OFF_CHECK:
-            // System OFF check
-            if (bttn_press_detected == true)  {
-                bttn_press_detected = false;
-                f_system_running = false;
-                DBG_PRINTLN("Stop Button Pressed!");
-                lcd.setCursor(0, 3);
-                lcd.print("Stop Button Pressed ");
-                COMPRSSR_CNTRL (COMPRSSR_OFF);
-                beep_for (SYS_OFF_BEEP);   // msecs
-
-                new_delay_msecs (1000);
-                lcd.setCursor(0, 3);
-                lcd.print("O2 Cons. Stopping.. ");
-                new_delay_msecs (1000);
-
-                lcd.setCursor(0, 3);
-                lcd.print("O2 Cons. Stopped..! ");
-                ui_state = UI_LAST;
-            }
-            else {
-                // back to run state..
-                ui_state = UI_SYS_RUNNING;
-            }
+        case UI_SYS_SHUT_OFF:
+            // System OFF 
+            COMPRSSR_CNTRL (COMPRSSR_OFF);
+            beep_for (SYS_OFF_BEEP);   // msecs
+            new_delay_msecs (1000);
+            lcd.setCursor(0, 3);
+            lcd.print("O2 Cons. Stopping.. ");
+            new_delay_msecs (1000);
+            ui_state = UI_LAST;           
             break;
         default:
         case UI_LAST:

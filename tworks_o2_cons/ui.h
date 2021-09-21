@@ -39,7 +39,7 @@ enum UI_STATES_E  {
     UI_SYS_INIT,      // 4
     UI_SYS_ON_CHECK,  // 5
     UI_SYS_RUNNING,   // 6
-    UI_SYS_OFF_CHECK, // 7
+    UI_SYS_SHUT_OFF,  // 7
 
     UI_LAST,          // 8
 

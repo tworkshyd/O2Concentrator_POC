@@ -75,53 +75,74 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
 }
 
 
+
+#define		BUTTON_DEBOUNCE_DLY			(10)		// milli seconds
+int             start_switch_dbnc_dly;
+int             alarm_clear_bttn_dbnc_dly;
+
 void button_check (void)  {
 
-    int     buttonState = 0;         // variable for reading the pushbutton status
+    int     start_switch_state = 0;         // variable for reading the pushbutton status
+    int     alarm_clear_buttn_state = 0;         // variable for reading the pushbutton status
 
 
-    buttonState = digitalRead(buttonPin);
+    start_switch_state = digitalRead(startSwitchPin);
+    alarm_clear_buttn_state = digitalRead(alarmClearButton);
 
-    // 1. Press detection
-    if (buttonState == BUTTON_ACTIVE) {   // press detection
-        if (bttn_dbnc_dly < BUTTON_DEBOUNCE_DLY)  {
-            bttn_long_press_detected = false;  // important!!
-            bttn_dbnc_dly++;
+    // 1. Start Switch Press detection
+    if (start_switch_state == START_SWITCH_PRESSED) {   // press detection
+        start_switch_dbnc_dly++;
+        if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+            start_switch_pressed = true; 
+            start_switch_dbnc_dly = 0;
+			      DBG_PRINT  ("Start_switch Pressed");
         }
-
-        // 2. Short press detection
-        if (bttn_dbnc_dly >= BUTTON_DEBOUNCE_DLY)   {
-            bttn_dbnc_dly = 0;
-            bttn_press_detected = true;       // important!!
-        }
-
-        // 3. Long press detection
-        bttn_hold_time++;
-        if (bttn_hold_time > BUTTON_LONG_PRESS_DLY)  {
-            // temp
-            DBG_PRINT ("long Press Detected - bttn_hold_time : ");
-            DBG_PRINTLN (bttn_hold_time);
-            
-            bttn_hold_time = 0;
-            bttn_press_detected = false;      // important!!
-            bttn_long_press_detected = true;  // important!!            
-        }
+		    DBG_PRINT  ("start_switch_dbnc_dly : ");
+		    DBG_PRINTLN(start_switch_dbnc_dly);
     }
-    // 4. release detection
+    // 2. Start Switch Release detection
+    else if (start_switch_state == START_SWITCH_RELEASED) {   // press detection
+	    start_switch_dbnc_dly++;
+	    if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+		      start_switch_pressed = false;
+		      start_switch_dbnc_dly = 0;
+		      DBG_PRINT  ("Start_switch RELEASED");
+	    }
+	    DBG_PRINT  ("start_switch_dbnc_dly : ");
+	    DBG_PRINTLN(start_switch_dbnc_dly);
+    }
+	else {
+		// nop
+	}
+	
+	
+    // 3. Alarm Clear Button Press detection
+    if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_PRESSED) {   // press detection
+	    alarm_clear_bttn_dbnc_dly++;
+	    if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+		    alarm_clear_button_pressed = true;
+		    alarm_clear_bttn_dbnc_dly = 0;
+		    DBG_PRINT  ("Alarm Clear Button Pressed..");
+	    }
+	    DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
+	    DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+    }
+    // 4. Alarm Clear Button Release detection
+    else if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_RELEASED) {   // press detection
+	    alarm_clear_bttn_dbnc_dly++;
+	    if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+		    alarm_clear_button_pressed = false;
+		    alarm_clear_bttn_dbnc_dly = 0;
+		    DBG_PRINT  ("Alarm Clear Button RELEASED");
+	    }
+	    DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
+	    DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+    }
     else {
-        if (bttn_dbnc_dly)
-            bttn_dbnc_dly--;
-
-        if (bttn_dbnc_dly == 0)    {
-            if (bttn_press_detected) {
-                bttn_press_detected = false;
-                bttn_press_cnt++;         // increment the count if previous press is not yet used..
-                // temp
-                DBG_PRINT  ("button_press_count : ");
-                DBG_PRINTLN(bttn_press_cnt);
-            }
-        }
+	    // nop
     }
+    	
+	
 }
 
 
@@ -138,7 +159,7 @@ void new_delay_msecs (unsigned int  time_delay) {
     }
 }
 
-
+/*
 void platform_init (void) {
 
     timer_init ();
@@ -176,7 +197,67 @@ void platform_init (void) {
 
 
 }
+*/
+void platform_init (void) {
 
+    timer_init ();
+
+    // set up the LCD's number of columns and rows:
+    lcd.begin(LCD_COLS, LCD_ROWS);
+
+    // pin mode setting
+    pinMode(RLY_1,          OUTPUT);
+    pinMode(RLY_2,          OUTPUT);
+    pinMode(RLY_3,          OUTPUT);
+    pinMode(RLY_4,          OUTPUT);
+    
+    pinMode(DDIR,           OUTPUT);
+    digitalWrite(DDIR,      HIGH);
+
+    pinMode(buzzr_cntrl_pin, OUTPUT);
+    pinMode(compr_cntrl_pin, OUTPUT);
+    pinMode(startSwitchPin,  INPUT );
+    pinMode(startSwitchPin,  INPUT_PULLUP);
+    pinMode(alarmClearButton, INPUT );
+    pinMode(alarmClearButton, INPUT_PULLUP);
+    
+
+    // default pin-state
+    /* 
+        digitalWrite(RLY_1,     HIGH);
+        digitalWrite(RLY_2,     HIGH);
+        digitalWrite(RLY_3,     HIGH);
+        digitalWrite(RLY_4,     HIGH);
+    */
+
+    digitalWrite(buzzr_cntrl_pin, LOW);
+    digitalWrite(compr_cntrl_pin, LOW );
+
+
+    // Serial 7 segment interface
+    pinMode(dataPin_7segment,        OUTPUT);
+    pinMode(clckPin_7segment,        OUTPUT);
+    pinMode(loadPin_7segment,        OUTPUT);
+
+    digitalWrite(dataPin_7segment,   LOW );
+    digitalWrite(clckPin_7segment,   LOW );
+    digitalWrite(loadPin_7segment,   LOW );
+
+
+
+    // Neo pixcel LEDs interface
+    pinMode(MISO_pin,         OUTPUT);
+    pinMode(PD6_pin,          OUTPUT);
+    pinMode(PD7_pin,          OUTPUT);
+    digitalWrite(MISO_pin,    LOW );
+    digitalWrite(PD6_pin,     LOW );
+    digitalWrite(PD7_pin,     LOW );
+
+
+    DBG_PRINTLN("GPIO init done..");
+
+
+}
 
 bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
 
