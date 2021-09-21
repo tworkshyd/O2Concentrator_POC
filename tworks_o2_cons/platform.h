@@ -156,7 +156,7 @@
 
 
 // 3. Buzzer
-#define buzzr_cntrl_pin  	(A5)
+#define buzzr_cntrl_pin  	  (A5)
 
 // 4. Compressor Control
 // #define compr_cntrl_pin  (A4)
@@ -168,8 +168,8 @@
 //#define LM35_Out_adc      (A1)
 
 // 6. Button input
-#define startButtonPin      (3)    
-#define configButtonPin     (4)    
+#define startSwitchPin      (3)    
+#define alarmClearButton    (4)    
 
 // Serial 7-segment display signals
 #define dataPin_7segment    (5)     

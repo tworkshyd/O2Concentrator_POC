@@ -5,8 +5,8 @@
 // tworks_o2_cons.c
 
 //#include <UniversalTimer.h>
-#include <extEEPROM.h>
-#include "RTCDS1307.h"
+//#include <extEEPROM.h>
+//#include "RTCDS1307.h"
 
 
 #include "o2_sensor.h"
@@ -22,8 +22,8 @@
 // Sytem tick time
 #define TICK_time (10)
 
-extEEPROM eep(kbits_64, 1, 8);        // device size, number of devices, page size
-RTCDS1307 rtc (0x68);                 // address of RTC DS1307
+//extEEPROM eep(kbits_64, 1, 8);        // device size, number of devices, page size
+//RTCDS1307 rtc (0x68);                 // address of RTC DS1307
 
 unsigned char cycle;
 
@@ -43,20 +43,37 @@ void setup (void) {
     //temp
     // test_ads1115 ();
 
-    // RTC DS1307 initialization
-    rtc.begin();
-    rtc.setDate(21, 9, 20);
-    rtc.setTime(21, 35, 55);
+//    // RTC DS1307 initialization
+//    rtc.begin();
+//    rtc.setDate(21, 9, 20);
+//    rtc.setTime(21, 35, 55);
+//
+//    uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
+//    if (eepStatus) {
+//      Serial.print(F("extEEPROM.begin() failed, status = "));
+//      Serial.println(eepStatus);
+//      while (1);
+//    }
 
-    uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
-    if (eepStatus) {
-      Serial.print(F("extEEPROM.begin() failed, status = "));
-      Serial.println(eepStatus);
-      while (1);
-    }
+    // temp
+    DBG_PRINTLN ("SIEVE_A_VALVE_CONTROL.!!");
+    do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);     
+    delay (1000);    
+    do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);     
+    delay (1000);    
+    DBG_PRINTLN ("SIEVE B VALVE_CONTROL.!!");
+    do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
+    delay (1000);    
+   do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
+    delay (1000);    
 
+    DBG_PRINTLN ("SIEVE_FLUSH_VLV_CNTRL..");
+    do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
+    delay (1000);    
+    do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
+    delay (1000);    
     
-    eeprom_init ();
+//    eeprom_init ();
     // temp
     // eeptest ();
     //while (1)
@@ -69,7 +86,7 @@ void setup (void) {
 
     // temp
     test_7segments ();
-    test_neo_pixcell_leds ();
+    //test_neo_pixcell_leds ();
 
     
     display_o2 (00.0);

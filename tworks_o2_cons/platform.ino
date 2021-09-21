@@ -104,10 +104,10 @@ void platform_init (void) {
 
     pinMode(buzzr_cntrl_pin, OUTPUT);
     pinMode(compr_cntrl_pin, OUTPUT);
-    pinMode(startButtonPin,  INPUT );
-    pinMode(startButtonPin,  INPUT_PULLUP);
-    //pinMode(configButtonPin, INPUT );
-    //pinMode(configButtonPin, INPUT_PULLUP);
+    pinMode(startSwitchPin,  INPUT );
+    pinMode(startSwitchPin,  INPUT_PULLUP);
+    pinMode(alarmClearButton, INPUT );
+    pinMode(alarmClearButton, INPUT_PULLUP);
     
 
     // default pin-state
@@ -213,151 +213,151 @@ unsigned long int time_elapsed (unsigned long int time_delay)  {
 
 
 
-////////////////// external eeprom driver //////////////////
-void eeprom_init (void) {
-
-    DBG_PRINTLN();
-    DBG_PRINT ("extEEPROM_START_ADDRESS : ");
-    DBG_PRINTLN(extEEPROM_START_ADDRESS);
-    DBG_PRINT ("extEEPROM_SIZE_IN_BITS : ");
-    DBG_PRINTLN(extEEPROM_SIZE_IN_BITS);
-    DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES : ");
-    DBG_PRINTLN(extEEPROM_PAGE_SIZE_IN_BYTES);
-    DBG_PRINT ("extEEPROM_SIZE_IN_BYTES : ");
-    DBG_PRINTLN(extEEPROM_SIZE_IN_BYTES);    
-    DBG_PRINT ("extEEPROM_LAST_ADDRESS : ");
-    DBG_PRINTLN(extEEPROM_LAST_ADDRESS);
-  
-}
-
-
-
-void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
-
-    unsigned int    len, partial_len, offset_bytes;
-    
-    if (buff_p == NULL  ||  address > extEEPROM_LAST_ADDRESS || n_bytes == 0) {
-        return; 
-    }
-
-    offset_bytes = address % extEEPROM_PAGE_SIZE_IN_BYTES;
-    partial_len  = extEEPROM_PAGE_SIZE_IN_BYTES - offset_bytes;
-//    DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES :");   
-//    DBG_PRINTLN (extEEPROM_PAGE_SIZE_IN_BYTES);   
-//    DBG_PRINT ("offset_bytes :");   
-//    DBG_PRINTLN (offset_bytes);   
-//    DBG_PRINT ("partial_len :");   
-//    DBG_PRINTLN (partial_len);   
-        
-    if (partial_len > n_bytes) {       
-        partial_len = n_bytes;
-
-    }
-
-    if (partial_len)  {
-        eep.write(address, buff_p, partial_len);
-        n_bytes -= partial_len;
-        address += partial_len;
-        buff_p  += partial_len;
-        //delay(5);
-    }
-
-    while (n_bytes) 
-    {
-        if (n_bytes > extEEPROM_PAGE_SIZE_IN_BYTES) {
-            partial_len = extEEPROM_PAGE_SIZE_IN_BYTES;
-        }
-        else {
-            partial_len = n_bytes;
-        }
-        eep.write(address, buff_p, partial_len);
-        n_bytes -= partial_len;
-        address += partial_len;    
-        buff_p  += partial_len;
-        //delay(5);
-    }
-    
-}
-
-
-void eepread (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
-    
-    if (buff_p == NULL  ||  address > extEEPROM_LAST_ADDRESS || n_bytes == 0) {
-        return; 
-    }
-
-    eep.read(address, buff_p, n_bytes);
-
-}
-
-#define EEPROM_TEST_BUFFER_SIZE  (45)
-    
-void eeptest (void) {
-    
-    int       i, address;
-    byte      buff[EEPROM_TEST_BUFFER_SIZE];
-    byte      readbuff[EEPROM_TEST_BUFFER_SIZE];
-    int       buff_size = EEPROM_TEST_BUFFER_SIZE;
-    
+//////////////////// external eeprom driver //////////////////
+//void eeprom_init (void) {
+//
+//    DBG_PRINTLN();
+//    DBG_PRINT ("extEEPROM_START_ADDRESS : ");
+//    DBG_PRINTLN(extEEPROM_START_ADDRESS);
+//    DBG_PRINT ("extEEPROM_SIZE_IN_BITS : ");
+//    DBG_PRINTLN(extEEPROM_SIZE_IN_BITS);
+//    DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES : ");
+//    DBG_PRINTLN(extEEPROM_PAGE_SIZE_IN_BYTES);
+//    DBG_PRINT ("extEEPROM_SIZE_IN_BYTES : ");
+//    DBG_PRINTLN(extEEPROM_SIZE_IN_BYTES);    
+//    DBG_PRINT ("extEEPROM_LAST_ADDRESS : ");
+//    DBG_PRINTLN(extEEPROM_LAST_ADDRESS);
+//  
+//}
+//
+//
+//
+//void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
+//
+//    unsigned int    len, partial_len, offset_bytes;
+//    
+//    if (buff_p == NULL  ||  address > extEEPROM_LAST_ADDRESS || n_bytes == 0) {
+//        return; 
+//    }
+//
+//    offset_bytes = address % extEEPROM_PAGE_SIZE_IN_BYTES;
+//    partial_len  = extEEPROM_PAGE_SIZE_IN_BYTES - offset_bytes;
+////    DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES :");   
+////    DBG_PRINTLN (extEEPROM_PAGE_SIZE_IN_BYTES);   
+////    DBG_PRINT ("offset_bytes :");   
+////    DBG_PRINTLN (offset_bytes);   
+////    DBG_PRINT ("partial_len :");   
+////    DBG_PRINTLN (partial_len);   
+//        
+//    if (partial_len > n_bytes) {       
+//        partial_len = n_bytes;
+//
+//    }
+//
+//    if (partial_len)  {
+//        eep.write(address, buff_p, partial_len);
+//        n_bytes -= partial_len;
+//        address += partial_len;
+//        buff_p  += partial_len;
+//        //delay(5);
+//    }
+//
+//    while (n_bytes) 
+//    {
+//        if (n_bytes > extEEPROM_PAGE_SIZE_IN_BYTES) {
+//            partial_len = extEEPROM_PAGE_SIZE_IN_BYTES;
+//        }
+//        else {
+//            partial_len = n_bytes;
+//        }
+//        eep.write(address, buff_p, partial_len);
+//        n_bytes -= partial_len;
+//        address += partial_len;    
+//        buff_p  += partial_len;
+//        //delay(5);
+//    }
+//    
+//}
 
 
-    DBG_PRINTLN();
-    DBG_PRINTLN ("external EEprom test started..");
-
-    DBG_PRINTLN ("test buffer..");
-    for (i = 0; i < EEPROM_TEST_BUFFER_SIZE; i++)
-    {
-        buff[i] = i + '0';   
-        DBG_PRINT (buff[i]);   
-        DBG_PRINT (" ");
-    }    
-
-    DBG_PRINTLN ();
-    
-    DBG_PRINT ("Writing test buffer..");
-    for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
-    {
-        eepwrite (address, buff, EEPROM_TEST_BUFFER_SIZE);
-    }
-
-    DBG_PRINT ("Reading test buffer..");
-    for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
-    {
-        eepread (address, readbuff, EEPROM_TEST_BUFFER_SIZE);
-        DBG_PRINT (readbuff[5]);
-        DBG_PRINT (" ");   
-    }
-    DBG_PRINTLN ();   
-  
-}
-
-
-
-//////////// RTC driver ////////////////////////////////////////
-void rtc_test (void)  {
-  
-  rtc.getDate(year, month, day, weekday);
-  rtc.getTime(hour, minute, second, period);
-  if (!(second % 3)) rtc.setMode(1 - rtc.getMode());
-  rtc.getTime(hour, minute, second, period);
-
-  Serial.print(w[weekday - 1]);
-  Serial.print("  ");
-  Serial.print(day, DEC);
-  Serial.print("/");
-  Serial.print(m[month - 1]);
-  Serial.print("/");
-  Serial.print(year + 2000, DEC);
-  Serial.print("  ");
-  Serial.print(hour, DEC);
-  Serial.print(":");
-  Serial.print(minute, DEC);
-  Serial.print(":");
-  Serial.print(second, DEC);
-  Serial.print(rtc.getMode() ? (period ? " PM" : " AM") : "");
-  Serial.println();
-  delay(1000);
-}
+//void eepread (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
+//    
+//    if (buff_p == NULL  ||  address > extEEPROM_LAST_ADDRESS || n_bytes == 0) {
+//        return; 
+//    }
+//
+//    eep.read(address, buff_p, n_bytes);
+//
+//}
+//
+//#define EEPROM_TEST_BUFFER_SIZE  (45)
+//    
+//void eeptest (void) {
+//    
+//    int       i, address;
+//    byte      buff[EEPROM_TEST_BUFFER_SIZE];
+//    byte      readbuff[EEPROM_TEST_BUFFER_SIZE];
+//    int       buff_size = EEPROM_TEST_BUFFER_SIZE;
+//    
+//
+//
+//    DBG_PRINTLN();
+//    DBG_PRINTLN ("external EEprom test started..");
+//
+//    DBG_PRINTLN ("test buffer..");
+//    for (i = 0; i < EEPROM_TEST_BUFFER_SIZE; i++)
+//    {
+//        buff[i] = i + '0';   
+//        DBG_PRINT (buff[i]);   
+//        DBG_PRINT (" ");
+//    }    
+//
+//    DBG_PRINTLN ();
+//    
+//    DBG_PRINT ("Writing test buffer..");
+//    for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
+//    {
+//        eepwrite (address, buff, EEPROM_TEST_BUFFER_SIZE);
+//    }
+//
+//    DBG_PRINT ("Reading test buffer..");
+//    for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
+//    {
+//        eepread (address, readbuff, EEPROM_TEST_BUFFER_SIZE);
+//        DBG_PRINT (readbuff[5]);
+//        DBG_PRINT (" ");   
+//    }
+//    DBG_PRINTLN ();   
+//  
+//}
+//
+//
+//
+////////////// RTC driver ////////////////////////////////////////
+//void rtc_test (void)  {
+//  
+//  rtc.getDate(year, month, day, weekday);
+//  rtc.getTime(hour, minute, second, period);
+//  if (!(second % 3)) rtc.setMode(1 - rtc.getMode());
+//  rtc.getTime(hour, minute, second, period);
+//
+//  Serial.print(w[weekday - 1]);
+//  Serial.print("  ");
+//  Serial.print(day, DEC);
+//  Serial.print("/");
+//  Serial.print(m[month - 1]);
+//  Serial.print("/");
+//  Serial.print(year + 2000, DEC);
+//  Serial.print("  ");
+//  Serial.print(hour, DEC);
+//  Serial.print(":");
+//  Serial.print(minute, DEC);
+//  Serial.print(":");
+//  Serial.print(second, DEC);
+//  Serial.print(rtc.getMode() ? (period ? " PM" : " AM") : "");
+//  Serial.println();
+//  delay(1000);
+//}
 
 
 

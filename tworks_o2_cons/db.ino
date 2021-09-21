@@ -41,6 +41,11 @@ volatile float    o2_const_val;
 volatile float    m_raw_voltage;
 
 
+
+uint8_t         start_switch_pressed;
+uint8_t         alarm_clear_button_pressed;
+
+
 uint8_t year, month, weekday, day, hour, minute, second;
 bool    period = 0;
 String  m[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "Septumber", "October", "November", "December"};

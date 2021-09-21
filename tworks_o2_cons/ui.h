@@ -16,6 +16,11 @@
 
 #define BUTTON_DEBOUNCE_DLY ( 55)    // in msecs
 
+#define START_SWITCH_PRESSED        (LOW)
+#define START_SWITCH_RELEASED       (HIGH)
+#define ALARM_CLEAR_BUTTON_PRESSED  (LOW)
+#define ALARM_CLEAR_BUTTON_RELEASED (HIGH)
+
 
 #define HIGH_BEEP           (200)
 #define LOW_BEEP            ( 50)
@@ -27,6 +32,7 @@
 #define CALIBRATION_MODE_ENTRY_CHECK      (5)
 #define FACTORY_MODE_ENTRY_CHECK          (3)
 #define CONFIG_MODE_ENTRY_CHECK           (1)
+
 
 
 
