@@ -129,12 +129,12 @@ void loop (void) {
 void o2_cons_init (void)    {
 
     // compute slope and constant values
-//    sensor_zero_calibration ();
+    sensor_zero_calibration ();
 
     // temp
-    DBG_PRINTLN ("Wsrning..: Hard coding slope and constant for Fio2");
-    o2_slope = 0.1734;
-    o2_const_val = 0.9393;
+//    DBG_PRINTLN ("Wsrning..: Hard coding slope and constant for Fio2");
+//    o2_slope = 0.1734;
+//    o2_const_val = 0.9393;
     
     DBG_PRINTLN ("");
     DBG_PRINT   ("o2_slope : ");
