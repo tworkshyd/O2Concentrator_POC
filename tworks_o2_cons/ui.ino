@@ -13,10 +13,74 @@ static int  ui_state, prev_ui_state;
 static int  f_state_changed;
 
 
-int buttonState = 0;         // variable for reading the pushbutton status
-int button_pressed;
-int button_press_count;
-int button_press_duration;
+int             start_switch_dbnc_dly;
+int             alarm_clear_bttn_dbnc_dly;
+
+void button_check (void)  {
+
+    int     start_switch_state = 0;         // variable for reading the pushbutton status
+    int     alarm_clear_buttn_state = 0;         // variable for reading the pushbutton status
+
+
+    start_switch_state = digitalRead(startSwitchPin);
+    alarm_clear_buttn_state = digitalRead(alarmClearButton);
+
+    // 1. Start Switch Press detection
+    if (start_switch_state == START_SWITCH_PRESSED) {   // press detection
+        start_switch_dbnc_dly++;
+        if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+            start_switch_pressed = true; 
+            start_switch_dbnc_dly = 0;
+            //DBG_PRINT  ("Start_switch Pressed");
+        }
+        //DBG_PRINT  ("start_switch_dbnc_dly : ");
+        //DBG_PRINTLN(start_switch_dbnc_dly);
+    }
+    // 2. Start Switch Release detection
+    else if (start_switch_state == START_SWITCH_RELEASED) {   // press detection
+      start_switch_dbnc_dly++;
+      if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+          start_switch_pressed = false;
+          start_switch_dbnc_dly = 0;
+          //DBG_PRINT  ("Start_switch RELEASED");
+      }
+      //DBG_PRINT  ("start_switch_dbnc_dly : ");
+      //DBG_PRINTLN(start_switch_dbnc_dly);
+    }
+  else {
+    // nop
+  }
+  
+  
+    // 3. Alarm Clear Button Press detection
+    if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_PRESSED) {   // press detection
+      alarm_clear_bttn_dbnc_dly++;
+      if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+        alarm_clear_button_pressed = true;
+        alarm_clear_bttn_dbnc_dly = 0;
+        //DBG_PRINT  ("Alarm Clear Button Pressed..");
+      }
+      //DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
+      //DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+    }
+    // 4. Alarm Clear Button Release detection
+    else if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_RELEASED) {   // press detection
+      alarm_clear_bttn_dbnc_dly++;
+      if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+        alarm_clear_button_pressed = false;
+        alarm_clear_bttn_dbnc_dly = 0;
+        //DBG_PRINT  ("Alarm Clear Button RELEASED");
+      }
+      //DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
+      //DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+    }
+    else {
+      // nop
+    }
+      
+  
+}
+
 
 
 void ui_print_welcome (void)    {
@@ -73,104 +137,108 @@ void ui_task_main (void)    {
     char                  str_temp[6];
     char                  str_temp2[6];
 
-    buttonState = digitalRead(startButtonPin);
+//    buttonState = digitalRead(startButtonPin);
 
     if (f_sec_change_ui_task) {
         f_sec_change_ui_task = 0;
         state_time++;
     }
 
-    if (buttonState == BUTTON_ACTIVE) {   // press detection
-        button_debounce_delay++;
-        if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
-            button_debounce_delay = 0;
-            button_pressed = true;
-        }
-        // temp
-        DBG_PRINT  ("button_debounce_delay : ");
-        DBG_PRINTLN(button_debounce_delay);
-    }
-    else {  // release detection
-        if (button_debounce_delay)
-            button_debounce_delay--;
-        if (button_debounce_delay == 0)    {
-            if (button_pressed) {
-                button_pressed = false;
-                button_press_count++;
-                time_tag = systemtick_msecs;
-                // temp
-                DBG_PRINT  ("button_press_count : ");
-                DBG_PRINTLN(button_press_count);
-            }
-        }
 
-    }
+    button_check ();
+      
+//    if (buttonState == BUTTON_ACTIVE) {   // press detection
+//        button_debounce_delay++;
+//        if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
+//            button_debounce_delay = 0;
+//            button_pressed = true;
+//        }
+//        // temp
+//        DBG_PRINT  ("button_debounce_delay : ");
+//        DBG_PRINTLN(button_debounce_delay);
+//    }
+//    else {  // release detection
+//        if (button_debounce_delay)
+//            button_debounce_delay--;
+//        if (button_debounce_delay == 0)    {
+//            if (button_pressed) {
+//                button_pressed = false;
+//                button_press_count++;
+//                time_tag = systemtick_msecs;
+//                // temp
+//                DBG_PRINT  ("button_press_count : ");
+//                DBG_PRINTLN(button_press_count);
+//            }
+//        }
+//
+//    }
 
 
     switch (ui_state)
     {
         case UI_START:
             //if (powerUpTimer.check())   {
-            if (state_time >= 10) {
-                ui_state = UI_SYS_INIT;
-                lcd.setCursor(0, 3);
-                button_press_count = 0;
-                lcd.print("Press ButtonToStart!");
-            }
-            else if (time_elapsed (time_tag) > 1500) {
-                if (button_press_count >= CALIBRATION_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
-                    ui_state = UI_CALIB_MODE;
-                }
-                else if (button_press_count >= FACTORY_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
-                    ui_state = UI_FACTORY_MODE;
-                }
-                if (button_press_count >= CONFIG_MODE_ENTRY_CHECK)  {
-                    button_press_count = 0;
-                    ui_state = UI_CONFIG_MODE;
-                }
-            }
-            else {
-                if (f_state_changed)  {
-                    ui_print_welcome ();
-                }
-            }
-            break;
-        case UI_CALIB_MODE:
-            DBG_PRINTLN("Entered Calibration Mode..");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Calibration Mode..");
-            lcd.setCursor(0, 1);
-            lcd.print("O2 sensorCalibration");
-            multi_beeps (5);
-            
+//            if (state_time >= 10) {
+//                ui_state = UI_SYS_INIT;
+//                lcd.setCursor(0, 3);
+//                button_press_count = 0;
+//                lcd.print("Press ButtonToStart!");
+//            }
+//            else if (time_elapsed (time_tag) > 1500) {
+//                if (button_press_count >= CALIBRATION_MODE_ENTRY_CHECK)  {
+//                    button_press_count = 0;
+//                    ui_state = UI_CALIB_MODE;
+//                }
+//                else if (button_press_count >= FACTORY_MODE_ENTRY_CHECK)  {
+//                    button_press_count = 0;
+//                    ui_state = UI_FACTORY_MODE;
+//                }
+//                if (button_press_count >= CONFIG_MODE_ENTRY_CHECK)  {
+//                    button_press_count = 0;
+//                    ui_state = UI_CONFIG_MODE;
+//                }
+//            }
+//            else {
+//                if (f_state_changed)  {
+//                    ui_print_welcome ();
+//                }
+//            }
             ui_state = UI_SYS_INIT;
             break;
-        case UI_FACTORY_MODE:
-            DBG_PRINTLN("Factory Mode..");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Factory Mode..");
-
-            multi_beeps (3);
-
-            // Power On self test - on demand
-            power_on_self_test ();
-            ui_state = UI_SYS_INIT;
-            break;
-
-        case UI_CONFIG_MODE:
-            DBG_PRINTLN("Entered Configuration Mode..");
-            lcd.clear();
-            lcd.setCursor(0, 0);
-            lcd.print("Configuration Mode..");
-            lcd.setCursor(0, 1);
-
-            multi_beeps (2);
-            ui_state = UI_SYS_INIT;
-            break;
+//        case UI_CALIB_MODE:
+//            DBG_PRINTLN("Entered Calibration Mode..");
+//            lcd.clear();
+//            lcd.setCursor(0, 0);
+//            lcd.print("Calibration Mode..");
+//            lcd.setCursor(0, 1);
+//            lcd.print("O2 sensorCalibration");
+//            multi_beeps (5);
+//            
+//            ui_state = UI_SYS_INIT;
+//            break;
+//        case UI_FACTORY_MODE:
+//            DBG_PRINTLN("Factory Mode..");
+//            lcd.clear();
+//            lcd.setCursor(0, 0);
+//            lcd.print("Factory Mode..");
+//
+//            multi_beeps (3);
+//
+//            // Power On self test - on demand
+//            power_on_self_test ();
+//            ui_state = UI_SYS_INIT;
+//            break;
+//
+//        case UI_CONFIG_MODE:
+//            DBG_PRINTLN("Entered Configuration Mode..");
+//            lcd.clear();
+//            lcd.setCursor(0, 0);
+//            lcd.print("Configuration Mode..");
+//            lcd.setCursor(0, 1);
+//
+//            multi_beeps (2);
+//            ui_state = UI_SYS_INIT;
+//            break;
 
         case UI_SYS_INIT:
             lcd.clear();
@@ -181,8 +249,7 @@ void ui_task_main (void)    {
             break;
         case UI_SYS_ON_CHECK:
             // System ON check
-            if (button_pressed == true)  {
-                button_pressed = false;
+            if (start_switch_pressed == true)  {
                 f_system_running = true;
 
                 DBG_PRINTLN("Start Button Pressed..!");
@@ -221,7 +288,7 @@ void ui_task_main (void)    {
                 // temp : just to trigger LCD refresh for O2 values
                 prev_o2_concentration = 0;
             }
-
+/*
             // LCD Line 2
             // O2 concentration / output pressure
             if (prev_o2_concentration != o2_concentration || prev_output_pressure != output_pressure)  {
@@ -229,7 +296,7 @@ void ui_task_main (void)    {
                 prev_output_pressure = output_pressure;
                 // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
                 // DBG_PRINTLN(lcd_temp_string);
-                /* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
+                // 4 is mininum width, 2 is precision; float value is copied onto str_temp
                 dtostrf(o2_concentration, 4, 2, str_temp);
 
 
@@ -262,9 +329,9 @@ void ui_task_main (void)    {
                 lcd.setCursor(0, 3);
                 lcd.print(lcd_temp_string);
             }
-
+*/
             // System OFF check
-            if (button_pressed == true)  {
+            if (start_switch_pressed == false)  {
                 ui_state = UI_SYS_OFF_CHECK;
             }
             else {
@@ -274,8 +341,8 @@ void ui_task_main (void)    {
 
         case UI_SYS_OFF_CHECK:
             // System OFF check
-            if (button_pressed == true)  {
-                button_pressed = false;
+//            if (button_pressed == true)  {
+//                button_pressed = false;
                 f_system_running = false;
                 DBG_PRINTLN("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
@@ -283,9 +350,6 @@ void ui_task_main (void)    {
                 COMPRSSR_CNTRL (COMPRSSR_OFF);
                 beep_for (SYS_OFF_BEEP);   // msecs
 
-				// clear current run time counter
-				current_run_time_secs = 0;
-				
                 // Bring values to default position
                 tworks2_values_to_default_postion ();
 
@@ -297,11 +361,11 @@ void ui_task_main (void)    {
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Stopped..! ");
                 ui_state = UI_LAST;
-            }
-            else {
-                // back to run state..
-                ui_state = UI_SYS_RUNNING;
-            }
+//            }
+//            else {
+//                // back to run state..
+//                ui_state = UI_SYS_RUNNING;
+//            }
             break;
         default:
         case UI_LAST:

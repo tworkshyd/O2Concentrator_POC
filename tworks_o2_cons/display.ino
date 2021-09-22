@@ -1,7 +1,7 @@
 
 
 #include "display.h"
-#include "LedControl.h"
+//#include "LedControl.h"
 
 
 char     lcd_temp_string[LCD_COLS + 1];
@@ -23,182 +23,210 @@ void lcd_clear_buf (char * bufp) {
 
 
 
+//==================== 7 segment driver ========================
+#define NO_OP     (0x00)
+#define DIGIT_0   (0x01)
+#define DIGIT_1   (0x02)
+#define DIGIT_2   (0x03)
+#define DIGIT_3   (0x04)
+#define DIGIT_4   (0x05)
+#define DIGIT_5   (0x06)
+#define DIGIT_6   (0x07)
+#define DIGIT_7   (0x08)
+#define DECODE_MODE   (0x09)
+#define INTENSITY     (0x0A)
+#define SCAN_LIMIT    (0x0B)
+#define SHUT_DOWN     (0x0C)
+#define DISPLAY_TEST  (0x0F)
+
+
+
+#define BLANK         (0x0F)
+
+// Local driver defines
+#define DECIMAL_POINT (0x0A)
+#define BLANK_DIGIT   (0x0B)
+
+
+uint8_t   digit_to_seg_value[] = {
+  
+    0b01111110,  // '0' 
+    0b00110000,  // '1' 
+    0b01101101,  // '2' 
+    0b01111001,  // '3' 
+    0b00110011,  // '4' 
+    0b01011011,  // '5' 
+    0b01011111,  // '6' 
+    0b01110000,  // '7' 
+    0b01111111,  // '8' 
+    0b01111011,  // '9' 
+    0b10000000,  // '.' -- 0x0A prints decimal point
+    0b10000000,  // ' ' -- 0x0B blanks digit
+  
+};
+
+//#define  DIGIT_0    0b01111110  // '0' 
+//#define  DIGIT_1    0b00110000  // '1' 
+//#define  DIGIT_2    0b01101101  // '2' 
+//#define  DIGIT_3    0b01111001  // '3' 
+//#define  DIGIT_4    0b00110011  // '4' 
+//#define  DIGIT_5    0b01011011  // '5' 
+//#define  DIGIT_6    0b01011111  // '6' 
+//#define  DIGIT_7    0b01110000  // '7' 
+//#define  DIGIT_8    0b01111111  // '8' 
+//#define  DIGIT_9    0b01111011  // '9' 
+//#define  POINT      0b10000000  // '.' -- 0x0A prints decimal point
+//#define  BLANK      0b10000000  // ' ' -- 0x0B blanks digit
+
+    
+void  set7segmentDigit (int digit, int value, uint8_t  point) {
+
+    if (point == true)
+        point = 0x80;
+    else 
+        point = 0;
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     
+    digitalWrite(loadPin_7segment,   LOW);
+    digitalWrite(loadPin_7segment,   HIGH);         
+}
+
+void  set7segmentRegister (int reg, int value) {
+  
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, reg);
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, value);     
+    digitalWrite(loadPin_7segment,   LOW);
+    digitalWrite(loadPin_7segment,   HIGH);         
+}
+
 
 void init_7segments (void) {
   /*
    The MAX72XX is in power-saving mode on startup,
    we have to do a wakeup call
    */
-  lc.shutdown (0, false);
-  /* Set the brightness to a medium values */
-  //  lc.setIntensity (0, 0x8);
-  lc.setIntensity (0, _7_SEGMENT_INTENSITY);    // 0xF = maximum brightness
-  /* and clear the display */
-  lc.clearDisplay (0);
-  
-}
+//  lc.shutdown (0, false);
+//  /* Set the brightness to a medium values */
+//  lc.setIntensity (0, 0x8);
+//  /* and clear the display */
+//  lc.clearDisplay (0);
 
-/*
- This method will display the characters for the
- word "Arduino" one after the other on digit 0. 
- */
-void display_banner (void) {
-
-    /*
-     * a = 'a'      j = 
-     * b =          k = 
-     * c =          l = 
-     * d = 'd'      m =
-     * e =          n = 
-     * f =
-     * g =
-     * h =
-     * i = 
-     */
-    
-    lc.setRow(0,0,B00010000);
-    delay(delaytime);
-    lc.setRow(0,1,B00010000);
-    delay(delaytime);
-    lc.setRow(0,2,B00010000);
-    delay(delaytime);
-    lc.setRow(0,3,B00010000);
-    delay(delaytime);
-    lc.setRow(0,4,B00010000);
-    delay(delaytime);
-    lc.setRow(0,5,B00010000);
-    delay(delaytime);
-    lc.setRow(0,6,B00010000);
-    delay(delaytime);
-    lc.setRow(0,7,B00010000);
-    delay(delaytime);
-    
-} 
-
-/*
-  This method will scroll all the hexa-decimal
- numbers and letters on the display. You will need at least
- four 7-Segment digits. otherwise it won't really look that good.
- */
-void scrollDigits (void) {
-    
-    for(int i = 0; i < 13; i++) 
-    {
-        lc.setDigit(0, 7, 8, false);
-        lc.setDigit(0, 6, 8, false);
-        lc.setDigit(0, 5, 8, false);
-        lc.setDigit(0, 4, 8, false);
-        lc.setDigit(0, 3, 8, false);
-        lc.setDigit(0, 2, 8, false);
-        lc.setDigit(0, 1, 8, false);
-        lc.setDigit(0, 0, 8, false);
-        delay(delaytime);
-    }
-    
-    lc.clearDisplay(0);
-    delay(delaytime);
-  
-}
-
-void test_7segments (void) { 
-    
-  display_banner();
-  scrollDigits();
-  
-}
-
-#define TOTAL_DIGITS    (7)
-#define DIGIT_VALUE_MAX (9)
 
 
 /*
- *  Two LED boards Board 1 with 5 LEDs A0 to A4
- *   and  Board 2 with 2 LEDs A0 & A1 (will refere these as a0 & a1)
- *   
- *   From host controller 3 pins are used for interface 
- *    MISO, PD6 & PD7, these are connected from display board JP5 connector to 
- *    J1 connector of LED Board1, LED Board2 is cascaed with LED Board1
- *    
+ * D15 D14 D13 D12 D11 D10 D9 D8 D7 D6 D5 D4 D3 D2 D1 D0
+   X   X   X   X   ADDRESS-----| MSB     DATA        LSB
  */
 
+    //shiftOut(dataPin, clockPin, bitOrder, value);
+
+ //DBG_PRINTLN("shifting bits...");
  
-#define NEO_PIXCELL_LED_COUNT   (7)
-void test_neo_pixcell_leds (void) {
-
-    int    count;
-
-    Serial.println("Testing Neo LEDs..");
-
-    count = 0;
-    for (count = 0; count <= 7; count++)
-    {
     
-        digitalWrite(MISO_pin,    count & 0x04);
-        digitalWrite(PD6_pin,     count & 0x02);
-        digitalWrite(PD7_pin,     count & 0x01);
-    
-        delay(200);
-        Serial.print("NEO LED no: ");
-        Serial.println(count);
-    }
+    set7segmentRegister (INTENSITY, 0x07);
+    set7segmentRegister (SHUT_DOWN, 1);
 
-    Serial.println("Testing Neo LEDs.. done");
-    // OFF all be fore leaving
-    digitalWrite(MISO_pin,    0);
-    digitalWrite(PD6_pin,     0);
-    digitalWrite(PD7_pin,     0);
+
+//    set7segmentDigit (1, 0); 
+//    set7segmentDigit (2, 1);
+//    set7segmentDigit (3, 2);
+//    set7segmentDigit (4, 3);
+//    set7segmentDigit (5, 4);
+//    set7segmentDigit (6, 5);
+//    set7segmentDigit (7, 6);
+//    set7segmentDigit (8, 7);
+
+
+  //DBG_PRINTLN("shifting done..");   
+  
 }
 
+///*
+// This method will display the characters for the
+// word "Arduino" one after the other on digit 0. 
+// */
+//void display_banner (void) {
+//
+//    /*
+//     * a = 'a'      j = 
+//     * b =          k = 
+//     * c =          l = 
+//     * d = 'd'      m =
+//     * e =          n = 
+//     * f =
+//     * g =
+//     * h =
+//     * i = 
+//     */
+//    
+//    lc.setRow(0,0,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,1,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,2,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,3,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,4,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,5,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,6,B00010000);
+//    delay(delaytime);
+//    lc.setRow(0,7,B00010000);
+//    delay(delaytime);
+//    
+//} 
+//
+///*
+//  This method will scroll all the hexa-decimal
+// numbers and letters on the display. You will need at least
+// four 7-Segment digits. otherwise it won't really look that good.
+// */
+//void scrollDigits (void) {
+//    
+//    for(int i = 0; i < 13; i++) 
+//    {
+//        lc.setDigit(0, 7, 8, false);
+//        lc.setDigit(0, 6, 8, false);
+//        lc.setDigit(0, 5, 8, false);
+//        lc.setDigit(0, 4, 8, false);
+//        lc.setDigit(0, 3, 8, false);
+//        lc.setDigit(0, 2, 8, false);
+//        lc.setDigit(0, 1, 8, false);
+//        lc.setDigit(0, 0, 8, false);
+//        delay(delaytime);
+//    }
+//    
+//    lc.clearDisplay(0);
+//    delay(delaytime);
+//  
+//}
+//
+//void test_7segments (void) { 
+//    
+//  display_banner();
+//  scrollDigits();
+//  
+//}
+
+//#define TOTAL_DIGITS    (7)
+//#define DIGIT_VALUE_MAX (9)
+//
+//
+//void disp_digit_on_7seg (uint8_t place, uint8_t value)   {
+//
+//    if (place > TOTAL_DIGITS  &&  value > DIGIT_VALUE_MAX)  {
+//        // invalid parameters
+//        return;
+//    }
+//
+//    lc.setDigit (0, place, value, false);
+//    
+//}
 
 
-void neo_pixcel_data (enum ERROR_CODE_E error_no, uint8_t  on_off) {
 
-    static uint8_t  led_byte;
-    uint8_t         code_bit;
-
-    switch (error_no)
-    {
-        case UNUSED_LED:            code_bit = A0;   break;
-        case UNIT_OVER_HEAT:        code_bit = A1;   break;
-        case POWER_FAIL:            code_bit = A2;   break;
-        case OUTPUT_FLOW_OBSTRUCT:  code_bit = A3;   break;
-        case LOW_O2_PURITY:         code_bit = A4;   break;
-        
-        case CRN_DISPLAY:           code_bit = a0;   break;
-        case TRN_DISPLAY:           code_bit = a1;   break;          
-
-        case ALL_LEDs_OFF:              
-            code_bit = 0;    
-            led_byte = 0;
-            break;   // temp fix, need to revisit here
-        default:
-          // nop
-          break;
-    }
-
-    if (on_off) {
-        led_byte |= code_bit;   
-    }
-    else {
-        led_byte &= ~code_bit;   
-    }
-            
-    digitalWrite(MISO_pin,    led_byte & 0x04);
-    digitalWrite(PD6_pin,     led_byte & 0x02);
-    digitalWrite(PD7_pin,     led_byte & 0x01);  
-    
-}
-
-void disp_digit_on_7seg (uint8_t place, uint8_t value)   {
-
-    if (place > TOTAL_DIGITS  &&  value > DIGIT_VALUE_MAX)  {
-        // invalid parameters
-        return;
-    }
-
-    lc.setDigit (0, place, value, false);
-    
-}
 
 void display_o2 (float o2value) {
 
@@ -215,10 +243,14 @@ void display_o2 (float o2value) {
     tens_digit    = int_o2value % 10;
     
     
-    lc.setDigit(0, 0, tens_digit,    false);
-    lc.setDigit(0, 1, unit_digit,    true);
-    lc.setDigit(0, 2, decimal_digit, false);
-   
+//    lc.setDigit(0, 0, tens_digit,    false);
+//    lc.setDigit(0, 1, unit_digit,    true);
+//    lc.setDigit(0, 2, decimal_digit, false);
+    set7segmentDigit (1, tens_digit, false);
+    //set7segmentDigit (2, BLANK_DIGIT);    
+    set7segmentDigit (2, unit_digit, true);
+    set7segmentDigit (3, decimal_digit, false);
+    
     
 }
 
@@ -237,153 +269,94 @@ void display_total_run_hours (uint32_t runhours) {
     ten_th_digit  = runhours % 10;
     runhours      = runhours / 10;
 
-    
-    lc.setDigit(0, 3, ten_th_digit, false);
-    lc.setDigit(0, 4, thnd_digit,   false);
-    lc.setDigit(0, 5, hund_digit,   false);
-    lc.setDigit(0, 6, tens_digit,   false);
-    lc.setDigit(0, 7, unit_digit,   false);  
-     
-    // 10,000th digit
-    if (ten_th_digit) {
-      lc.setDigit(0, 3, ten_th_digit, false);
-    }
-    else {
-      lc.setRow(0, 3, 0b00000000);
-    }
-    // 1000th digit
-    if (thnd_digit) {
-      lc.setDigit(0, 4, thnd_digit, false);
-    }
-    else {
-      lc.setRow(0, 4, 0b00000000);
-    }
 
-    // 100th digit
-    //lc.setDigit(0, 5, hund_digit,   true);
-    if (hund_digit) {
-      lc.setDigit(0, 5, hund_digit, false);
-    }
-    else {
-      lc.setRow(0, 5, 0b00000000);
-    }
-
-    // 10th digit
-    // lc.setDigit(0, 6, tens_digit,   true);
-    //lc.setDigit(0, 6, tens_digit,   false);
-    if (tens_digit) {
-      lc.setDigit(0, 6, tens_digit, false);
-    }
-    else {
-      lc.setRow(0, 6, 0b00000000);
-    }
-
-    // unit's digit
-    lc.setDigit(0, 7, unit_digit,   false);   
-
+    set7segmentDigit (4, ten_th_digit, false);
+    set7segmentDigit (5, thnd_digit, false);
+    set7segmentDigit (6, hund_digit, false);
+    set7segmentDigit (7, tens_digit, false);
+    set7segmentDigit (8, unit_digit, false);
+         
+//    // 10,000th digit
+//    if (ten_th_digit) {
+//
+//    }
+//    else {
+//      set7segmentDigit (4, BLANK, false);
+//    }
+//    
+//    // 1000th digit
+//    if (thnd_digit) {
+//      // lc.setDigit(0, 5, thnd_digit, false);
+//      set7segmentDigit (5, thnd_digit, false);
+//    }
+//    else {
+//      //lc.setRow(0, 5, 0b00000000);
+//      set7segmentDigit (5, BLANK, false);
+//    }
+//
+//    // 100th digit
+//    //lc.setDigit(0, 5, hund_digit,   true);
+//    if (hund_digit) {
+//      //lc.setDigit(0, 6, hund_digit, false);
+//      set7segmentDigit (6, hund_digit, false);
+//    }
+//    else {
+//      //lc.setRow(0, 6, 0b00000000);
+//      set7segmentDigit (6, BLANK, false);
+//    }
+//
+//    // 10th digit
+//    // lc.setDigit(0, 6, tens_digit,   true);
+//    //lc.setDigit(0, 6, tens_digit,   false);
+//    if (tens_digit) {
+//      //lc.setDigit(0, 7, tens_digit, false);
+//      set7segmentDigit (7, tens_digit, false);
+//    }
+//    else {
+//      //lc.setRow(0, 7, 0b00000000);
+//      set7segmentDigit (7, BLANK_DIGIT, false);
+//    }
+//
+//    // unit's digit
+//    // lc.setDigit(0, 8, unit_digit,   false);   
+//    set7segmentDigit (8, unit_digit, false);
         
 }
 
+void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
-// 1. with decimal point after hours	
-void display_current_run_time_1 (uint16_t hours, uint16_t mins) {
-
-    uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
+    uint8_t     digit1, digit2, digit3, digit4, digit5;
 
     // validate parameters
     mins  = mins % 60;
-    hours = hours % 999;
+    hours = hours % 99;
 
-    unit_digit    = mins % 10;
-    mins          = mins / 10;
-    tens_digit    = mins % 10;
+
+    digit1    = hours % 10;
+    hours     = hours / 10;
+    digit2    = hours % 10;
+
+    // digit3 = blank
     // : 
-    hund_digit    = hours % 10;
-    hours         = hours / 10;
-    thnd_digit    = hours % 10;
-    hours         = hours / 10;    
-    ten_th_digit  = hours % 10;
+    digit4    = mins % 10;
+    mins      = mins / 10;
+    digit5    = mins % 10;
 
     
-    // 10,000th digit
-    if (ten_th_digit) {
-      lc.setDigit(0, 3, ten_th_digit, false);
-    }
-    else {
-      lc.setRow(0, 3, 0b00000000);
-    }
-    // 1000th digit
-    if (thnd_digit) {
-      lc.setDigit(0, 4, thnd_digit, false);
-    }
-    else {
-      lc.setRow(0, 4, 0b00000000);
-    }
 
-    // 100th digit
-    lc.setDigit(0, 5, hund_digit,   true);
-
-    // 10th digit
-    // lc.setDigit(0, 6, tens_digit,   true);
-    lc.setDigit(0, 6, tens_digit,   false);
-
-    // unit's digit
-    lc.setDigit(0, 7, unit_digit,   false);   
     
-}
+    // digit 1
+    set7segmentDigit (4, digit2, false);
+    // digit 2
+    set7segmentDigit (5, digit1, false);
+    // digit 3
+    set7segmentDigit (6, BLANK_DIGIT, true);
+    // digit 4
+    set7segmentDigit (7, digit5, false);
+    // digit 5
+    set7segmentDigit (8, digit4, false);
 
 
-// 2. without decimal point and one digit gap between hours & minutes
-void display_current_run_time_2 (uint16_t hours, uint16_t mins) {
-  
-  	uint8_t     digit5, digit4, digit3, digit2, digit1;
-  
-  	// validate parameters
-  	mins  = mins % 60;
-  	hours = hours % 99;
-  
-  	digit1	= mins % 10;
-  	mins	= mins / 10;
-  	digit2	= mins % 10;
-  	// blank
-  	digit3	= 0b00000000;
-  	digit4	= hours % 10;
-  	hours	= hours / 10;
-  	digit5	= hours % 10;
-
-
-  	
-  	// digit5
-    //	if (digit5) {
-    //		lc.setDigit(0, 3, digit5, false);
-    //	}
-    //	else {
-    //		lc.setRow(0, 3, 0b00000000);
-    //	}
-    lc.setDigit(0, 3, digit5, false);
-  
-  	// digit4
-  	lc.setDigit(0, 4, digit4, false);
-  	
-  
-  	// digit3
-  	lc.setRow(0, 5, 0b10000000);
-  	
-  	// digit2
-  	// lc.setDigit(0, 6, digit2,   true);
-  	lc.setDigit(0, 6, digit2,   false);
-  
-  	// digit1
-  	lc.setDigit(0, 7, digit1,   false);
-	
-}
-
-
-// 3. with colon between run hours and minutes by flipping digit2 (from right) of row2
-void display_current_run_time_3  (uint16_t hours, uint16_t mins)	{
-	
-	// todo
-	
 }
 
 

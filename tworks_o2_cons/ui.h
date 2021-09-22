@@ -28,6 +28,10 @@
 #define FACTORY_MODE_ENTRY_CHECK          (3)
 #define CONFIG_MODE_ENTRY_CHECK           (1)
 
+#define START_SWITCH_PRESSED          (LOW)
+#define START_SWITCH_RELEASED         (HIGH)
+#define ALARM_CLEAR_BUTTON_PRESSED    (LOW)
+#define ALARM_CLEAR_BUTTON_RELEASED   (HIGH)
 
 
 enum UI_STATES_E  {

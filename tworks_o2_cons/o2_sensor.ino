@@ -122,6 +122,7 @@ int sensor_zero_calibration (void)
     DBG_PRINT   ("o2_slope : ");
     DBG_PRINT   (o2_slope);
     DBG_PRINT   (", o2_const_val : ");
+    DBG_PRINT   (o2_const_val);
 
     return result;
     
@@ -145,8 +146,8 @@ void o2_sensor_scan (void)  {
     // o2_slope = 0.02065262;  // 48.42; // 0.166;
     // o2_const_val = -4.68815;  //227; //1.3228;
     
-    // o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
-    o2_concentration = ((o2_raw_adc_count * o2_slope) + o2_const_val);
+    o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
+    //o2_concentration = ((o2_raw_adc_count * o2_slope) + o2_const_val);
 
     DBG_PRINT(", o2_concentration : ");
     DBG_PRINT(o2_concentration);
