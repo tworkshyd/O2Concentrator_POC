@@ -28,7 +28,7 @@ unsigned long   total_run_time_secs;
 
 
 unsigned long int Production_Delay;     // delay variable creation
-volatile unsigned long int Flush_Delay;          // delay variable creation
+volatile unsigned long int Flush_Delay; // delay variable creation
 unsigned long int PreCharge_Delay;      // delay variable creation
 
 unsigned long int nb_delay;
