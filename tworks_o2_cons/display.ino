@@ -85,17 +85,20 @@ void  set7segmentDigit (int digit, int value, uint8_t  point) {
         point = 0x80;
     else 
         point = 0;
+        
+    digitalWrite(loadPin_7segment,   LOW);        
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     
-    digitalWrite(loadPin_7segment,   LOW);
+
     digitalWrite(loadPin_7segment,   HIGH);         
 }
 
 void  set7segmentRegister (int reg, int value) {
-  
+
+    digitalWrite(loadPin_7segment,   LOW);  
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, reg);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, value);     
-    digitalWrite(loadPin_7segment,   LOW);
+
     digitalWrite(loadPin_7segment,   HIGH);         
 }
 
@@ -123,8 +126,11 @@ void init_7segments (void) {
  //DBG_PRINTLN("shifting bits...");
  
     
-    set7segmentRegister (INTENSITY, 0x07);
     set7segmentRegister (SHUT_DOWN, 1);
+    set7segmentRegister (DECODE_MODE, 0x00);  // 0xFF);
+    set7segmentRegister (INTENSITY,   0x0F);
+    set7segmentRegister (SCAN_LIMIT,   0x07);
+
 
 
 //    set7segmentDigit (1, 0); 
