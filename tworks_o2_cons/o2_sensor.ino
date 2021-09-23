@@ -17,7 +17,8 @@ float x_samples[NUM_OF_SAMPLES_O2]   = {  94.0, 1005.0, 4888.0};  // default cal
 */
 
 // for sensor S3
-float y_samples[NUM_OF_SAMPLES_O2]   = {  4.0,    20.0,   99.7};
+//float y_samples[NUM_OF_SAMPLES_O2]   = {  4.0,    20.0,   99.7};
+float y_samples[NUM_OF_SAMPLES_O2]   = {  0.0,    21.1,   100.0};
 float x_samples[NUM_OF_SAMPLES_O2]   = {  8.75, 129.75,  601.75};  // default calib values
 
 
