@@ -61,7 +61,7 @@ uint8_t   digit_to_seg_value[] = {
     0b01111111,  // '8' 
     0b01111011,  // '9' 
     0b10000000,  // '.' -- 0x0A prints decimal point
-    0b10000000,  // ' ' -- 0x0B blanks digit
+    0b00000000,  // ' ' -- 0x0B blanks digit
   
 };
 
@@ -93,6 +93,11 @@ void  set7segmentDigit (int digit, int value, uint8_t  point) {
 
 void  set7segmentRegister (int reg, int value) {
   
+/*
+ * D15 D14 D13 D12 D11 D10 D9 D8 D7 D6 D5 D4 D3 D2 D1 D0
+   X   X   X   X   ADDRESS-----| MSB     DATA        LSB
+ */
+    //shiftOut(dataPin, clockPin, bitOrder, value);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, reg);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, value);     
     digitalWrite(loadPin_7segment,   LOW);
@@ -101,158 +106,60 @@ void  set7segmentRegister (int reg, int value) {
 
 
 void init_7segments (void) {
-  /*
-   The MAX72XX is in power-saving mode on startup,
-   we have to do a wakeup call
-   */
-//  lc.shutdown (0, false);
-//  /* Set the brightness to a medium values */
-//  lc.setIntensity (0, 0x8);
-//  /* and clear the display */
-//  lc.clearDisplay (0);
-
-
-
-/*
- * D15 D14 D13 D12 D11 D10 D9 D8 D7 D6 D5 D4 D3 D2 D1 D0
-   X   X   X   X   ADDRESS-----| MSB     DATA        LSB
- */
-
-    //shiftOut(dataPin, clockPin, bitOrder, value);
-
- //DBG_PRINTLN("shifting bits...");
- 
     
     set7segmentRegister (INTENSITY, 0x07);
     set7segmentRegister (SHUT_DOWN, 1);
-
-
-//    set7segmentDigit (1, 0); 
-//    set7segmentDigit (2, 1);
-//    set7segmentDigit (3, 2);
-//    set7segmentDigit (4, 3);
-//    set7segmentDigit (5, 4);
-//    set7segmentDigit (6, 5);
-//    set7segmentDigit (7, 6);
-//    set7segmentDigit (8, 7);
-
-
-  //DBG_PRINTLN("shifting done..");   
-  
+ 
 }
 
-///*
-// This method will display the characters for the
-// word "Arduino" one after the other on digit 0. 
-// */
-//void display_banner (void) {
+// ver1: Display 2.1 digits for O2 concentration
+//void display_o2 (float o2value) {
 //
-//    /*
-//     * a = 'a'      j = 
-//     * b =          k = 
-//     * c =          l = 
-//     * d = 'd'      m =
-//     * e =          n = 
-//     * f =
-//     * g =
-//     * h =
-//     * i = 
-//     */
+//    uint16_t     int_o2value;
+//    uint8_t     decimal_digit;
+//    uint8_t     unit_digit;
+//    uint8_t     tens_digit;
+//
+//    int_o2value   = (uint16_t)(o2value * 10);
+//    decimal_digit = int_o2value % 10;
+//    int_o2value   = int_o2value / 10;
+//    unit_digit    = int_o2value % 10;
+//    int_o2value   = int_o2value / 10;
 //    
-//    lc.setRow(0,0,B00010000);
-//    delay(delaytime);
-//    lc.setRow(0,1,B00010000);
-//    delay(delaytime);
-//    lc.setRow(0,2,B00010000);
-//    delay(delaytime);
-//    lc.setRow(0,3,B00010000);
-//    delay(delaytime);
-//    lc.setRow(0,4,B00010000);
-//    delay(delaytime);
-//    lc.setRow(0,5,B00010000);
-//    delay(delaytime);
-//    lc.setRow(0,6,B00010000);
-//    delay(delaytime);
-//    lc.setRow(0,7,B00010000);
-//    delay(delaytime);
+//    tens_digit    = int_o2value % 10;
 //    
-//} 
+//    //  2.1 digit display for concentration
+//    set7segmentDigit (1, tens_digit, false);
+//    //set7segmentDigit (2, BLANK_DIGIT);    
+//    set7segmentDigit (2, unit_digit, true);
+//    set7segmentDigit (3, decimal_digit, false);
 //
-///*
-//  This method will scroll all the hexa-decimal
-// numbers and letters on the display. You will need at least
-// four 7-Segment digits. otherwise it won't really look that good.
-// */
-//void scrollDigits (void) {
-//    
-//    for(int i = 0; i < 13; i++) 
-//    {
-//        lc.setDigit(0, 7, 8, false);
-//        lc.setDigit(0, 6, 8, false);
-//        lc.setDigit(0, 5, 8, false);
-//        lc.setDigit(0, 4, 8, false);
-//        lc.setDigit(0, 3, 8, false);
-//        lc.setDigit(0, 2, 8, false);
-//        lc.setDigit(0, 1, 8, false);
-//        lc.setDigit(0, 0, 8, false);
-//        delay(delaytime);
-//    }
-//    
-//    lc.clearDisplay(0);
-//    delay(delaytime);
-//  
-//}
-//
-//void test_7segments (void) { 
-//    
-//  display_banner();
-//  scrollDigits();
-//  
-//}
-
-//#define TOTAL_DIGITS    (7)
-//#define DIGIT_VALUE_MAX (9)
-//
-//
-//void disp_digit_on_7seg (uint8_t place, uint8_t value)   {
-//
-//    if (place > TOTAL_DIGITS  &&  value > DIGIT_VALUE_MAX)  {
-//        // invalid parameters
-//        return;
-//    }
-//
-//    lc.setDigit (0, place, value, false);
 //    
 //}
 
-
-
-
+// ver2: Display 2.0 digits for O2 concentration
 void display_o2 (float o2value) {
 
-    uint16_t     int_o2value;
-    uint8_t     decimal_digit;
+    uint16_t    int_o2value;
     uint8_t     unit_digit;
     uint8_t     tens_digit;
+    
 
-    int_o2value   = (uint16_t)(o2value * 10);
-    decimal_digit = int_o2value % 10;
-    int_o2value   = int_o2value / 10;
+    int_o2value   = round (o2value);
     unit_digit    = int_o2value % 10;
-    int_o2value   = int_o2value / 10;
+    int_o2value   = int_o2value / 10;   
     tens_digit    = int_o2value % 10;
     
-    
-//    lc.setDigit(0, 0, tens_digit,    false);
-//    lc.setDigit(0, 1, unit_digit,    true);
-//    lc.setDigit(0, 2, decimal_digit, false);
-    set7segmentDigit (1, tens_digit, false);
-    //set7segmentDigit (2, BLANK_DIGIT);    
-    set7segmentDigit (2, unit_digit, true);
-    set7segmentDigit (3, decimal_digit, false);
-    
+
+    // b: only last 2 digits integer value display by blanking the leading digit.
+    set7segmentDigit (1, BLANK_DIGIT, false);
+    set7segmentDigit (2, tens_digit,  false);
+    set7segmentDigit (3, unit_digit,  false);    
     
 }
+
+
+
 
 void display_total_run_hours (uint32_t runhours) {
 
@@ -271,57 +178,13 @@ void display_total_run_hours (uint32_t runhours) {
 
 
     set7segmentDigit (4, ten_th_digit, false);
-    set7segmentDigit (5, thnd_digit, false);
-    set7segmentDigit (6, hund_digit, false);
-    set7segmentDigit (7, tens_digit, false);
-    set7segmentDigit (8, unit_digit, false);
+    set7segmentDigit (5, thnd_digit,   false);
+    set7segmentDigit (6, hund_digit,   false);
+    set7segmentDigit (7, tens_digit,   false);
+    set7segmentDigit (8, unit_digit,   false);
          
-//    // 10,000th digit
-//    if (ten_th_digit) {
-//
-//    }
-//    else {
-//      set7segmentDigit (4, BLANK, false);
-//    }
-//    
-//    // 1000th digit
-//    if (thnd_digit) {
-//      // lc.setDigit(0, 5, thnd_digit, false);
-//      set7segmentDigit (5, thnd_digit, false);
-//    }
-//    else {
-//      //lc.setRow(0, 5, 0b00000000);
-//      set7segmentDigit (5, BLANK, false);
-//    }
-//
-//    // 100th digit
-//    //lc.setDigit(0, 5, hund_digit,   true);
-//    if (hund_digit) {
-//      //lc.setDigit(0, 6, hund_digit, false);
-//      set7segmentDigit (6, hund_digit, false);
-//    }
-//    else {
-//      //lc.setRow(0, 6, 0b00000000);
-//      set7segmentDigit (6, BLANK, false);
-//    }
-//
-//    // 10th digit
-//    // lc.setDigit(0, 6, tens_digit,   true);
-//    //lc.setDigit(0, 6, tens_digit,   false);
-//    if (tens_digit) {
-//      //lc.setDigit(0, 7, tens_digit, false);
-//      set7segmentDigit (7, tens_digit, false);
-//    }
-//    else {
-//      //lc.setRow(0, 7, 0b00000000);
-//      set7segmentDigit (7, BLANK_DIGIT, false);
-//    }
-//
-//    // unit's digit
-//    // lc.setDigit(0, 8, unit_digit,   false);   
-//    set7segmentDigit (8, unit_digit, false);
-        
 }
+
 
 void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
@@ -360,32 +223,7 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
 }
 
 
-/*
 
-    Prameters :  line_no (1 to LCD_ROWS), start_col ( 0 to LCD_COLS-1)
-                align (LEFT, CENTER, RIGHT)
-*/
-/*
-    void lcd_wirte_to_line (char line_no, char start_col, char * str_ptr, char align)   {
-
-    // validate prameters
-    if (line_no < 1  ||  line_no > LCD_ROWS)    {
-       line_no = 1;
-    }
-
-    if (start_col >= LCD_COLS)   {
-       start_col = 0;
-    }
-
-    if (str_ptr == NULL)    {
-       return;
-    }
-    // 'lcd.setCursor()' - char (0 to LCD_COLS-1),  line no (0 to LCD_ROWS-1)
-    lcd.setCursor(line_no-1, start_col);
-
-    lcd.print("Hyderabad");
-
-    }*/
 
 
 ////// scratch pad ////////////////////////////

@@ -17,6 +17,9 @@
 // 3. Debug logs
 #define ENABLE_DEBUG_PRINTS
 
+// 4. O2C cap-value setting
+#define O2C_CAP_VALUE_MAX   (95.0)
+
 // Select by uncommeting the required events from below list
 //  Note: these uncommented events print only if 'ENABLE_EVENT_LOGS' is enabled 
 #define CHANGE_IN_O2_LEVEL    
