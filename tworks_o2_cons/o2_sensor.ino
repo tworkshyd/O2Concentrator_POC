@@ -9,11 +9,24 @@
 
 #define NUM_OF_SAMPLES_O2   (3)
 
-// for sensor S3
-//float y_samples[NUM_OF_SAMPLES_O2]   = {  4.0,    20.0,   99.7};
-//float y_samples[NUM_OF_SAMPLES_O2]   = {  0.0,    21.1,   100.0};
-float y_samples[NUM_OF_SAMPLES_O2]   = {  5.0,    21.1,   96.0};    // based on o2c tank purity = 96% & nitrogen tank purity = 95%
-float x_samples[NUM_OF_SAMPLES_O2]   = {  8.75, 129.75,  601.75};   // default calib values
+
+#if  0
+    // 1. for Envitec sensor marked as S2 for demo device
+    //float y_samples[NUM_OF_SAMPLES_O2]   = {  4.0,    20.0,   99.7};
+    //float y_samples[NUM_OF_SAMPLES_O2]   = {  0.0,    21.1,   100.0};
+    float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};    // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+    float x_samples[NUM_OF_SAMPLES_O2]     = {  8.75, 129.75,  601.75};   // default calib values
+
+
+#else 
+    // 2. for Envitec sensor marked as S3 for demo device
+    //float y_samples[NUM_OF_SAMPLES_O2]   = {  4.0,    20.0,   99.7};
+    //float y_samples[NUM_OF_SAMPLES_O2]   = {  0.0,    21.1,   100.0};
+    float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};    // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+    float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
+
+#endif
+
 
 
 ADS1115 ADS(O2_SENSOR_ADS_ADDR);
