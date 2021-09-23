@@ -104,10 +104,10 @@ void platform_init (void) {
 
     pinMode(buzzr_cntrl_pin, OUTPUT);
     pinMode(compr_cntrl_pin, OUTPUT);
-    pinMode(startButtonPin,  INPUT );
-    pinMode(startButtonPin,  INPUT_PULLUP);
-    //pinMode(configButtonPin, INPUT );
-    //pinMode(configButtonPin, INPUT_PULLUP);
+    pinMode(startSwitchPin,  INPUT );
+    pinMode(startSwitchPin,  INPUT_PULLUP);
+    pinMode(alarmClearButton, INPUT );
+    pinMode(alarmClearButton, INPUT_PULLUP);
     
 
     // default pin-state
@@ -130,16 +130,6 @@ void platform_init (void) {
     digitalWrite(dataPin_7segment,   LOW );
     digitalWrite(clckPin_7segment,   LOW );
     digitalWrite(loadPin_7segment,   LOW );
-
-
-
-    // Neo pixcel LEDs interface
-    pinMode(MISO_pin,         OUTPUT);
-    pinMode(PD6_pin,          OUTPUT);
-    pinMode(PD7_pin,          OUTPUT);
-    digitalWrite(MISO_pin,    LOW );
-    digitalWrite(PD6_pin,     LOW );
-    digitalWrite(PD7_pin,     LOW );
 
 
     DBG_PRINTLN("GPIO init done..");

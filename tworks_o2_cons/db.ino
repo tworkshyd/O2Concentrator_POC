@@ -28,7 +28,7 @@ unsigned long   total_run_time_secs;
 
 
 unsigned long int Production_Delay;     // delay variable creation
-volatile unsigned long int Flush_Delay;          // delay variable creation
+volatile unsigned long int Flush_Delay; // delay variable creation
 unsigned long int PreCharge_Delay;      // delay variable creation
 
 unsigned long int nb_delay;
@@ -40,6 +40,9 @@ volatile float    o2_slope;
 volatile float    o2_const_val;
 volatile float    m_raw_voltage;
 
+
+uint8_t   start_switch_pressed;
+uint8_t   alarm_clear_button_pressed;
 
 void db_init (void) {
 
