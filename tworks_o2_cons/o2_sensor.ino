@@ -161,11 +161,11 @@ void o2_sensor_scan (void)  {
     o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
     //o2_concentration = ((o2_raw_adc_count * o2_slope) + o2_const_val);
 
-//    // capping O2C value.. to restrict it below.. 95% of FiO2   
-//    if (o2_concentration > O2C_CAP_VALUE_MAX) {
-//        o2_concentration = O2C_CAP_VALUE_MAX;
-//        DBG_PRINT(", Capping limit hit-->");
-//    }  
+    // capping O2C value.. to restrict it below.. 95% of FiO2   
+    if (o2_concentration > O2C_CAP_VALUE_MAX) {
+        o2_concentration = O2C_CAP_VALUE_MAX;
+        DBG_PRINT(", Capping limit hit-->");
+    }  
 
     DBG_PRINT(", o2_concentration : ");
     DBG_PRINT(o2_concentration);
