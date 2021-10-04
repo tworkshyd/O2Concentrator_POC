@@ -243,6 +243,7 @@ void          new_delay_msecs (unsigned int  time_delay);
 bool eeprom_init  (void);
 void eepwrite     (unsigned int address, byte * buff_p, uint8_t n_bytes);
 void eepread      (unsigned int address, byte * buff_p, uint8_t n_bytes);
+void eep_clear    (void);
 void eeptest      (void);
 void save_record  (void);
 

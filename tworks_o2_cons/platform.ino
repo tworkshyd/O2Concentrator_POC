@@ -328,7 +328,36 @@ bool compare_buff (byte * buff_a, byte * buff_b, int  len)  {
 }
 
 #define EEPROM_TEST_BUFFER_SIZE  (45)
+
+void eep_clear (void) {
     
+    int       i, address;
+    byte      write_buff[EEPROM_TEST_BUFFER_SIZE];
+
+
+    DBG_PRINTLN();
+    DBG_PRINTLN ("external EEprom test started..");
+
+    DBG_PRINTLN ("test buffer..");
+    for (i = 0; i < EEPROM_TEST_BUFFER_SIZE; i++)
+    {
+        write_buff[i] = 0;   
+        DBG_PRINT (write_buff[i]);   
+        DBG_PRINT (" ");
+    }    
+
+    DBG_PRINTLN ();
+    
+    DBG_PRINT ("Erasing eeprom..");
+    for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
+    {
+        eepwrite (address, write_buff, EEPROM_TEST_BUFFER_SIZE);
+    }
+
+}
+
+
+
 void eeptest (void) {
     
     int       i, address;

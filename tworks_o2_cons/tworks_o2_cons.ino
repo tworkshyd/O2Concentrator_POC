@@ -40,12 +40,12 @@ void setup (void) {
     
     if (eeprom_init () == true) {
         f_eeprom_working = 1;
-        // read eeprom and retrive saved caounters and system parameters
+        // read eeprom and retrieve saved counters and system parameters
         eepread (EEPROM_RECORD_START, (byte*)&eep_record, EEPROM_RECORD_AREA_SIZE);
 
-        // print retrived record.. 
+        // print retrieved record.. 
         DBG_PRINTLN ();
-        DBG_PRINTLN ("EEprom retrived record...");
+        DBG_PRINTLN ("EEprom retrieved record...");
         DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
         DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
         DBG_PRINT   ("eep_record.total_run_time_secs   : ");
@@ -76,9 +76,11 @@ void setup (void) {
 
 
     // temp test area ---------------------
+    eep_clear ();
     // eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
+    while(1);
     // ------------------------------------
 
     
