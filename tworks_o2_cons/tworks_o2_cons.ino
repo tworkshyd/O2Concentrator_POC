@@ -3,7 +3,7 @@
 // tworks_o2_cons.c
 
 //#include <UniversalTimer.h>
-
+#include <extEEPROM.h>
 #include "o2_sensor.h"
 #include "platform.h"
 #include "o2_cons.h"
@@ -13,11 +13,10 @@
 #include "db.h"
 #include "ui.h"
 
-
 // Sytem tick time
 #define TICK_time (10)
 
-
+extEEPROM eep(kbits_64, 1, 8);         //device size, number of devices, page size
 
 unsigned char cycle;
 unsigned char f_crn;
@@ -32,11 +31,17 @@ void o2_main_task (void);
 void setup (void) {
 
     Serial.begin (115200);
+    DBG_PRINTLN ();
+    DBG_PRINTLN ();
     DBG_PRINTLN ("Serial port initialized..!!");
     platform_init ();
     ads_init ();
     db_init ();
+    
+    eeprom_init ();
+
     //temp
+    eeptest ();    
     // test_ads1115 ();
     o2_cons_init ();
 
