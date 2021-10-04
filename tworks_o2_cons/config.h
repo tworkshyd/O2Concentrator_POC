@@ -29,9 +29,16 @@
 
 
 // 6. O2c Capping enable / Disable selection
-#define CAPP_AT_95_O2 (1)
+//#define CAPP_AT_95_O2 (1)
+
+// 7. Relay selection for Z1 seive
+// #define ENABLE_USE_OF_RELAY_3_FOR_Z1    // enabling this results in '1st and 3rd relay reversal'
 
 
+// Use appropriate selection above .. to generate .hex files .. as per the need..
+//M3 - v1.1 - no cap
+//M2 - v1.0 - with cap
+//M1 - v1.2 - with cap, 1st and 3rd relay reversal
 
 
 
