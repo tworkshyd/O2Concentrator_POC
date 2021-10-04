@@ -21,7 +21,38 @@
 
 #define   extEEPROM_LAST_ADDRESS          (extEEPROM_START_ADDRESS + extEEPROM_SIZE_IN_BYTES)
 
+// Memory address allocations
+#define   EEPROM_TEST_AREA_START          (extEEPROM_START_ADDRESS)
+#define   EEPROM_TEST_AREA_SIZE           (extEEPROM_PAGE_SIZE_IN_BYTES)
+#define   EEPROM_TEST_AREA_END            (EEPROM_TEST_AREA_START + EEPROM_TEST_AREA_SIZE)
 
+#define   EEPROM_RECORD_START             (EEPROM_TEST_AREA_END)
+#define   EEPROM_RECORD_AREA_SIZE         (sizeof(EEP_RECORD_T))
+#define   EEPROM_RECORD_AREA_END          (EEPROM_RECORD_START + EEPROM_RECORD_AREA_SIZE)
+
+// ... 
+
+
+
+
+// Structure declarations
+typedef struct eep_record_t {
+
+    // 1. Run hour countes 
+    unsigned int    last_cycle_run_time_secs;
+    unsigned long   total_run_time_secs;  
+
+    // 2. Calibration constants
+    float           O2_slope;
+    float           O2_constant;
+    
+} EEP_RECORD_T;
+
+
+// variable declarations
+extern bool f_eeprom_working;
+extern EEP_RECORD_T  eep_record;
+extern EEP_RECORD_T  eep_record_default;
 
 
 
@@ -48,6 +79,7 @@ extern float           prev_output_pressure;
 
 extern unsigned int    current_run_time_secs;
 extern unsigned int    prev_current_run_time_secs;
+extern unsigned int    last_cycle_run_time_secs;
 extern unsigned long   total_run_time_secs;
 
 

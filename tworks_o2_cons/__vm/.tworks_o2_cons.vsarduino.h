@@ -24,7 +24,3 @@
 #include "db.ino"
 #include "display.ino"
 #include "logs.ino"
-#include "o2_sensor.ino"
-#include "platform.ino"
-#include "pressure_sensor.ino"
-#include "ui.ino"

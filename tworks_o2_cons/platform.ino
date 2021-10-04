@@ -201,7 +201,7 @@ unsigned long int time_elapsed (unsigned long int time_delay)  {
 
 
 ////////////////// external eeprom driver //////////////////
-void eeprom_init (void) {
+bool eeprom_init (void) {
 
 
     uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
@@ -210,8 +210,11 @@ void eeprom_init (void) {
       Serial.println(eepStatus);
       // while (1);
       // todo - record this error ..
+      return false;
+      
     }
-    
+
+    // temp
     DBG_PRINTLN();
     DBG_PRINT ("extEEPROM_START_ADDRESS : ");
     DBG_PRINTLN(extEEPROM_START_ADDRESS);
@@ -223,6 +226,22 @@ void eeprom_init (void) {
     DBG_PRINTLN(extEEPROM_SIZE_IN_BYTES);    
     DBG_PRINT ("extEEPROM_LAST_ADDRESS : ");
     DBG_PRINTLN(extEEPROM_LAST_ADDRESS);
+
+    DBG_PRINT ("EEPROM_TEST_AREA_START : ");
+    DBG_PRINTLN(EEPROM_TEST_AREA_START);
+    DBG_PRINT ("EEPROM_TEST_AREA_SIZE : ");
+    DBG_PRINTLN(EEPROM_TEST_AREA_SIZE);    
+    DBG_PRINT ("EEPROM_TEST_AREA_END : ");
+    DBG_PRINTLN(EEPROM_TEST_AREA_END);
+
+    DBG_PRINT ("EEPROM_RECORD_START : ");
+    DBG_PRINTLN(EEPROM_RECORD_START);
+    DBG_PRINT ("EEPROM_RECORD_AREA_SIZE : ");
+    DBG_PRINTLN(EEPROM_RECORD_AREA_SIZE);    
+    DBG_PRINT ("EEPROM_RECORD_AREA_END : ");
+    DBG_PRINTLN(EEPROM_RECORD_AREA_END);
+
+    return true;
   
 }
 
@@ -242,7 +261,8 @@ void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
 //    DBG_PRINTLN (offset_bytes);   
 //    DBG_PRINT ("partial_len :");   
 //    DBG_PRINTLN (partial_len);   
-        
+
+
     if (partial_len > n_bytes) {       
         partial_len = n_bytes;
 
@@ -362,7 +382,17 @@ void eeptest (void) {
 }
 
 
+void save_record (void) {
 
+    eep_record.last_cycle_run_time_secs = last_cycle_run_time_secs;
+    eep_record.total_run_time_secs      = total_run_time_secs;
+    
+    // write on to eeprom
+    if (f_eeprom_working) {
+      eepwrite (EEPROM_RECORD_START, (byte*)&eep_record, EEPROM_RECORD_AREA_SIZE);
+    }
+            
+}
 
 /////////////////// scrap area /////////////////////////////////
 /*

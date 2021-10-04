@@ -38,22 +38,53 @@ void setup (void) {
     ads_init ();
     db_init ();
     
-    eeprom_init ();
+    if (eeprom_init () == true) {
+        f_eeprom_working = 1;
+        // read eeprom and retrive saved caounters and system parameters
+        eepread (EEPROM_RECORD_START, (byte*)&eep_record, EEPROM_RECORD_AREA_SIZE);
 
-    //temp
-    eeptest ();    
+        // print retrived record.. 
+        DBG_PRINTLN ();
+        DBG_PRINTLN ("EEprom retrived record...");
+        DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
+        DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
+        DBG_PRINT   ("eep_record.total_run_time_secs   : ");
+        DBG_PRINTLN (eep_record.total_run_time_secs);
+
+        // update system variables
+        last_cycle_run_time_secs = eep_record.last_cycle_run_time_secs;
+        total_run_time_secs      = eep_record.total_run_time_secs;
+    }
+    else {
+        f_eeprom_working = 0;
+      
+        // load default parameters..
+        byte *buff1, *buff2;
+
+        buff1 = (byte*)&eep_record;
+        buff2 = (byte*)&eep_record_default;
+        for (int i = 0; i < EEPROM_RECORD_AREA_SIZE; i++)
+        {
+            buff1[i] = buff2[i];
+        }
+
+        DBG_PRINTLN ();
+        DBG_PRINTLN ("EEprom not working...");
+        DBG_PRINTLN ("Loaded factory defaults .. ");
+
+    }
+
+
+    // temp test area ---------------------
+    // eeptest ();    
     // test_ads1115 ();
-    o2_cons_init ();
+    // test_7segments ();
+    // ------------------------------------
 
-    //    while (1)
-    //    {
-    init_7segments ();
-    //      delay(100);
-    //    }
-
-    // temp
-    //test_7segments ();
     
+    o2_cons_init ();
+    init_7segments ();
+       
     display_o2 (00.0);
     display_total_run_hours (total_run_time_secs);    
     ui_init ();
@@ -95,6 +126,10 @@ void loop (void) {
     else if (f_1min) {
         f_1min = 0;
         // 1 minute tasks go here..
+
+        if (f_system_running) {
+            save_record ();
+        }
         
     }
     else if (f_1hr) {

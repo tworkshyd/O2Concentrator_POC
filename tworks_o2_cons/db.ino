@@ -2,6 +2,24 @@
 
 #include "db.h"
 
+
+// variable definations
+bool f_eeprom_working;
+EEP_RECORD_T  eep_record;
+EEP_RECORD_T  eep_record_default = {
+    
+    // 1. Run hour countes 
+    0,  // unsigned int    current_run_time_secs;
+    0,  // unsigned long   total_run_time_secs;  
+
+    // todo
+      //    // 2. Calibration constants
+      //    float           O2_slope;
+      //    float           O2_constant;
+      
+};
+
+
 // time keepers
 volatile unsigned long int    systemtick_msecs;
 volatile unsigned char        systemtick_secs;
@@ -24,6 +42,7 @@ float           prev_output_pressure  = 25;
 
 unsigned int    current_run_time_secs;
 unsigned int    prev_current_run_time_secs;
+unsigned int    last_cycle_run_time_secs;
 unsigned long   total_run_time_secs;
 
 
