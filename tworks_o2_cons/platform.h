@@ -9,7 +9,7 @@
 #include "WProgram.h"
 #endif
 
-
+#include "config.h"
 
 /* Prototype general purpose board with aurdino nano
     1. 1st row : From Port map O2 concentrator document &
@@ -185,7 +185,7 @@
 
 // RELAY PIN ASSIGNMENT
 //**************************************************************************
-#if ENABLE_USE_OF_RELAY_3_FOR_Z1    
+#ifdef ENABLE_USE_OF_RELAY_3_FOR_Z1    
     // temp arrangement to over-come h/w issue
     #define  Sieve_A_Valve_Z1       RLY_3       // Z1TSOL
     #define  Sieve_B_Valve_Z2       RLY_2       // Z2TSOL
