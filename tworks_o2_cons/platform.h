@@ -9,7 +9,7 @@
 #include "WProgram.h"
 #endif
 
-
+#include "config.h"
 
 /* Prototype general purpose board with aurdino nano
     1. 1st row : From Port map O2 concentrator document &
@@ -185,10 +185,18 @@
 
 // RELAY PIN ASSIGNMENT
 //**************************************************************************
-#define  Sieve_A_Valve_Z1       RLY_1       // Z1TSOL
-#define  Sieve_B_Valve_Z2       RLY_2       // Z2TSOL
-#define  PreCharge_Valve_BCKF   RLY_3       // BACKFSOL
+#ifdef ENABLE_USE_OF_RELAY_3_FOR_Z1    
+    // temp arrangement to over-come h/w issue
+    #define  Sieve_A_Valve_Z1       RLY_3       // Z1TSOL
+    #define  Sieve_B_Valve_Z2       RLY_2       // Z2TSOL
+    #define  PreCharge_Valve_BCKF   RLY_1       // BACKFSOL // not used in circuit
 
+#else
+    #define  Sieve_A_Valve_Z1       RLY_1       // Z1TSOL
+    #define  Sieve_B_Valve_Z2       RLY_2       // Z2TSOL
+    #define  PreCharge_Valve_BCKF   RLY_3       // BACKFSOL
+
+#endif
 
 #define BUTTON_ACTIVE       (LOW)
 
@@ -229,6 +237,15 @@ extern volatile unsigned long systemtick_msecs;
 void          platform_init   (void);
 unsigned long time_elapsed    (unsigned long time_delay);
 void          new_delay_msecs (unsigned int  time_delay);
+
+
+////////////////// external eeprom driver //////////////////
+bool eeprom_init  (void);
+void eepwrite     (unsigned int address, byte * buff_p, uint8_t n_bytes);
+void eepread      (unsigned int address, byte * buff_p, uint8_t n_bytes);
+void eeptest      (void);
+void save_record  (void);
+
 
 
 #endif

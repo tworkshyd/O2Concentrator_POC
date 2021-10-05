@@ -112,6 +112,22 @@ void init_7segments (void) {
  
 }
 
+
+
+void blank_7segments (void) {
+	
+	set7segmentDigit (1, BLANK_DIGIT, false);
+	set7segmentDigit (2, BLANK_DIGIT, false);
+	set7segmentDigit (3, BLANK_DIGIT, false);
+	set7segmentDigit (4, BLANK_DIGIT, false);
+	set7segmentDigit (5, BLANK_DIGIT, false);
+	set7segmentDigit (6, BLANK_DIGIT, false);
+	set7segmentDigit (7, BLANK_DIGIT, false);
+	set7segmentDigit (8, BLANK_DIGIT, false);
+	
+}
+
+
 // ver1: Display 2.1 digits for O2 concentration
 //void display_o2 (float o2value) {
 //

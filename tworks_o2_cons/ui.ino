@@ -344,6 +344,13 @@ void ui_task_main (void)    {
 //            if (button_pressed == true)  {
 //                button_pressed = false;
                 f_system_running = false;
+				f_run_hours = 0;
+				blank_7segments ();
+
+                last_cycle_run_time_secs = current_run_time_secs;
+                current_run_time_secs = 0;
+                save_record ();
+                
                 DBG_PRINTLN("Stop Button Pressed!");
                 lcd.setCursor(0, 3);
                 lcd.print("Stop Button Pressed ");

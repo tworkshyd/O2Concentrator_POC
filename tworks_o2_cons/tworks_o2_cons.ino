@@ -3,7 +3,7 @@
 // tworks_o2_cons.c
 
 //#include <UniversalTimer.h>
-
+#include <extEEPROM.h>
 #include "o2_sensor.h"
 #include "platform.h"
 #include "o2_cons.h"
@@ -13,16 +13,15 @@
 #include "db.h"
 #include "ui.h"
 
-
 // Sytem tick time
 #define TICK_time (10)
 
-
+extEEPROM eep(kbits_64, 1, 8);         //device size, number of devices, page size
 
 unsigned char cycle;
 unsigned char f_crn;
 unsigned char f_trn;
-
+unsigned char f_run_hours;
 
 void o2_cons_init (void);
 void o2_main_task (void);
@@ -32,25 +31,63 @@ void o2_main_task (void);
 void setup (void) {
 
     Serial.begin (115200);
+    DBG_PRINTLN ();
+    DBG_PRINTLN ();
     DBG_PRINTLN ("Serial port initialized..!!");
     platform_init ();
     ads_init ();
     db_init ();
-    //temp
-    // test_ads1115 ();
-    o2_cons_init ();
-
-    //    while (1)
-    //    {
-    init_7segments ();
-    //      delay(100);
-    //    }
-
-    // temp
-    //test_7segments ();
     
-    display_o2 (00.0);
-    display_total_run_hours (total_run_time_secs);    
+    if (eeprom_init () == true) {
+        f_eeprom_working = 1;
+        // read eeprom and retrieve saved counters and system parameters
+        eepread (EEPROM_RECORD_START, (byte*)&eep_record, EEPROM_RECORD_AREA_SIZE);
+
+        // print retrieved record.. 
+        DBG_PRINTLN ();
+        DBG_PRINTLN ("EEprom retrieved record...");
+        DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
+        DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
+        DBG_PRINT   ("eep_record.total_run_time_secs   : ");
+        DBG_PRINTLN (eep_record.total_run_time_secs);
+
+        // update system variables
+        last_cycle_run_time_secs = eep_record.last_cycle_run_time_secs;
+        total_run_time_secs      = eep_record.total_run_time_secs;
+    }
+    else {
+        f_eeprom_working = 0;
+      
+        // load default parameters..
+        byte *buff1, *buff2;
+
+        buff1 = (byte*)&eep_record;
+        buff2 = (byte*)&eep_record_default;
+        for (int i = 0; i < EEPROM_RECORD_AREA_SIZE; i++)
+        {
+            buff1[i] = buff2[i];
+        }
+
+        DBG_PRINTLN ();
+        DBG_PRINTLN ("EEprom not working...");
+        DBG_PRINTLN ("Loaded factory defaults .. ");
+
+    }
+
+
+    // temp test area ---------------------
+    // eeptest ();    
+    // test_ads1115 ();
+    // test_7segments ();
+    // ------------------------------------
+
+    
+    o2_cons_init ();
+    init_7segments ();
+	  blank_7segments ();
+       
+    // display_o2 (00.0);
+    // display_total_run_hours (0);    
     ui_init ();
 
 }
@@ -84,12 +121,18 @@ void loop (void) {
 
         o2_sensor_scan ();
         // read_pressure ();
-        display_o2 (o2_concentration);       
+    		if (f_system_running)	{
+    			display_o2 (o2_concentration);  
+    		}
         DBG_PRINT (".");
     }
     else if (f_1min) {
         f_1min = 0;
         // 1 minute tasks go here..
+
+        if (f_system_running) {
+            save_record ();
+        }
         
     }
     else if (f_1hr) {
@@ -98,28 +141,29 @@ void loop (void) {
 
     }
 
-    // 2. contineous tasks are called here
+    // 2. Continuous tasks are called here
     else {
         o2_main_task ();
         ui_task_main ();
         logs_task ();
 
 
-        display_o2 (o2_concentration);
-        if (f_crn == 1) {
-            int secs = ( current_run_time_secs %  60);
-            int mins = ((current_run_time_secs % (60 * 60)) / 60);
-            int hrs  = ( current_run_time_secs / (60 * 60));
-            display_current_run_hours(hrs, mins);
-        }
-        if (f_trn == 1) {
-            int hrs = (total_run_time_secs / (60 * 60));
-            display_total_run_hours(hrs);
-        }
-        
+  		if (f_system_running)	{
+  			display_o2 (o2_concentration);
+  			if (f_run_hours == 1) {
+  				int secs = ( current_run_time_secs %  60);
+  				int mins = ((current_run_time_secs % (60 * 60)) / 60);
+  				int hrs  = ( current_run_time_secs / (60 * 60));
+  				display_current_run_hours(hrs, mins);
+  			}
+  			else  {
+  				int hrs = (total_run_time_secs / (60 * 60));
+  				display_total_run_hours(hrs);
+  			}
+  		}
     }
 
-        init_7segments ();
+	  init_7segments ();
 
 
 }
@@ -132,7 +176,7 @@ void o2_cons_init (void)    {
     sensor_zero_calibration ();
 
     // temp
-//    DBG_PRINTLN ("Wsrning..: Hard coding slope and constant for Fio2");
+//    DBG_PRINTLN ("Warning..: Hard coding slope and constant for Fio2");
 //    o2_slope = 0.1734;
 //    o2_const_val = 0.9393;
     
@@ -196,31 +240,31 @@ void o2_main_task (void)    {
         total_run_time_secs++;
 
 
-      // display run hours, 45 seconds current run hours, 15 seconds total runhours
-      int secs = ( current_run_time_secs %  60);
-      int mins = ((current_run_time_secs % (60 * 60)) / 60);
-      int hrs  = ( current_run_time_secs / (60 * 60));
-         
-      if ((current_run_time_secs % 15) == 0) {
-        quadrant++;
-        switch (quadrant) 
-        {
-            case 0:
-            case 1:
-            case 2:
-              display_current_run_hours(hrs, mins);
-              f_crn = 1;
-              f_trn = 0;
-              break;
-           case 3:
-              hrs = (total_run_time_secs / (60 * 60));
-              display_total_run_hours(hrs);
-              quadrant = 0;
-              f_crn = 0;
-              f_trn = 1;             
-              break;
+        // display run hours, 45 seconds current run hours, 15 seconds total runhours
+        int secs = ( current_run_time_secs %  60);
+        int mins = ((current_run_time_secs % (60 * 60)) / 60);
+        int hrs  = ( current_run_time_secs / (60 * 60));
+           
+        if ((current_run_time_secs % 15) == 0) {
+            quadrant++;
+            switch (quadrant) 
+            {
+                case 0:
+                case 1:
+                case 2:
+                  display_current_run_hours(hrs, mins);
+                  f_crn = 1;
+                  f_trn = 0;
+                  break;
+               case 3:
+                  hrs = (total_run_time_secs / (60 * 60));
+                  display_total_run_hours(hrs);
+                  quadrant = 0;
+                  f_crn = 0;
+                  f_trn = 1;             
+                  break;
+            }
         }
-      }
     }
     
     if (time_elapsed (time_tag) < nb_delay)  {
