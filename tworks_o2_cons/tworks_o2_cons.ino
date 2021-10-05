@@ -21,7 +21,7 @@ extEEPROM eep(kbits_64, 1, 8);         //device size, number of devices, page si
 unsigned char cycle;
 unsigned char f_crn;
 unsigned char f_trn;
-
+unsigned char f_run_hours;
 
 void o2_cons_init (void);
 void o2_main_task (void);
@@ -84,8 +84,9 @@ void setup (void) {
     
     o2_cons_init ();
     init_7segments ();
+	  blank_7segments ();
        
-    display_o2 (00.0);
+    // display_o2 (00.0);
     // display_total_run_hours (0);    
     ui_init ();
 
@@ -120,7 +121,9 @@ void loop (void) {
 
         o2_sensor_scan ();
         // read_pressure ();
-        display_o2 (o2_concentration);       
+    		if (f_system_running)	{
+    			display_o2 (o2_concentration);  
+    		}
         DBG_PRINT (".");
     }
     else if (f_1min) {
@@ -145,21 +148,22 @@ void loop (void) {
         logs_task ();
 
 
-        display_o2 (o2_concentration);
-        if (f_crn == 1) {
-            int secs = ( current_run_time_secs %  60);
-            int mins = ((current_run_time_secs % (60 * 60)) / 60);
-            int hrs  = ( current_run_time_secs / (60 * 60));
-            display_current_run_hours(hrs, mins);
-        }
-        if (f_trn == 1) {
-            int hrs = (total_run_time_secs / (60 * 60));
-            display_total_run_hours(hrs);
-        }
-        
+  		if (f_system_running)	{
+  			display_o2 (o2_concentration);
+  			if (f_run_hours == 1) {
+  				int secs = ( current_run_time_secs %  60);
+  				int mins = ((current_run_time_secs % (60 * 60)) / 60);
+  				int hrs  = ( current_run_time_secs / (60 * 60));
+  				display_current_run_hours(hrs, mins);
+  			}
+  			else  {
+  				int hrs = (total_run_time_secs / (60 * 60));
+  				display_total_run_hours(hrs);
+  			}
+  		}
     }
 
-        init_7segments ();
+	  init_7segments ();
 
 
 }
@@ -236,31 +240,31 @@ void o2_main_task (void)    {
         total_run_time_secs++;
 
 
-      // display run hours, 45 seconds current run hours, 15 seconds total runhours
-      int secs = ( current_run_time_secs %  60);
-      int mins = ((current_run_time_secs % (60 * 60)) / 60);
-      int hrs  = ( current_run_time_secs / (60 * 60));
-         
-      if ((current_run_time_secs % 15) == 0) {
-        quadrant++;
-        switch (quadrant) 
-        {
-            case 0:
-            case 1:
-            case 2:
-              display_current_run_hours(hrs, mins);
-              f_crn = 1;
-              f_trn = 0;
-              break;
-           case 3:
-              hrs = (total_run_time_secs / (60 * 60));
-              display_total_run_hours(hrs);
-              quadrant = 0;
-              f_crn = 0;
-              f_trn = 1;             
-              break;
+        // display run hours, 45 seconds current run hours, 15 seconds total runhours
+        int secs = ( current_run_time_secs %  60);
+        int mins = ((current_run_time_secs % (60 * 60)) / 60);
+        int hrs  = ( current_run_time_secs / (60 * 60));
+           
+        if ((current_run_time_secs % 15) == 0) {
+            quadrant++;
+            switch (quadrant) 
+            {
+                case 0:
+                case 1:
+                case 2:
+                  display_current_run_hours(hrs, mins);
+                  f_crn = 1;
+                  f_trn = 0;
+                  break;
+               case 3:
+                  hrs = (total_run_time_secs / (60 * 60));
+                  display_total_run_hours(hrs);
+                  quadrant = 0;
+                  f_crn = 0;
+                  f_trn = 1;             
+                  break;
+            }
         }
-      }
     }
     
     if (time_elapsed (time_tag) < nb_delay)  {

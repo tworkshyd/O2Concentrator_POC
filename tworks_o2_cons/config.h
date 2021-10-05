@@ -36,9 +36,9 @@
 
 
 // Use appropriate selection above .. to generate .hex files .. as per the need..
-//M3 - v1.1 - no cap
-//M2 - v1.0 - with cap
-//M1 - v1.2 - with cap, 1st and 3rd relay reversal
+//M3 - v1.1 - no cap                                --- O2 Sensor S3
+//M2 - v1.0 - with cap                              --- O2 Sensor S2
+//M1 - v1.2 - with cap, 1st and 3rd relay reversal  --- O2 Sensor S1
 
 
 

@@ -99,6 +99,9 @@ extern volatile float    m_raw_voltage;
 extern uint8_t   start_switch_pressed;
 extern uint8_t   alarm_clear_button_pressed;
 
+extern unsigned char  f_run_hours;
+
+
 void db_init (void);
 
 

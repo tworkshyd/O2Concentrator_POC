@@ -10,6 +10,7 @@
 
 #define __AVR_ATmega1284p__
 #define __AVR_ATmega1284P__
+#define _VMDEBUG 1
 #define ARDUINO 108013
 #define ARDUINO_MAIN
 #define F_CPU 16000000L
