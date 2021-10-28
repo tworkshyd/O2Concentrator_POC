@@ -255,13 +255,15 @@ void o2_main_task (void)    {
                   display_current_run_hours(hrs, mins);
                   f_crn = 1;
                   f_trn = 0;
+		          f_run_hours = 1;
                   break;
                case 3:
                   hrs = (total_run_time_secs / (60 * 60));
                   display_total_run_hours(hrs);
                   quadrant = 0;
                   f_crn = 0;
-                  f_trn = 1;             
+                  f_trn = 1;  
+				  f_run_hours = 0;           
                   break;
             }
         }

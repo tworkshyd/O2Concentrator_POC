@@ -343,8 +343,8 @@ void ui_task_main (void)    {
             // System OFF check
 //            if (button_pressed == true)  {
 //                button_pressed = false;
-                f_system_running = false;
 				f_run_hours = 0;
+                f_system_running = false;				
 				blank_7segments ();
 
                 last_cycle_run_time_secs = current_run_time_secs;

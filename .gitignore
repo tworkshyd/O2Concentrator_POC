@@ -1,3 +1,9 @@
+
+*.hex
+*.lst
+*.eep
+*.elf
+
 /.project
 *.elf
 *.hex
