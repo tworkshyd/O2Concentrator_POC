@@ -201,10 +201,10 @@
 #define BUTTON_ACTIVE       (LOW)
 
 // Digital output Controls
-// #define BUUZZER_CNTRL(x)    (digitalWrite(buzzr_cntrl_pin, !x))
-#define BUUZZER_CNTRL(x)    (do_control(BUZZER_CONTROL, x))
-//#define compr_cntrl_pin_CNTRL(x)   (digitalWrite(compr_cntrl_pin, x))
-#define COMPRSSR_CNTRL(x)   (do_control(COMPRESSOR_CONTROL, x))
+// #define BUUZZER_CNTRL(x)         (digitalWrite(buzzr_cntrl_pin, !x))
+#define BUUZZER_CNTRL(x)            (do_control(BUZZER_CONTROL, x))
+//#define compr_cntrl_pin_CNTRL(x)  (digitalWrite(compr_cntrl_pin, x))
+#define COMPRSSR_CNTRL(x)           (do_control(COMPRESSOR_CONTROL, x))
 
 
 
