@@ -69,6 +69,80 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
             }
         }
     }
+
+    // button check detection
+    button_check ();
+}
+
+
+
+#define		BUTTON_DEBOUNCE_DLY			(10)		// milli seconds
+int             start_switch_dbnc_dly;
+int             alarm_clear_bttn_dbnc_dly;
+
+void button_check (void)  {
+
+    int     start_switch_state = 0;         // variable for reading the pushbutton status
+    int     alarm_clear_buttn_state = 0;         // variable for reading the pushbutton status
+
+
+    start_switch_state = digitalRead(startSwitchPin);
+    alarm_clear_buttn_state = digitalRead(alarmClearButton);
+
+    // 1. Start Switch Press detection
+    if (start_switch_state == START_SWITCH_PRESSED) {   // press detection
+        start_switch_dbnc_dly++;
+        if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+            start_switch_pressed = true; 
+            start_switch_dbnc_dly = 0;
+			      DBG_PRINT  ("Start_switch Pressed");
+        }
+		    DBG_PRINT  ("start_switch_dbnc_dly : ");
+		    DBG_PRINTLN(start_switch_dbnc_dly);
+    }
+    // 2. Start Switch Release detection
+    else if (start_switch_state == START_SWITCH_RELEASED) {   // press detection
+	    start_switch_dbnc_dly++;
+	    if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+		      start_switch_pressed = false;
+		      start_switch_dbnc_dly = 0;
+		      DBG_PRINT  ("Start_switch RELEASED");
+	    }
+	    DBG_PRINT  ("start_switch_dbnc_dly : ");
+	    DBG_PRINTLN(start_switch_dbnc_dly);
+    }
+	else {
+		// nop
+	}
+	
+	
+    // 3. Alarm Clear Button Press detection
+    if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_PRESSED) {   // press detection
+	    alarm_clear_bttn_dbnc_dly++;
+	    if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+		    alarm_clear_button_pressed = true;
+		    alarm_clear_bttn_dbnc_dly = 0;
+		    DBG_PRINT  ("Alarm Clear Button Pressed..");
+	    }
+	    DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
+	    DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+    }
+    // 4. Alarm Clear Button Release detection
+    else if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_RELEASED) {   // press detection
+	    alarm_clear_bttn_dbnc_dly++;
+	    if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+		    alarm_clear_button_pressed = false;
+		    alarm_clear_bttn_dbnc_dly = 0;
+		    DBG_PRINT  ("Alarm Clear Button RELEASED");
+	    }
+	    DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
+	    DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+    }
+    else {
+	    // nop
+    }
+    	
+	
 }
 
 
@@ -85,7 +159,45 @@ void new_delay_msecs (unsigned int  time_delay) {
     }
 }
 
+/*
+void platform_init (void) {
 
+    timer_init ();
+
+    // set up the LCD's number of columns and rows:
+    lcd.begin(LCD_COLS, LCD_ROWS);
+
+    // pin mode setting
+    pinMode(RLY_1,          OUTPUT);
+    pinMode(RLY_2,          OUTPUT);
+    pinMode(RLY_3,          OUTPUT);
+    // pinMode(RLY_4,       OUTPUT);
+
+    pinMode(buzzr_cntrl_pin, OUTPUT);
+    pinMode(compr_cntrl_pin, OUTPUT);
+    pinMode(buttonPin,      INPUT );
+    pinMode(buttonPin, INPUT_PULLUP);
+
+    // default pin-states
+    digitalWrite(buzzr_cntrl_pin, HIGH);
+    digitalWrite(compr_cntrl_pin, LOW );
+
+
+    // Serial 7 segment interface
+    pinMode(dataPin,        OUTPUT);
+    pinMode(clckPin,        OUTPUT);
+    pinMode(csPin,          OUTPUT);
+
+    digitalWrite(dataPin,   LOW );
+    digitalWrite(clckPin,   LOW );
+    digitalWrite(csPin,     LOW );
+
+
+    DBG_PRINTLN("GPIO init done..");
+
+
+}
+*/
 void platform_init (void) {
 
     timer_init ();
@@ -132,18 +244,26 @@ void platform_init (void) {
     digitalWrite(loadPin_7segment,   LOW );
 
 
+
+    // Neo pixcel LEDs interface
+    pinMode(MISO_pin,         OUTPUT);
+    pinMode(PD6_pin,          OUTPUT);
+    pinMode(PD7_pin,          OUTPUT);
+    digitalWrite(MISO_pin,    LOW );
+    digitalWrite(PD6_pin,     LOW );
+    digitalWrite(PD7_pin,     LOW );
+
+
     DBG_PRINTLN("GPIO init done..");
 
-    
 
 }
-
 
 bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
 
 
-    DBG_PRINT ("do_id : ");
-    DBG_PRINTLN (do_id);
+    // DBG_PRINT ("do_id : ");
+    // DBG_PRINTLN (do_id);
 
     switch (do_id)
     {
@@ -157,10 +277,10 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
             digitalWrite(PreCharge_Valve_BCKF,  bit_value);
             break;
         case COMPRESSOR_CONTROL:
-            digitalWrite(compr_cntrl_pin,       bit_value);
+            digitalWrite(compr_cntrl_pin,  bit_value);
             break;
         case BUZZER_CONTROL:
-            digitalWrite(buzzr_cntrl_pin,       !bit_value);
+            digitalWrite(buzzr_cntrl_pin, !bit_value);
             break;
         case _7SEG_DATA_CONTROL:
         case _7SEG_CLCK_CONTROL:
@@ -184,8 +304,8 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
     // temp
     // Serial.println(bit_value); Serial.println(do_id); Serial.println(do_byte);
 
-    DBG_PRINT ("do_byte : ");
-    DBG_PRINTLN(do_byte);
+    // DBG_PRINT ("do_byte : ");
+    // DBG_PRINTLN(do_byte);
 
 }
 
@@ -196,246 +316,3 @@ unsigned long int time_elapsed (unsigned long int time_delay)  {
     return systemtick_msecs - time_delay;
 
 }
-
-
-
-
-////////////////// external eeprom driver //////////////////
-bool eeprom_init (void) {
-
-
-    uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
-    if (eepStatus) {
-      Serial.print(F("extEEPROM.begin() failed, status = "));
-      Serial.println(eepStatus);
-      // while (1);
-      // todo - record this error ..
-      return false;
-      
-    }
-
-    // temp
-    DBG_PRINTLN();
-    DBG_PRINT ("extEEPROM_START_ADDRESS : ");
-    DBG_PRINTLN(extEEPROM_START_ADDRESS);
-    DBG_PRINT ("extEEPROM_SIZE_IN_BITS : ");
-    DBG_PRINTLN(extEEPROM_SIZE_IN_BITS);
-    DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES : ");
-    DBG_PRINTLN(extEEPROM_PAGE_SIZE_IN_BYTES);
-    DBG_PRINT ("extEEPROM_SIZE_IN_BYTES : ");
-    DBG_PRINTLN(extEEPROM_SIZE_IN_BYTES);    
-    DBG_PRINT ("extEEPROM_LAST_ADDRESS : ");
-    DBG_PRINTLN(extEEPROM_LAST_ADDRESS);
-
-    DBG_PRINT ("EEPROM_TEST_AREA_START : ");
-    DBG_PRINTLN(EEPROM_TEST_AREA_START);
-    DBG_PRINT ("EEPROM_TEST_AREA_SIZE : ");
-    DBG_PRINTLN(EEPROM_TEST_AREA_SIZE);    
-    DBG_PRINT ("EEPROM_TEST_AREA_END : ");
-    DBG_PRINTLN(EEPROM_TEST_AREA_END);
-
-    DBG_PRINT ("EEPROM_RECORD_START : ");
-    DBG_PRINTLN(EEPROM_RECORD_START);
-    DBG_PRINT ("EEPROM_RECORD_AREA_SIZE : ");
-    DBG_PRINTLN(EEPROM_RECORD_AREA_SIZE);    
-    DBG_PRINT ("EEPROM_RECORD_AREA_END : ");
-    DBG_PRINTLN(EEPROM_RECORD_AREA_END);
-
-    return true;
-  
-}
-
-void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
-
-    unsigned int    len, partial_len, offset_bytes;
-    
-    if (buff_p == NULL  ||  address > extEEPROM_LAST_ADDRESS || n_bytes == 0) {
-        return; 
-    }
-
-    offset_bytes = address % extEEPROM_PAGE_SIZE_IN_BYTES;
-    partial_len  = extEEPROM_PAGE_SIZE_IN_BYTES - offset_bytes;
-//    DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES :");   
-//    DBG_PRINTLN (extEEPROM_PAGE_SIZE_IN_BYTES);   
-//    DBG_PRINT ("offset_bytes :");   
-//    DBG_PRINTLN (offset_bytes);   
-//    DBG_PRINT ("partial_len :");   
-//    DBG_PRINTLN (partial_len);   
-
-
-    if (partial_len > n_bytes) {       
-        partial_len = n_bytes;
-
-    }
-
-    if (partial_len)  {
-        eep.write(address, buff_p, partial_len);
-        n_bytes -= partial_len;
-        address += partial_len;
-        buff_p  += partial_len;
-        _delay_us(5);
-    }
-
-    while (n_bytes) 
-    {
-        if (n_bytes > extEEPROM_PAGE_SIZE_IN_BYTES) {
-            partial_len = extEEPROM_PAGE_SIZE_IN_BYTES;
-        }
-        else {
-            partial_len = n_bytes;
-        }
-        eep.write(address, buff_p, partial_len);
-        n_bytes -= partial_len;
-        address += partial_len;    
-        buff_p  += partial_len;
-        _delay_us(5);
-    }
-    
-  
-}
-
-
-void eepread (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
-    
-    if (buff_p == NULL  ||  address > extEEPROM_LAST_ADDRESS || n_bytes == 0) {
-        return; 
-    }
-
-    eep.read(address, buff_p, n_bytes);
-
-}
-
-
-bool compare_buff (byte * buff_a, byte * buff_b, int  len)  {
-
-    if (buff_a == NULL || buff_b == NULL || len == 0) {
-      return false;
-    }
-
-    // else
-
-    while (len)  
-    {
-        len--;
-        if (*buff_a != *buff_b) {
-            return false;
-        }
-        buff_a++;
-        buff_b++;
-    }
-
-    return true;
-}
-
-#define EEPROM_TEST_BUFFER_SIZE  (45)
-
-void eep_clear (void) {
-    
-    int       i, address;
-    byte      write_buff[EEPROM_TEST_BUFFER_SIZE];
-
-
-    DBG_PRINTLN();
-    DBG_PRINTLN ("external EEprom test started..");
-
-    DBG_PRINTLN ("test buffer..");
-    for (i = 0; i < EEPROM_TEST_BUFFER_SIZE; i++)
-    {
-        write_buff[i] = 0;   
-        DBG_PRINT (write_buff[i]);   
-        DBG_PRINT (" ");
-    }    
-
-    DBG_PRINTLN ();
-    
-    DBG_PRINT ("Erasing eeprom..");
-    for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
-    {
-        eepwrite (address, write_buff, EEPROM_TEST_BUFFER_SIZE);
-    }
-
-}
-
-
-
-void eeptest (void) {
-    
-    int       i, address;
-    byte      write_buff[EEPROM_TEST_BUFFER_SIZE];
-    byte      read_buff[EEPROM_TEST_BUFFER_SIZE];
-    int       buff_size = EEPROM_TEST_BUFFER_SIZE;
-    int       success = 0;
-    int       fail = 0;
-
-
-    DBG_PRINTLN();
-    DBG_PRINTLN ("external EEprom test started..");
-
-    DBG_PRINTLN ("test buffer..");
-    for (i = 0; i < EEPROM_TEST_BUFFER_SIZE; i++)
-    {
-        write_buff[i] = i + '3';   
-        DBG_PRINT (write_buff[i]);   
-        DBG_PRINT (" ");
-    }    
-
-    DBG_PRINTLN ();
-    
-    DBG_PRINT ("Writing test buffer..");
-    for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
-    {
-        eepwrite (address, write_buff, EEPROM_TEST_BUFFER_SIZE);
-    }
-
-    DBG_PRINT ("Reading test buffer..");
-    for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
-    {
-        eepread (address, read_buff, EEPROM_TEST_BUFFER_SIZE);
-        DBG_PRINT (read_buff[5]); // just a sample element printed
-        DBG_PRINT (" ");   
-
-        if (compare_buff (read_buff, write_buff, EEPROM_TEST_BUFFER_SIZE) == true)  {
-            success++;
-        }
-        else {
-            fail++;
-        }
-    }
-    DBG_PRINTLN ();   
-
-    DBG_PRINT ("Success : ");
-    DBG_PRINTLN (success);
-    DBG_PRINT ("Fail    : ");
-    DBG_PRINTLN (fail);
-      
-}
-
-
-void save_record (void) {
-
-    eep_record.last_cycle_run_time_secs = last_cycle_run_time_secs;
-    eep_record.total_run_time_secs      = total_run_time_secs;
-    
-    // write on to eeprom
-    if (f_eeprom_working) {
-      eepwrite (EEPROM_RECORD_START, (byte*)&eep_record, EEPROM_RECORD_AREA_SIZE);
-    }
-            
-}
-
-/////////////////// scrap area /////////////////////////////////
-/*
-    // temp : test for LCD pins
-    while (1)
-    {
-        digitalWrite(dataPin_7segment,   LOW );
-        digitalWrite(clckPin_7segment,   LOW );
-        digitalWrite(loadPin_7segment,   LOW );
-        delay(1000);
-        digitalWrite(dataPin_7segment,   HIGH );
-        digitalWrite(clckPin_7segment,   HIGH );
-        digitalWrite(loadPin_7segment,   HIGH );
-        delay(1000);
-        
-     }
-*/

@@ -35,6 +35,14 @@ bool            f_sec_change_ui_task;
 bool            f_sec_change_o2_task;
 bool            f_sec_change_sensor_task;
 
+<<<<<<< HEAD:tworks_o2_cons/db.ino
+=======
+
+uint8_t         start_switch_pressed;
+uint8_t         alarm_clear_button_pressed;
+
+
+>>>>>>> From_scratch:O2Concentrator_POC/tworks_o2_cons/db.ino
 float           o2_concentration = 93.50;
 float           prev_o2_concentration;
 float           output_pressure  = 25.03;

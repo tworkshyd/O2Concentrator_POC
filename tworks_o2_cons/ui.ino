@@ -177,6 +177,7 @@ void ui_task_main (void)    {
     switch (ui_state)
     {
         case UI_START:
+<<<<<<< HEAD:tworks_o2_cons/ui.ino
             //if (powerUpTimer.check())   {
 //            if (state_time >= 10) {
 //                ui_state = UI_SYS_INIT;
@@ -204,6 +205,9 @@ void ui_task_main (void)    {
 //                }
 //            }
             ui_state = UI_SYS_INIT;
+=======
+			ui_state = UI_SYS_INIT;
+>>>>>>> From_scratch:O2Concentrator_POC/tworks_o2_cons/ui.ino
             break;
 //        case UI_CALIB_MODE:
 //            DBG_PRINTLN("Entered Calibration Mode..");
@@ -257,14 +261,23 @@ void ui_task_main (void)    {
                 lcd.print("Start Button Pressed");
                 beep_for (SYS_ON_BEEP);   // msecs
 
+<<<<<<< HEAD:tworks_o2_cons/ui.ino
                 
+=======
+                COMPRSSR_CNTRL (COMPRSSR_ON);
+>>>>>>> From_scratch:O2Concentrator_POC/tworks_o2_cons/ui.ino
                 // new_delay_msecs (1000);
 
                 lcd.setCursor(0, 3);
                 lcd.print("O2 Cons. Starting... ");
+<<<<<<< HEAD:tworks_o2_cons/ui.ino
                 new_delay_msecs (1000);
                 // COMPRSSR_CNTRL (COMPRSSR_ON);
                 
+=======
+                // new_delay_msecs (1000);
+
+>>>>>>> From_scratch:O2Concentrator_POC/tworks_o2_cons/ui.ino
                 ui_state = UI_SYS_RUNNING;
             }
             break;
@@ -272,6 +285,7 @@ void ui_task_main (void)    {
 
         case UI_SYS_RUNNING:
             // system running
+<<<<<<< HEAD:tworks_o2_cons/ui.ino
             // LCD Line 1
             if (f_state_changed)  {
                 f_state_changed = 0;
@@ -333,12 +347,19 @@ void ui_task_main (void)    {
             // System OFF check
             if (start_switch_pressed == false)  {
                 ui_state = UI_SYS_OFF_CHECK;
+=======
+            // System OFF check
+            if (start_switch_pressed == false)  {
+                f_system_running = false;
+                ui_state = UI_SYS_SHUT_OFF;
+>>>>>>> From_scratch:O2Concentrator_POC/tworks_o2_cons/ui.ino
             }
             else {
                 // no state change
             }
             break;
 
+<<<<<<< HEAD:tworks_o2_cons/ui.ino
         case UI_SYS_OFF_CHECK:
             // System OFF check
 //            if (button_pressed == true)  {
@@ -371,6 +392,17 @@ void ui_task_main (void)    {
 //                // back to run state..
 //                ui_state = UI_SYS_RUNNING;
 //            }
+=======
+        case UI_SYS_SHUT_OFF:
+            // System OFF 
+            COMPRSSR_CNTRL (COMPRSSR_OFF);
+            beep_for (SYS_OFF_BEEP);   // msecs
+            new_delay_msecs (1000);
+            lcd.setCursor(0, 3);
+            lcd.print("O2 Cons. Stopping.. ");
+            new_delay_msecs (1000);
+            ui_state = UI_LAST;           
+>>>>>>> From_scratch:O2Concentrator_POC/tworks_o2_cons/ui.ino
             break;
         default:
         case UI_LAST:
