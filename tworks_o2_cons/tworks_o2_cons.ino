@@ -4,6 +4,10 @@
 
 //#include <UniversalTimer.h>
 
+//#include <extEEPROM.h>
+//#include "RTCDS1307.h"
+
+
 #include "o2_sensor.h"
 #include "platform.h"
 #include "o2_cons.h"
@@ -18,14 +22,15 @@
 #define TICK_time (10)
 
 
+//extEEPROM eep(kbits_64, 1, 8);        // device size, number of devices, page size
+//RTCDS1307 rtc (0x68);                 // address of RTC DS1307
+
 
 unsigned char cycle;
 
 
-
 void o2_cons_init (void);
 void o2_main_task (void);
-
 
 
 void setup (void) {
@@ -34,6 +39,59 @@ void setup (void) {
     DBG_PRINTLN ("Serial port initialized..!!");
     platform_init ();
     db_init ();
+
+    //temp
+    // test_ads1115 ();
+
+//    // RTC DS1307 initialization
+//    rtc.begin();
+//    rtc.setDate(21, 9, 20);
+//    rtc.setTime(21, 35, 55);
+//
+//    uint8_t eepStatus = eep.begin(eep.twiClock400kHz);   //go fast!
+//    if (eepStatus) {
+//      Serial.print(F("extEEPROM.begin() failed, status = "));
+//      Serial.println(eepStatus);
+//      while (1);
+//    }
+
+    // temp
+    DBG_PRINTLN ("SIEVE_A_VALVE_CONTROL.!!");
+    do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);     
+    delay (1000);    
+    do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);     
+    delay (1000);    
+    DBG_PRINTLN ("SIEVE B VALVE_CONTROL.!!");
+    do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
+    delay (1000);    
+   do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
+    delay (1000);    
+
+    DBG_PRINTLN ("SIEVE_FLUSH_VLV_CNTRL..");
+    do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
+    delay (1000);    
+    do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
+    delay (1000);    
+    
+//    eeprom_init ();
+    // temp
+    // eeptest ();
+    //while (1)
+    //{
+    //  rtc_test ();
+    //}
+    
+    o2_cons_init ();
+    init_7segments ();
+
+    // temp
+    test_7segments ();
+    //test_neo_pixcell_leds ();
+
+    
+    display_o2 (00.0);
+    display_total_run_hours (total_run_time_secs);    
+
     ui_init ();
     ads_init ();
     o2_cons_init ();
@@ -132,9 +190,9 @@ void o2_main_task (void)    {
     }
     if (f_sec_change_o2_task) {
         f_sec_change_o2_task = 0;
-<<<<<<< HEAD
+
         production_time_secs++;
-=======
+
         current_run_time_secs++;
         total_run_time_secs++;
 
@@ -166,7 +224,7 @@ void o2_main_task (void)    {
               break;
         }
       }
->>>>>>> origin/Revised_code_for_Demo
+
     }
 
     if (time_elapsed (time_tag) < nb_delay)  {

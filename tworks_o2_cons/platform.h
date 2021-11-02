@@ -85,7 +85,7 @@
 
  
 /* Rev 1.0 O2 Concentrator Main Board, 
-<<<<<<< HEAD
+
 		dated 2021-05-18, developed @ Tworks
  
 
@@ -130,73 +130,20 @@
     PB1(T1/CLK0/PCINT9)     41  | 	CLK   ================================>  9
     PB0(XCK0/T0/PCINT8)     40  | 	SW    ================================>  8
 
-=======
-    dated 2021-05-18, developed @ Tworks
- 
 
-    PB5(PCINT13/ICP3/MOSI)   1  | MOSI --> MOSI --> Din ================> 5
-    PB6(PCINT14/OC3A/MISO)   2  | MISO =================================> 6
-    PB7(PCINT15/OC3B/SCK)    3  | SCK  --> SCK  --> sck ================> 7 
-    #RESET                   4  | RESET 
-    VCC                      5  | VCC   
-                      
-    PD0(PCINT24/RXD0/T3*)  9  | RXD   
-    PD1(PCINT25/TXD0)   10  | TXD   
-    PD2(PCINT26/RXD1/INT0)  11  | INT0  
-                      
-    PD3(PCINT27/TXD1/INT1)  12  | INT1  
-    PD4(PCINT28/XCK1/OC1B)  13  | DDIR  ================================> 12 
-    PD5(PCINT29/OC1A)       14  | PD5 --> PD5  --> PD5 --> LOAD ========> 13
-    PD6(PCINT30/OC2B/ICP)   15  | PD6   ================================> 14  
-    PD7(PCINT31/OC2A)       16  | PD7   ================================> 15 
-                      
-    PC0(PCINT16/SCL)    19  | SCL   
-    PC1(PCINT17/SDA)        20  |   SDA   
-    PC2(PCINT18/TCK)        21  |   RS    ================================> 18
-    PC3(PCINT19/TMS)        22  |   EN    ================================> 19
-                      
-    PA0(ADC0/PCINT0)    37  |   OUT1  --> SOL1 --> RLY1 ==> ZT1     ==> A0
-    PA1(ADC1/PCINT1)    36  |   OUT2  --> SOL2 --> RLY2 ==> ZT2     ==> A1
-    PA2(ADC2/PCINT2)    35  |   OUT3  --> SOL3 --> RLY3 ==> BCF     ==> A2
-    PA3(ADC3/PCINT3)    34  |   OUT4  --> SPR  --> RLY4 ==> SPRR --> Compressor SSR  ==> A3
-    PA4(ADC4/PCINT4)    33  |   OUT5  --> CMP  =======================> A4 (not in use for now)
-    PA5(ADC5/PCINT5)    32  |   OUT8  --> BZR  =======================> A5
-    PA6(ADC6/PCINT6)    31  |   OUT6  --> x 
-    PA7(ADC7/PCINT7)    30  |   OUT7  --> x 
-                      
-    PC7(TOSC2/PCINT23)    26  | DB7   ================================> 23
-    PC6(TOSC1/PCINT22)    25  | DB6   ================================> 22
-    PC5(TDI/PCINT21)      24  | DB5   ================================> 21
-    PC4(TDO/PCINT20)      23  | DB4   ================================> 20
-    
-    PB4(#SS/OC0B/PCINT12)   44  |   SW5   ================================>  4
-    PB3(AIN1/OC0A7PCINT11)  43  |   sw4   ================================>  3
-    PB2(AIN0/INT2/PCINT10)  42  |   DT    ================================>  2
-    PB1(T1/CLK0/PCINT9)     41  |   CLK   ================================>  9
-    PB0(XCK0/T0/PCINT8)     40  |   SW    ================================>  8
-    
->>>>>>> From_scratch
 
  */
 
 
 
 // 1. LCD display port mappings
-<<<<<<< HEAD
 #define RS		        (18)
 #define EN		        (19)
 #define D4		        (20)
 #define D5		        (21)
 #define D6		        (22)
 #define D7		        (23)
-=======
-#define RS            (18)
-#define EN            (19)
-#define D4            (20)
-#define D5            (21)
-#define D6            (22)
-#define D7            (23)
->>>>>>> From_scratch
+
 
 // 2. Relay Controls
 #define RLY_1           (A0)
@@ -212,11 +159,9 @@
 
 
 // 3. Buzzer
-<<<<<<< HEAD
 #define buzzr_cntrl_pin  	(A5)
-=======
-#define buzzr_cntrl_pin   (A5)
->>>>>>> From_scratch
+
+
 
 // 4. Compressor Control
 // #define compr_cntrl_pin  (A4)
@@ -241,25 +186,18 @@
 #define encoderClk          (9)    
 #define encoderData         (10)    
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> origin/Revised_code_for_Demo
+
 // 9. Neo LED interface
 #define MISO_pin            (6)    
 #define PD6_pin             (14)    
 #define PD7_pin             (15)    
-<<<<<<< HEAD
 
->>>>>>> From_scratch
-=======
->>>>>>> origin/Revised_code_for_Demo
+
 
 
 // RELAY PIN ASSIGNMENT
 //**************************************************************************
-<<<<<<< HEAD
+
 #if ENABLE_USE_OF_RELAY_3_FOR_Z1    
     // temp arrangement to over-come h/w issue
     #define  Sieve_A_Valve_Z1       RLY_3       // Z1TSOL
@@ -274,7 +212,7 @@
 #endif
 
 #define BUTTON_ACTIVE       (LOW)
-=======
+
 #define  Sieve_A_Valve_Z1       RLY_1       // Z1TSOL
 #define  Sieve_B_Valve_Z2       RLY_2       // Z2TSOL
 #define  PreCharge_Valve_BCKF   RLY_3       // BACKFSOL
@@ -285,7 +223,7 @@
 #define ALARM_CLEAR_BUTTON_PRESSED	(LOW)
 #define ALARM_CLEAR_BUTTON_RELEASED	(HIGH)
 
->>>>>>> From_scratch
+
 
 // Digital output Controls
 // #define BUUZZER_CNTRL(x)    (digitalWrite(buzzr_cntrl_pin, !x))
@@ -326,8 +264,9 @@ unsigned long time_elapsed    (unsigned long time_delay);
 void          new_delay_msecs (unsigned int  time_delay);
 
 
-<<<<<<< HEAD
+
 ////////////////// external eeprom driver //////////////////
+
 bool eeprom_init  (void);
 void eepwrite     (unsigned int address, byte * buff_p, uint8_t n_bytes);
 void eepread      (unsigned int address, byte * buff_p, uint8_t n_bytes);
@@ -335,14 +274,19 @@ void eep_clear    (void);
 void eeptest      (void);
 void save_record  (void);
 
-=======
 //////////////////// external eeprom driver //////////////////
 //void eeprom_init (void);
 //void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes);
 //void eepread  (unsigned int address, byte * buff_p, uint8_t n_bytes);
 //void eeptest  (void);
 //void rtc_test (void);
->>>>>>> From_scratch
+
+void eeprom_init (void);
+void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes);
+void eepread  (unsigned int address, byte * buff_p, uint8_t n_bytes);
+void eeptest  (void);
+void rtc_test (void);
+
 
 
 #endif

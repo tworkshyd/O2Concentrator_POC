@@ -18,8 +18,7 @@ void lcd_clear_buf (char * bufp) {
     bufp[i] = '\0';
 }
 
-<<<<<<< HEAD
-=======
+
 
 
 
@@ -330,7 +329,7 @@ void display_run_time (uint16_t hours, uint16_t mins) {
 }
 
 
->>>>>>> origin/Revised_code_for_Demo
+
 /*
 
     Prameters :  line_no (1 to LCD_ROWS), start_col ( 0 to LCD_COLS-1)

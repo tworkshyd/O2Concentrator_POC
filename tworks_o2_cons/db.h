@@ -48,7 +48,14 @@ extern volatile float    o2_slope;
 extern volatile float    o2_const_val;
 extern volatile float    m_raw_voltage;
 
+extern uint8_t        start_switch_pressed;
+extern uint8_t        alarm_clear_button_pressed;
 
+
+extern uint8_t  year, month, weekday, day, hour, minute, second;
+extern bool     period;
+extern String   m[12];
+extern String   w[7];
 
 void db_init (void);
 
