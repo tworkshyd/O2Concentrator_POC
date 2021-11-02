@@ -146,7 +146,7 @@ void loop (void) {
         ui_task_main ();
         logs_task ();
 
-
+        init_7segments ();
         display_o2 (o2_concentration);
         if (f_crn == 1) {
             int secs = ( current_run_time_secs %  60);
@@ -161,7 +161,7 @@ void loop (void) {
         
     }
 
-        init_7segments ();
+        
 
 
 }

@@ -85,31 +85,56 @@ void  set7segmentDigit (int digit, int value, uint8_t  point) {
         point = 0x80;
     else 
         point = 0;
+        
+    digitalWrite(loadPin_7segment,   LOW);        
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     
-    digitalWrite(loadPin_7segment,   LOW);
+
     digitalWrite(loadPin_7segment,   HIGH);         
 }
 
 void  set7segmentRegister (int reg, int value) {
+
   
 /*
  * D15 D14 D13 D12 D11 D10 D9 D8 D7 D6 D5 D4 D3 D2 D1 D0
    X   X   X   X   ADDRESS-----| MSB     DATA        LSB
  */
     //shiftOut(dataPin, clockPin, bitOrder, value);
+
+
+    digitalWrite(loadPin_7segment,   LOW);  
+
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, reg);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, value);     
-    digitalWrite(loadPin_7segment,   LOW);
+
     digitalWrite(loadPin_7segment,   HIGH);         
 }
 
 
 void init_7segments (void) {
     
-    set7segmentRegister (INTENSITY, 0x07);
     set7segmentRegister (SHUT_DOWN, 1);
- 
+
+    set7segmentRegister (DECODE_MODE, 0x00);  // 0xFF);
+    set7segmentRegister (INTENSITY,   0x0F);
+    set7segmentRegister (SCAN_LIMIT,   0x07);
+
+
+
+//    set7segmentDigit (1, 0); 
+//    set7segmentDigit (2, 1);
+//    set7segmentDigit (3, 2);
+//    set7segmentDigit (4, 3);
+//    set7segmentDigit (5, 4);
+//    set7segmentDigit (6, 5);
+//    set7segmentDigit (7, 6);
+//    set7segmentDigit (8, 7);
+
+
+  //DBG_PRINTLN("shifting done..");   
+  
+
 }
 
 // ver1: Display 2.1 digits for O2 concentration
