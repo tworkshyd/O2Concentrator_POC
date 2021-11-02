@@ -9,20 +9,6 @@
 	#include "WProgram.h"
 #endif
 
-
-
-// external EEPROM memory address range and memory map
-#define   extEEPROM_START_ADDRESS         (0x00)
-
-#define   extEEPROM_SIZE_IN_BITS          (8142L * 8L)
-#define   extEEPROM_PAGE_SIZE_IN_BYTES    (32L)
-#define   extEEPROM_SIZE_IN_BYTES         (extEEPROM_SIZE_IN_BITS / 8)
-
-#define   extEEPROM_LAST_ADDRESS          (extEEPROM_START_ADDRESS + extEEPROM_SIZE_IN_BYTES)
-
-
-
-
 // time keepers
 extern volatile unsigned long int systemtick_msecs;
 extern volatile unsigned char     systemtick_secs;
@@ -61,7 +47,8 @@ extern volatile float    o2_slope;
 extern volatile float    o2_const_val;
 extern volatile float    m_raw_voltage;
 
-
+extern uint8_t   start_switch_pressed;
+extern uint8_t   alarm_clear_button_pressed;
 
 void db_init (void);
 
