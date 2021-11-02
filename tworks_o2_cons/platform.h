@@ -242,13 +242,19 @@
 #define encoderData         (10)    
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/Revised_code_for_Demo
 // 9. Neo LED interface
 #define MISO_pin            (6)    
 #define PD6_pin             (14)    
 #define PD7_pin             (15)    
+<<<<<<< HEAD
 
 >>>>>>> From_scratch
+=======
+>>>>>>> origin/Revised_code_for_Demo
 
 
 // RELAY PIN ASSIGNMENT

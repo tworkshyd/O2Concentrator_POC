@@ -70,6 +70,7 @@ ISR (TIMER1_COMPA_vect) { // change the 0 to 1 for timer0
         }
     }
 
+<<<<<<< HEAD
     // button check detection
     button_check ();
 }
@@ -143,6 +144,9 @@ void button_check (void)  {
     }
     	
 	
+=======
+    // DBG_PRINT (". "); // temp for debugging
+>>>>>>> origin/Revised_code_for_Demo
 }
 
 
@@ -253,7 +257,11 @@ void platform_init (void) {
     digitalWrite(PD6_pin,     LOW );
     digitalWrite(PD7_pin,     LOW );
 
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/Revised_code_for_Demo
     DBG_PRINTLN("GPIO init done..");
 
 

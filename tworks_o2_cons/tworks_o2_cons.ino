@@ -115,6 +115,9 @@ void o2_cons_init (void)    {
     do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
     new_delay_msecs (1000);
 
+    // start with TRN display hence light-up TRN LED
+    neo_pixcel_data (ALL_LEDs_OFF, 0);
+    neo_pixcel_data (TRN_DISPLAY, 1); 
 
 }
 
@@ -129,7 +132,41 @@ void o2_main_task (void)    {
     }
     if (f_sec_change_o2_task) {
         f_sec_change_o2_task = 0;
+<<<<<<< HEAD
         production_time_secs++;
+=======
+        current_run_time_secs++;
+        total_run_time_secs++;
+
+
+      // display run hours, 45 seconds current run hours, 15 seconds total runhours
+      int secs = ( current_run_time_secs %  60);
+      int mins = ((current_run_time_secs % (60 * 60)) / 60);
+      int hrs  = ( current_run_time_secs / (60 * 60));
+         
+      if ((current_run_time_secs % 15) == 0) {
+        quadrant++;
+        switch (quadrant) 
+        {
+            case 0:
+            case 1:
+            case 2:
+              display_run_time(hrs, mins);
+              neo_pixcel_data (ALL_LEDs_OFF, 0);
+              delay(333);              
+              neo_pixcel_data (CRN_DISPLAY, 1);              
+              break;
+           case 3:
+              hrs = (total_run_time_secs / (60 * 60));
+              display_run_hours(hrs);
+              neo_pixcel_data (ALL_LEDs_OFF, 0);
+              delay(333);
+              neo_pixcel_data (TRN_DISPLAY,  1); 
+              quadrant = 0;
+              break;
+        }
+      }
+>>>>>>> origin/Revised_code_for_Demo
     }
 
     if (time_elapsed (time_tag) < nb_delay)  {
