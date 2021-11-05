@@ -40,8 +40,52 @@
 LiquidCrystal   lcd(RS, EN, D4, D5, D6, D7);
 LedControl      lc = LedControl(dataPin_7segment, clckPin_7segment, loadPin_7segment, 1);
 
+/*
+ *  Two LED boards Board 1 with 5 LEDs A0 to A4
+ *   and  Board 2 with 2 LEDs A0 & A1 (will refere these as a0 & a1)
+ *   
+ *   From host controller 3 pins are used for interface 
+ *    MISO, PD6 & PD7, these are connected from display board JP5 connector to 
+ *    J1 connector of LED Board1, LED Board2 is cascaed with LED Board1
+ *   
+ *   LED orientation for data 000 to 111 on these control bits is ..
+ *   
+ *   MISO  PD6  PD7          a1  a0  A4  A3  A2  A1  A0   
+ *    0    0     0            -   -   -   -   -   -   - 
+ *    0    0     1            -   -   -   -   -   -   1 
+ *    0    1     0            -   -   -   -   -   1   - 
+ *    0    1     1            -   -   -   -   1   -   - 
+ *    1    0     0            -   -   -   1   -   -   - 
+ *    1    0     1            -   -   1   -   -   -   - 
+ *    1    1     0            -   1   -   -   -   -   - 
+ *    1    1     1            1   -   -   -   -   -   - 
+ *    
+ */
+#define   A0        (0b001)
+#define   A1        (0b010) 
+#define   A2        (0b011)
+#define   A3        (0b100)
+#define   A4        (0b101) 
+#define   a0        (0b110)
+#define   a1        (0b111)
+#define   ALL_OFF   (0b000)
 
 enum ALIGN {LEFT, CENTER, RIGHT};
+
+enum ERROR_CODE_E {
+
+    TRN_DISPLAY,
+    CRN_DISPLAY,
+    LOW_O2_PURITY,
+    OUTPUT_FLOW_OBSTRUCT,
+    POWER_FAIL,
+    UNIT_OVER_HEAT,
+    UNUSED_LED,
+
+    ALL_LEDs_OFF
+};
+
+//enum ALIGN {LEFT, CENTER, RIGHT};
 extern char     lcd_temp_string[LCD_COLS + 1];
 
 
@@ -56,6 +100,8 @@ void test_7segments		(void);
 void display_o2			(float o2value);
 void display_current_run_hours   (uint16_t hours, uint16_t mins);
 void display_total_run_hours    (uint32_t runhours);
+
+void neo_pixcel_data (enum ERROR_CODE_E error_no, uint8_t  on_off);
 
 
 // initialize the library by associating any needed LCD interface pin

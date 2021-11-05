@@ -17,6 +17,41 @@ tworks_o2_cons/Release/board.buildinfo
 
 *.cppproj
 
-*.sisc
+O2c_browse.si4project/O2c_browse.bookmarks.xml
+O2c_browse.si4project/O2c_browse.sip_sym
+O2c_browse.si4project/O2c_browse.sip_xab
+O2c_browse.si4project/O2c_browse.sip_xad
+O2c_browse.si4project/O2c_browse.sip_xc
+O2c_browse.si4project/O2c_browse.sip_xf
+O2c_browse.si4project/O2c_browse.sip_xm
+O2c_browse.si4project/O2c_browse.sip_xr
+O2c_browse.si4project/O2c_browse.sip_xsb
+O2c_browse.si4project/O2c_browse.sip_xsd
+O2c_browse.si4project/O2c_browse.siproj
+O2c_browse.si4project/O2c_browse.siproj_settings.xml
+O2c_browse.si4project/O2c_browse.siwork
+O2c_browse.si4project/cache/parse/tworks_o2_cons_commn.h.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_commn.ino.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_db.h.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_db.ino.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_display.h.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_display.ino.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_memory_watch.h.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_o2_sensor.h.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_o2_sensor.ino.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_platform.h.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_platform.ino.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_pressure_sensor.h.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_pressure_sensor.ino.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_tworks_o2_cons.ino.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_ui.h.sisc
+O2c_browse.si4project/cache/parse/tworks_o2_cons_ui.ino.sisc
+tworks_o2_cons/Release/makedep.mk
+tworks_o2_cons/Release/tworks_o2_cons.lss
+tworks_o2_cons/Release/tworks_o2_cons.map
+tworks_o2_cons/Release/tworks_o2_cons.srec
 
+
+*.sisc
+O2c_browse.si4project/
 
