@@ -384,8 +384,8 @@ void ui_task_main (void)    {
         prev_ui_state = ui_state;
         f_state_changed = 1;
         state_time = 0;
-        DBG_PRINT("ui_state : ");
-        DBG_PRINTLN(ui_state);
+        // DBG_PRINT("ui_state : ");
+        // DBG_PRINTLN(ui_state);
     }
 }
 

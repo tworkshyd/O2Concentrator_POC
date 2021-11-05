@@ -30,21 +30,20 @@ void o2_main_task (void);
 
 void setup (void) {
 
+    // Serial port initialization
     Serial.begin (115200);
-    DBG_PRINTLN ();
+    
     DBG_PRINTLN ();
     DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
-    DBG_PRINTLN ("Oxygen Concentrator\n");
+    DBG_PRINTLN ("Oxygen Concentrator Project\n");
     DBG_PRINTLN ("Harware Board Revision : " HW_REVISION_TXT);
     DBG_PRINTLN ("Firmware Version       : " FW_VERSION_TXT);
     DBG_PRINT   ("Build Time             : ");
     DBG_PRINT   (__DATE__);
     DBG_PRINT   (", ");
     DBG_PRINTLN (__TIME__);
+    DBG_PRINTLN ();
 
-    
-    DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
-    DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
     platform_init ();
     ads_init ();
     db_init ();
@@ -59,7 +58,7 @@ void setup (void) {
         DBG_PRINTLN ("EEprom retrieved record...");
         DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
         DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
-        DBG_PRINT   ("eep_record.total_run_time_secs   : ");
+        DBG_PRINT   ("eep_record.total_run_time_secs      : ");
         DBG_PRINTLN (eep_record.total_run_time_secs);
 
         // update system variables
@@ -95,7 +94,7 @@ void setup (void) {
     
     o2_cons_init ();
     init_7segments ();
-	  blank_7segments ();
+    blank_7segments ();
        
     // display_o2 (00.0);
     // display_total_run_hours (0);    
@@ -135,7 +134,7 @@ void loop (void) {
     		if (f_system_running)	{
     			display_o2 (o2_concentration);  
     		}
-        DBG_PRINT (".");
+        // DBG_PRINT (".");
     }
     else if (f_1min) {
         f_1min = 0;

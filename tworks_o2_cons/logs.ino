@@ -2,6 +2,7 @@
 
 
 #include "logs.h"
+#include "tempr_sensor.h"
 
 
 
@@ -52,25 +53,28 @@ void logs_task (void) {
 
 void log_dump (void)  {
 
+    // 1. print legend
+    // sample output : 00:06:04 00:00:00  5400   0         700       0 0 0 0 0.00 2.10 1 2 3
+    DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, tempr-snsr-1, tempr-snsr-2\r\n" );
+
     // 1. time stamp
     sprintf(lcd_temp_string, "%02d:%02d:%02d ", systemtick_hrs, systemtick_mins, systemtick_secs);
-    Serial.print (lcd_temp_string);
+    DBG_PRINT (lcd_temp_string);
 
     // 2. system run time
     int secs = ( current_run_time_secs %  60);
     int mins = ((current_run_time_secs % (60 * 60)) / 60);
     int hrs  = ( current_run_time_secs / (60 * 60));
-    sprintf(lcd_temp_string, "%02d:%02d:%02d ", hrs, mins, secs);
+    sprintf(lcd_temp_string, "%02d:%02d:%02d,  ", hrs, mins, secs);
     Serial.print (lcd_temp_string);
 
     // 3. production time, flush time n precharge time
-    Serial.print (Production_Delay);
-    Serial.print (" ");
-    Serial.print (Flush_Delay);
-    Serial.print (" ");
-    Serial.print (PreCharge_Delay);
-    Serial.print (" ");
+    Serial.printf ("%5d,  ", Production_Delay);
+    Serial.printf ("%6d,  ", Flush_Delay);
+    Serial.printf ("%9d,  ", PreCharge_Delay);
 
+
+/*
     // 4. sieve A, B & back fluxh vavle status
     sprintf(lcd_temp_string, "%d %d %d ", (do_byte & SIEVE_A_VALVE_CONTROL) != 0, (do_byte & SIEVE_B_VALVE_CONTROL) != 0, (do_byte & SIEVE_FLUSH_VLV_CNTRL) != 0);
     Serial.print (lcd_temp_string);
@@ -84,10 +88,12 @@ void log_dump (void)  {
     Serial.print (" ");
     Serial.print(o2_concentration, 2);
     Serial.print (" ");
-
+*/
     // 6. O2 cons ACD, room temp, RH
-    sprintf(lcd_temp_string, "%d %d %d ", 1, 2, 3);
-    Serial.println (lcd_temp_string);
-
+    Serial.print ("    ");
+    Serial.print(tempr_value_1);
+    Serial.print (",      ");
+    Serial.print(tempr_value_2);
+    Serial.println("\r\n");
 
 }
