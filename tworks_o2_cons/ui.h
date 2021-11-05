@@ -16,11 +16,6 @@
 
 #define BUTTON_DEBOUNCE_DLY ( 55)    // in msecs
 
-#define START_SWITCH_PRESSED        (LOW)
-#define START_SWITCH_RELEASED       (HIGH)
-#define ALARM_CLEAR_BUTTON_PRESSED  (LOW)
-#define ALARM_CLEAR_BUTTON_RELEASED (HIGH)
-
 
 #define HIGH_BEEP           (200)
 #define LOW_BEEP            ( 50)
@@ -39,7 +34,6 @@
 #define ALARM_CLEAR_BUTTON_RELEASED   (HIGH)
 
 
-
 enum UI_STATES_E  {
 
     UI_START,         // 0
@@ -50,7 +44,7 @@ enum UI_STATES_E  {
     UI_SYS_INIT,      // 4
     UI_SYS_ON_CHECK,  // 5
     UI_SYS_RUNNING,   // 6
-    UI_SYS_SHUT_OFF,  // 7
+    UI_SYS_OFF_CHECK, // 7
 
     UI_LAST,          // 8
 

@@ -4,25 +4,31 @@
 #include "platform.h"
 #include "o2_sensor.h"
 #include "ADS1X15.h"
-
+#include "config.h"
 
 
 #define NUM_OF_SAMPLES_O2   (3)
 
 
-#if  0
-    // 1. for Envitec sensor marked as S2 for demo device
+#if  (O2_SENSOR == 1)
+    // 1. for Envitec sensor marked as S1 for demo device
+    float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+    float x_samples[NUM_OF_SAMPLES_O2]     = { 2.3750, 125.125, 661.625};   // default calib values
+
+#elif  (O2_SENSOR == 2) 
+    // 2. for Envitec sensor marked as S2 for demo device
     //float y_samples[NUM_OF_SAMPLES_O2]   = {  4.0,    20.0,   99.7};
     //float y_samples[NUM_OF_SAMPLES_O2]   = {  0.0,    21.1,   100.0};
-    float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};    // based on o2c tank purity = 96% & nitrogen tank purity = 95%
-    float x_samples[NUM_OF_SAMPLES_O2]     = {  8.75, 129.75,  601.75};   // default calib values
+    float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+    float x_samples[NUM_OF_SAMPLES_O2]     = {  8.75, 129.75,  601.75};     // default calib values
 
+#elif  (O2_SENSOR == 3) 
+    // 3. for Envitec sensor marked as S3 for demo device
+    float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+    float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
 
 #else 
-    // 2. for Envitec sensor marked as S3 for demo device
-    //float y_samples[NUM_OF_SAMPLES_O2]   = {  4.0,    20.0,   99.7};
-    //float y_samples[NUM_OF_SAMPLES_O2]   = {  0.0,    21.1,   100.0};
-    float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};    // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+    float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
     float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
 
 #endif
@@ -161,13 +167,15 @@ void o2_sensor_scan (void)  {
     o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
     //o2_concentration = ((o2_raw_adc_count * o2_slope) + o2_const_val);
 
-    #if CAPP_AT_95_O2
+
+    #if (CAPP_AT_95_O2 == 1)
     // capping O2C value.. to restrict it below.. 95% of FiO2   
     if (o2_concentration > O2C_CAP_VALUE_MAX) {
         o2_concentration = O2C_CAP_VALUE_MAX;
         DBG_PRINT(", Capping limit hit-->");
     }  
     #endif
+
     
     DBG_PRINT(", o2_concentration : ");
     DBG_PRINT(o2_concentration);

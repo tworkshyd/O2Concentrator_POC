@@ -85,7 +85,6 @@
 
  
 /* Rev 1.0 O2 Concentrator Main Board, 
-
 		dated 2021-05-18, developed @ Tworks
  
 
@@ -131,7 +130,6 @@
     PB0(XCK0/T0/PCINT8)     40  | 	SW    ================================>  8
 
 
-
  */
 
 
@@ -143,7 +141,6 @@
 #define D5		        (21)
 #define D6		        (22)
 #define D7		        (23)
-
 
 // 2. Relay Controls
 #define RLY_1           (A0)
@@ -160,8 +157,6 @@
 
 // 3. Buzzer
 #define buzzr_cntrl_pin  	(A5)
-
-
 
 // 4. Compressor Control
 // #define compr_cntrl_pin  (A4)
@@ -187,19 +182,10 @@
 #define encoderData         (10)    
 
 
-// 9. Neo LED interface
-#define MISO_pin            (6)    
-#define PD6_pin             (14)    
-#define PD7_pin             (15)    
-
-
-
 
 // RELAY PIN ASSIGNMENT
 //**************************************************************************
-
-#if ENABLE_USE_OF_RELAY_3_FOR_Z1    
-
+#ifdef ENABLE_USE_OF_RELAY_3_FOR_Z1    
     // temp arrangement to over-come h/w issue
     #define  Sieve_A_Valve_Z1       RLY_3       // Z1TSOL
     #define  Sieve_B_Valve_Z2       RLY_2       // Z2TSOL
@@ -214,23 +200,11 @@
 
 #define BUTTON_ACTIVE       (LOW)
 
-#define  Sieve_A_Valve_Z1       RLY_1       // Z1TSOL
-#define  Sieve_B_Valve_Z2       RLY_2       // Z2TSOL
-#define  PreCharge_Valve_BCKF   RLY_3       // BACKFSOL
-
-
-#define START_SWITCH_PRESSED		(LOW)
-#define START_SWITCH_RELEASED		(HIGH)
-#define ALARM_CLEAR_BUTTON_PRESSED	(LOW)
-#define ALARM_CLEAR_BUTTON_RELEASED	(HIGH)
-
-
-
 // Digital output Controls
-// #define BUUZZER_CNTRL(x)    (digitalWrite(buzzr_cntrl_pin, !x))
-#define BUUZZER_CNTRL(x)    (do_control(BUZZER_CONTROL, x))
-//#define compr_cntrl_pin_CNTRL(x)   (digitalWrite(compr_cntrl_pin, x))
-#define COMPRSSR_CNTRL(x)   (do_control(COMPRESSOR_CONTROL, x))
+// #define BUUZZER_CNTRL(x)         (digitalWrite(buzzr_cntrl_pin, !x))
+#define BUUZZER_CNTRL(x)            (do_control(BUZZER_CONTROL, x))
+//#define compr_cntrl_pin_CNTRL(x)  (digitalWrite(compr_cntrl_pin, x))
+#define COMPRSSR_CNTRL(x)           (do_control(COMPRESSOR_CONTROL, x))
 
 
 
@@ -265,28 +239,12 @@ unsigned long time_elapsed    (unsigned long time_delay);
 void          new_delay_msecs (unsigned int  time_delay);
 
 
-
 ////////////////// external eeprom driver //////////////////
-
 bool eeprom_init  (void);
 void eepwrite     (unsigned int address, byte * buff_p, uint8_t n_bytes);
 void eepread      (unsigned int address, byte * buff_p, uint8_t n_bytes);
-void eep_clear    (void);
 void eeptest      (void);
 void save_record  (void);
-
-//////////////////// external eeprom driver //////////////////
-//void eeprom_init (void);
-//void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes);
-//void eepread  (unsigned int address, byte * buff_p, uint8_t n_bytes);
-//void eeptest  (void);
-//void rtc_test (void);
-
-void eeprom_init (void);
-void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes);
-void eepread  (unsigned int address, byte * buff_p, uint8_t n_bytes);
-void eeptest  (void);
-void rtc_test (void);
 
 
 

@@ -129,76 +129,6 @@ void multi_beeps (int count) {
 
 
 
-
-int             start_switch_dbnc_dly;
-int             alarm_clear_bttn_dbnc_dly;
-
-void button_check (void)  {
-
-    int     start_switch_state = 0;         // variable for reading the pushbutton status
-    int     alarm_clear_buttn_state = 0;         // variable for reading the pushbutton status
-
-
-    start_switch_state = digitalRead(startSwitchPin);
-    alarm_clear_buttn_state = digitalRead(alarmClearButton);
-
-    // 1. Start Switch Press detection
-    if (start_switch_state == START_SWITCH_PRESSED) {   // press detection
-        start_switch_dbnc_dly++;
-        if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
-            start_switch_pressed = true; 
-            start_switch_dbnc_dly = 0;
-            DBG_PRINT  ("Start_switch Pressed");
-        }
-        DBG_PRINT  ("start_switch_dbnc_dly : ");
-        DBG_PRINTLN(start_switch_dbnc_dly);
-    }
-    // 2. Start Switch Release detection
-    else if (start_switch_state == START_SWITCH_RELEASED) {   // press detection
-      start_switch_dbnc_dly++;
-      if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
-          start_switch_pressed = false;
-          start_switch_dbnc_dly = 0;
-          DBG_PRINT  ("Start_switch RELEASED");
-      }
-      DBG_PRINT  ("start_switch_dbnc_dly : ");
-      DBG_PRINTLN(start_switch_dbnc_dly);
-    }
-  else {
-    // nop
-  }
-  
-  
-    // 3. Alarm Clear Button Press detection
-    if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_PRESSED) {   // press detection
-      alarm_clear_bttn_dbnc_dly++;
-      if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
-        alarm_clear_button_pressed = true;
-        alarm_clear_bttn_dbnc_dly = 0;
-        DBG_PRINT  ("Alarm Clear Button Pressed..");
-      }
-      DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
-      DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
-    }
-    // 4. Alarm Clear Button Release detection
-    else if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_RELEASED) {   // press detection
-      alarm_clear_bttn_dbnc_dly++;
-      if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
-        alarm_clear_button_pressed = false;
-        alarm_clear_bttn_dbnc_dly = 0;
-        DBG_PRINT  ("Alarm Clear Button RELEASED");
-      }
-      DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
-      DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
-    }
-    else {
-      // nop
-    }
-      
-  
-}
-
-
 void ui_task_main (void)    {
 
     static int            button_debounce_delay;
@@ -207,9 +137,7 @@ void ui_task_main (void)    {
     char                  str_temp[6];
     char                  str_temp2[6];
 
-
-    button_check ();
-
+//    buttonState = digitalRead(startButtonPin);
 
     if (f_sec_change_ui_task) {
         f_sec_change_ui_task = 0;
@@ -249,7 +177,6 @@ void ui_task_main (void)    {
     switch (ui_state)
     {
         case UI_START:
-
             //if (powerUpTimer.check())   {
 //            if (state_time >= 10) {
 //                ui_state = UI_SYS_INIT;
@@ -330,7 +257,7 @@ void ui_task_main (void)    {
                 lcd.print("Start Button Pressed");
                 beep_for (SYS_ON_BEEP);   // msecs
 
-                COMPRSSR_CNTRL (COMPRSSR_ON);
+                
                 // new_delay_msecs (1000);
 
                 lcd.setCursor(0, 3);
@@ -416,8 +343,8 @@ void ui_task_main (void)    {
             // System OFF check
 //            if (button_pressed == true)  {
 //                button_pressed = false;
-                f_system_running = false;
 				f_run_hours = 0;
+                f_system_running = false;				
 				blank_7segments ();
 
                 last_cycle_run_time_secs = current_run_time_secs;
