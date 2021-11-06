@@ -113,14 +113,15 @@ int sensor_zero_calibration (void)
         sigmaXX += x * x;
         sigmaXY += x * y;
 
-        DBG_PRINT ("x : "); DBG_PRINT (x); DBG_PRINT (", y : "); DBG_PRINTLN (y);
-        DBG_PRINT ("sigmaX : "); DBG_PRINT (sigmaX); DBG_PRINT (", sigmaY : "); DBG_PRINTLN (sigmaY);
-        DBG_PRINT ("sigmaXX : "); DBG_PRINT (sigmaXX); DBG_PRINT (", sigmaXY : "); DBG_PRINTLN (sigmaXY);
-
+        DBG_PRINT ("      x : "); DBG_PRINTLN (x);        DBG_PRINT ("      y : "); DBG_PRINTLN (y);
+        DBG_PRINT (" sigmaX : "); DBG_PRINTLN (sigmaX);   DBG_PRINT (" sigmaY : "); DBG_PRINTLN (sigmaY);
+        DBG_PRINT ("sigmaXX : "); DBG_PRINTLN (sigmaXX);  DBG_PRINT ("sigmaXY : "); DBG_PRINTLN (sigmaXY);
+        
     }
     
     denominator = (NUM_OF_SAMPLES_O2 * sigmaXX) - (sigmaX * sigmaX);
-    DBG_PRINT ("denominator : "); DBG_PRINTLN (denominator);
+    DBG_PRINT ("dnmnatr : "); DBG_PRINTLN (denominator);
+
     
     if (denominator != 0) {      
         o2_slope = ((NUM_OF_SAMPLES_O2 * sigmaXY) - (sigmaX * sigmaY)) / denominator;
@@ -150,22 +151,20 @@ int sensor_zero_calibration (void)
 void o2_sensor_scan (void)  {
 
     ADS.readADC(O2_SENSOR_CHANNEL_NO);
-    o2_raw_adc_count = ADS.getValue();
-    
-    DBG_PRINT("o2_raw_adc_count : ");
-    DBG_PRINT(o2_raw_adc_count);
-
+    o2_raw_adc_count = ADS.getValue();   
+    DBG_PRINT   ("o2_raw_adc_count : ");
+    DBG_PRINTLN (o2_raw_adc_count);
 
     m_raw_voltage = ((float)o2_raw_adc_count * 1000.0) * 0.000125;
-    DBG_PRINT(", m_raw_voltage : ");
-    DBG_PRINT(m_raw_voltage, 4);
+    DBG_PRINT   ("m_raw_voltage    : ");
+    DBG_PRINTLN (m_raw_voltage, 4);
 
     // temp hard coding till calib menu is ready
     // o2_slope = 0.02065262;  // 48.42; // 0.166;
     // o2_const_val = -4.68815;  //227; //1.3228;
     
     o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
-    //o2_concentration = ((o2_raw_adc_count * o2_slope) + o2_const_val);
+
 
 
     #if (CAPP_AT_95_O2 == 1)
@@ -177,10 +176,9 @@ void o2_sensor_scan (void)  {
     #endif
 
     
-    DBG_PRINT(", o2_concentration : ");
-    DBG_PRINT(o2_concentration);
-    DBG_PRINT(o2_concentration, 4);
-    DBG_PRINTLN("");
+    DBG_PRINT   ("o2_concentration : ");
+    DBG_PRINTLN (o2_concentration, 4);
+
 
 }
 
