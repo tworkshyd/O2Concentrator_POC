@@ -4,6 +4,7 @@
 
 //#include <UniversalTimer.h>
 #include <extEEPROM.h>
+#include "tempr_sensor.h"
 #include "o2_sensor.h"
 #include "platform.h"
 #include "o2_cons.h"
@@ -130,6 +131,7 @@ void loop (void) {
         f_sec_change_sensor_task = 1;
 
         o2_sensor_scan ();
+        tempr_sensor_scan ();
         // read_pressure ();
     		if (f_system_running)	{
     			display_o2 (o2_concentration);  
