@@ -88,21 +88,21 @@
 		dated 2021-05-18, developed @ Tworks
  
 
-	PB5(PCINT13/ICP3/MOSI)	 1  |	MOSI --> MOSI --> Din ================> 5
-	PB6(PCINT14/OC3A/MISO)	 2  |	MISO  
-	PB7(PCINT15/OC3B/SCK)	 3  |	SCK  --> SCK  --> sck ================> 7 
+	PB5(PCINT13/ICP3/MOSI)	 5  |	MOSI --> MOSI --> Din ================> 5
+	PB6(PCINT14/OC3A/MISO)	 6  |	MISO  
+	PB7(PCINT15/OC3B/SCK)	 7  |	SCK  --> SCK  --> sck ================> 7 
 	#RESET                	 4  |	RESET 
 	VCC                  	 5  |	VCC   
 										  
-	PD0(PCINT24/RXD0/T3*)	 9  |	RXD   
-	PD1(PCINT25/TXD0)		10  |	TXD   
-	PD2(PCINT26/RXD1/INT0)	11  |	INT0  
+	PD0(PCINT24/RXD0/T3*)	 8  |	RXD   
+	PD1(PCINT25/TXD0)		 9  |	TXD   
+	PD2(PCINT26/RXD1/INT0)	10  |	INT0  
 										  
-	PD3(PCINT27/TXD1/INT1)  12 	|	INT1  
-	PD4(PCINT28/XCK1/OC1B)  13  |	DDIR  ================================> 12 
-	PD5(PCINT29/OC1A)       14  |	PD5 --> PD5  --> PD5 --> LOAD ========> 13
-	PD6(PCINT30/OC2B/ICP)   15  |	PD6   
-	PD7(PCINT31/OC2A)       16  |	PD7   
+	PD3(PCINT27/TXD1/INT1)  11 	|	INT1  
+	PD4(PCINT28/XCK1/OC1B)  12  |	DDIR  ================================> 12 
+	PD5(PCINT29/OC1A)       13  |	PD5 --> PD5  --> PD5 --> LOAD ========> 13
+	PD6(PCINT30/OC2B/ICP)   14  |	PD6   
+	PD7(PCINT31/OC2A)       15  |	PD7   
 										  
 	PC0(PCINT16/SCL)		19  |	SCL   
 	PC1(PCINT17/SDA)        20  |   SDA   
@@ -180,6 +180,11 @@
 #define encoderButtonPin    (8)    
 #define encoderClk          (9)    
 #define encoderData         (10)    
+
+// 9. Neo-pixel out-put pins
+#define miso_neo_data1      (6)    
+#define pd6_neo_data2       (14)    
+#define pd7_neo_data3       (15)    
 
 
 

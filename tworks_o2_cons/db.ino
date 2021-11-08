@@ -63,6 +63,10 @@ volatile float    m_raw_voltage;
 uint8_t   start_switch_pressed;
 uint8_t   alarm_clear_button_pressed;
 
+
+uint8_t     neo_pixel_leds_byte;   // holds led light-up info, 1 - on, 0 - off from LSB as alarm-1
+
+
 void db_init (void) {
 
     f_system_running = 0;
