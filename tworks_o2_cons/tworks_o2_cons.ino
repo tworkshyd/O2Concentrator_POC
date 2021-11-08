@@ -120,7 +120,16 @@ void loop (void) {
     else if (f_100msec) {
         f_100msec = 0;
         // 100 milli second tasks go here..
+{
+         // temp for testing
+         static char temp_count;
 
+         temp_count++;
+         if (temp_count > 0b111)  {
+            temp_count = 0;
+         }
+         neo_pixel_control (temp_count, true);  // ON -> true, OFF - false
+}    
     }
     else if (f_1sec) {
         f_1sec = 0;
@@ -136,6 +145,7 @@ void loop (void) {
     		if (f_system_running)	{
     			display_o2 (o2_concentration);  
     		}
+    
         // DBG_PRINT (".");
     }
     else if (f_1min) {
@@ -174,10 +184,9 @@ void loop (void) {
   			}
   		}
     }
-
-	  init_7segments ();
-
-
+    
+	init_7segments ();
+  
 }
 
 
@@ -188,9 +197,9 @@ void o2_cons_init (void)    {
     sensor_zero_calibration ();
 
     // temp
-//    DBG_PRINTLN ("Warning..: Hard coding slope and constant for Fio2");
-//    o2_slope = 0.1734;
-//    o2_const_val = 0.9393;
+    //    DBG_PRINTLN ("Warning..: Hard coding slope and constant for Fio2");
+    //    o2_slope = 0.1734;
+    //    o2_const_val = 0.9393;
     
     DBG_PRINTLN ("");
     DBG_PRINT   ("o2_slope : ");

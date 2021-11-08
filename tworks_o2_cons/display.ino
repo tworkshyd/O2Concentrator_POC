@@ -23,6 +23,133 @@ void lcd_clear_buf (char * bufp) {
 
 
 
+//==================== Neo-pixel LED driver ====================
+/*
+ * JP5 of display board of rev1.0 SCH,
+ * --------------------------------------------------
+ *      MISO    PD6     PD7     |       output
+ * --------------------------------------------------
+ *      0       0       0       |   all off
+ *      0       0       1       |   Alarm-1
+ *      0       1       0       |   Alarm-2
+ *      0       1       1       |   Alarm-3
+ *      1       0       0       |   Alarm-4
+ *      1       0       1       |   Alarm-5
+ *      1       1       0       |   Current Run Time
+ *      1       1       1       |   Total Run Time
+ * --------------------------------------------------
+*/
+#define     NEO_PXL_ALL_OFF             (0b000)
+#define     NEO_PXL_ALARM_1             (0b001)
+#define     NEO_PXL_ALARM_2             (0b010)
+#define     NEO_PXL_ALARM_3             (0b011)
+#define     NEO_PXL_ALARM_4             (0b100)
+#define     NEO_PXL_ALARM_5             (0b101)
+#define     NEO_PXL_CURR_RUN_TIME       (0b110)
+#define     NEO_PXL_TOTAL_RUN_TIME      (0b111)
+
+void neo_led_data_send (uint8_t  select_bits)    {
+
+    // bit 2
+    if (select_bits & 0b100)    {
+        digitalWrite(miso_neo_data1,    HIGH );
+    }
+    else {
+        digitalWrite(miso_neo_data1,    LOW );
+    }
+
+    // bit 1
+    if (select_bits & 0b010)    {
+        digitalWrite(pd6_neo_data2,    HIGH );
+    }
+    else {
+        digitalWrite(pd6_neo_data2,    LOW );
+    }
+
+    // bit 20
+    if (select_bits & 0b001)    {
+        digitalWrite(pd7_neo_data3,    HIGH );
+    }
+    else {
+        digitalWrite(pd7_neo_data3,    LOW );
+    }
+       
+    
+}
+
+
+uint8_t tb_bit8_led_mask[8] = {
+
+    0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 
+   
+};
+
+
+void update_neo_pixel_leds (void)    {
+
+    static uint8_t  prev_neo_pixel_leds;
+
+    uint8_t     bit_no;
+    //uint8_t     mask;
+
+    if (neo_pixel_leds_byte ^ prev_neo_pixel_leds)  {
+        prev_neo_pixel_leds = neo_pixel_leds_byte;
+        // update neo pixel leds
+        // 1. clear all of them using clear command..
+        neo_led_data_send (NEO_PXL_ALL_OFF);
+        
+        // 2. light-up one by one
+        //mask = 1;
+        for (bit_no = 0; bit_no  <  8; bit_no++) 
+        {
+            if (neo_pixel_leds_byte  &  tb_bit8_led_mask[bit_no])    {
+                neo_led_data_send (bit_no);
+                DBG_PRINT  ("bit_no : ");
+                DBG_PRINTLN  (bit_no);
+                // delay (100);  
+            }
+            //mask <<= 1;
+        }
+    
+    }
+    else {
+        // nop    
+    }
+}
+
+
+void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
+
+    if (led_no == 0) {
+        // handle this special case seperately
+        neo_pixel_leds_byte = 0;
+    }    
+    else if (led_no < 8) {
+        if (on_off == true) {
+            neo_pixel_leds_byte |=  tb_bit8_led_mask[led_no];
+        }
+        else {
+            neo_pixel_leds_byte &= ~tb_bit8_led_mask[led_no];
+        }
+    }
+    else {
+        // nop
+    }
+
+    DBG_PRINTLN();
+    DBG_PRINT  ("neo_pixel_leds_byte : ");
+    DBG_PRINTLN(neo_pixel_leds_byte);
+    DBG_PRINTLN();
+    
+    update_neo_pixel_leds ();
+    
+}
+
+
+
+
+
+
 //==================== 7 segment driver ========================
 #define NO_OP     (0x00)
 #define DIGIT_0   (0x01)

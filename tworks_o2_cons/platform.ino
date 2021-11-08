@@ -109,17 +109,26 @@ void platform_init (void) {
     pinMode(alarmClearButton, INPUT_PULLUP);
     
     // default pin-state
-    digitalWrite(buzzr_cntrl_pin,    LOW);
-    digitalWrite(compr_cntrl_pin,    LOW );
+    digitalWrite(buzzr_cntrl_pin,   LOW);
+    digitalWrite(compr_cntrl_pin,   LOW );
 
     // Serial 7 segment interface
-    pinMode(dataPin_7segment,        OUTPUT);
-    pinMode(clckPin_7segment,        OUTPUT);
-    pinMode(loadPin_7segment,        OUTPUT);
+    pinMode(dataPin_7segment,       OUTPUT);
+    pinMode(clckPin_7segment,       OUTPUT);
+    pinMode(loadPin_7segment,       OUTPUT);
 
-    digitalWrite(dataPin_7segment,   LOW );
-    digitalWrite(clckPin_7segment,   LOW );
-    digitalWrite(loadPin_7segment,   LOW );
+    digitalWrite(dataPin_7segment,  LOW );
+    digitalWrite(clckPin_7segment,  LOW );
+    digitalWrite(loadPin_7segment,  LOW );
+
+    // neo-pixel leds interface
+    pinMode(miso_neo_data1,         OUTPUT);
+    pinMode(pd6_neo_data2,          OUTPUT);
+    pinMode(pd7_neo_data3,          OUTPUT);
+
+    digitalWrite(miso_neo_data1,    LOW );
+    digitalWrite(pd6_neo_data2,     LOW );
+    digitalWrite(pd7_neo_data3,     LOW );
 
     DBG_PRINTLN("GPIO init done..");
 
