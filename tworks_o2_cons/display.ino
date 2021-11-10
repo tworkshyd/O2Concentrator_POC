@@ -39,19 +39,19 @@ void lcd_clear_buf (char * bufp) {
  *      1       1       1       |   Total Run Time
  * --------------------------------------------------
 */
-#define     NEO_PXL_ALL_OFF             (0b000)
-#define     NEO_PXL_ALARM_1             (0b001)
-#define     NEO_PXL_ALARM_2             (0b010)
-#define     NEO_PXL_ALARM_3             (0b011)
-#define     NEO_PXL_ALARM_4             (0b100)
-#define     NEO_PXL_ALARM_5             (0b101)
-#define     NEO_PXL_CURR_RUN_TIME       (0b110)
-#define     NEO_PXL_TOTAL_RUN_TIME      (0b111)
+//#define     NEO_PXL_ALL_OFF             (0b000)
+//#define     NEO_PXL_ALARM_1             (0b001)
+//#define     NEO_PXL_ALARM_2             (0b010)
+//#define     NEO_PXL_ALARM_3             (0b011)
+//#define     NEO_PXL_ALARM_4             (0b100)
+//#define     NEO_PXL_ALARM_5             (0b101)
+//#define     NEO_PXL_CURR_RUN_TIME       (0b110)
+//#define     NEO_PXL_TOTAL_RUN_TIME      (0b111)
 
 void neo_led_data_send (uint8_t  select_bits)    {
 
     // bit 2
-    if (select_bits & 0b100)    {
+    if (select_bits & 0x04) {   //0b100)    {
         digitalWrite(miso_neo_data1,    HIGH );
     }
     else {
@@ -59,7 +59,7 @@ void neo_led_data_send (uint8_t  select_bits)    {
     }
 
     // bit 1
-    if (select_bits & 0b010)    {
+    if (select_bits & 0x02) {   //0b010)    {
         digitalWrite(pd6_neo_data2,    HIGH );
     }
     else {
@@ -67,7 +67,7 @@ void neo_led_data_send (uint8_t  select_bits)    {
     }
 
     // bit 20
-    if (select_bits & 0b001)    {
+    if (select_bits & 0x01) {   //0b001)    {
         digitalWrite(pd7_neo_data3,    HIGH );
     }
     else {
@@ -87,39 +87,54 @@ uint8_t tb_bit8_led_mask[8] = {
 
 void update_neo_pixel_leds (void)    {
 
-    static uint8_t  prev_neo_pixel_leds;
+    static uint8_t  state;
+    static uint8_t  bit_no;
 
-    uint8_t     bit_no;
-    //uint8_t     mask;
 
-    if (neo_pixel_leds_byte ^ prev_neo_pixel_leds)  {
-        prev_neo_pixel_leds = neo_pixel_leds_byte;
-        // update neo pixel leds
-        // 1. clear all of them using clear command..
-        neo_led_data_send (NEO_PXL_ALL_OFF);
-        
-        // 2. light-up one by one
-        //mask = 1;
-        for (bit_no = 0; bit_no  <  8; bit_no++) 
-        {
+    switch (state)
+    {
+        case 0:
+            if (prev_neo_pixel_leds ^ neo_pixel_leds_byte)  {
+                prev_neo_pixel_leds = neo_pixel_leds_byte;
+                // update neo pixel leds
+                // 1. clear all of them using clear command..
+                neo_led_data_send (NEO_PXL_ALL_OFF);
+                bit_no = 0;
+                DBG_PRINT ("clearing LEDs, bit_no : ");
+                DBG_PRINTLN (bit_no, BIN);
+                state++;
+            }
+            else {
+                // nop
+            }
+            break;
+
+        case 1:
+            // 2. light-up one by one
             if (neo_pixel_leds_byte  &  tb_bit8_led_mask[bit_no])    {
                 neo_led_data_send (bit_no);
-                DBG_PRINT  ("bit_no : ");
-                DBG_PRINTLN  (bit_no);
-                // delay (100);  
+                DBG_PRINT ("bit_no : ");
+                DBG_PRINTLN (bit_no, BIN);
             }
-            //mask <<= 1;
-        }
+
+            bit_no++;            
+            if (bit_no > 8) {
+                state++;
+            }            
+            break;
+
+        default:
+            state = 0;
+            break;
+    }
     
-    }
-    else {
-        // nop    
-    }
 }
 
 
 void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
 
+    uint8_t     check_byte = neo_pixel_leds_byte;
+    
     if (led_no == 0) {
         // handle this special case seperately
         neo_pixel_leds_byte = 0;
@@ -136,12 +151,13 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
         // nop
     }
 
-    DBG_PRINTLN();
-    DBG_PRINT  ("neo_pixel_leds_byte : ");
-    DBG_PRINTLN(neo_pixel_leds_byte);
-    DBG_PRINTLN();
-    
-    update_neo_pixel_leds ();
+//    if (check_byte != neo_pixel_leds_byte)   {
+//        DBG_PRINTLN();
+//        DBG_PRINT  ("neo_pixel_leds_byte : ");
+//        DBG_PRINTLN(neo_pixel_leds_byte, BIN);
+//        DBG_PRINTLN();
+//    }
+    //update_neo_pixel_leds ();
     
 }
 
