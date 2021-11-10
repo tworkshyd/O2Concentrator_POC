@@ -17,6 +17,36 @@
 #include "LedControl.h"
 
 
+
+//==================== Neo-pixel LED driver ====================
+/*
+ * JP5 of display board of rev1.0 SCH,
+ * --------------------------------------------------
+ *      MISO    PD6     PD7     |       output
+ * --------------------------------------------------
+ *      0       0       0       |   all off
+ *      0       0       1       |   Alarm-1
+ *      0       1       0       |   Alarm-2
+ *      0       1       1       |   Alarm-3
+ *      1       0       0       |   Alarm-4
+ *      1       0       1       |   Alarm-5
+ *      1       1       0       |   Current Run Time
+ *      1       1       1       |   Total Run Time
+ * --------------------------------------------------
+*/
+#define     NEO_PXL_ALL_OFF             (0b000)
+#define     NEO_PXL_ALARM_1             (0b001)
+#define     NEO_PXL_ALARM_2             (0b010)
+#define     NEO_PXL_ALARM_3             (0b011)
+#define     NEO_PXL_ALARM_4             (0b100)
+#define     NEO_PXL_ALARM_5             (0b101)
+#define     NEO_PXL_CURR_RUN_TIME       (0b110)
+#define     NEO_PXL_TOTAL_RUN_TIME      (0b111)
+
+#define     ON_LED                      (true)
+#define     OFF_LED                     (false)
+
+
 /*
     The circuit:
     LCD RS pin to digital pin 12

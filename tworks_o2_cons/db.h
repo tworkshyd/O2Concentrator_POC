@@ -99,8 +99,10 @@ extern volatile float    m_raw_voltage;
 extern uint8_t   start_switch_pressed;
 extern uint8_t   alarm_clear_button_pressed;
 
-extern unsigned char  f_run_hours;
-extern uint8_t   neo_pixel_leds_byte;   // holds led light-up info, 1 - on, 0 - off from LSB as alarm-1
+extern unsigned char    f_run_hours;
+extern unsigned char    f_display_crn;
+extern uint8_t          neo_pixel_leds_byte;   // holds led light-up info, 1 - on, 0 - off from LSB as alarm-1
+extern uint8_t          prev_neo_pixel_leds;
 
 
 void db_init (void);
