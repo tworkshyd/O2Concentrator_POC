@@ -103,6 +103,8 @@ void setup (void) {
 
 }
 
+// temp
+uint8_t f_temp_flag;
 
 void loop (void) {
 
@@ -120,16 +122,7 @@ void loop (void) {
     else if (f_100msec) {
         f_100msec = 0;
         // 100 milli second tasks go here..
-{
-         // temp for testing
-         static char temp_count;
-
-         temp_count++;
-         if (temp_count > 0b111)  {
-            temp_count = 0;
-         }
-         neo_pixel_control (temp_count, true);  // ON -> true, OFF - false
-}    
+        update_neo_pixel_leds ();
     }
     else if (f_1sec) {
         f_1sec = 0;
@@ -142,10 +135,11 @@ void loop (void) {
         o2_sensor_scan ();
         tempr_sensor_scan ();
         // read_pressure ();
-    		if (f_system_running)	{
-    			display_o2 (o2_concentration);  
-    		}
-    
+       
+		if (f_system_running)	{
+			display_o2 (o2_concentration);  
+		}
+   
         // DBG_PRINT (".");
     }
     else if (f_1min) {
@@ -169,19 +163,26 @@ void loop (void) {
         ui_task_main ();
         logs_task ();
 
-
   		if (f_system_running)	{
   			display_o2 (o2_concentration);
   			if (f_run_hours == 1) {
+                // display currenr run hours : CRN
   				int secs = ( current_run_time_secs %  60);
   				int mins = ((current_run_time_secs % (60 * 60)) / 60);
   				int hrs  = ( current_run_time_secs / (60 * 60));
-  				display_current_run_hours(hrs, mins);
-  			}
+  				display_current_run_hours(hrs, mins);  
+
+                neo_pixel_control (NEO_PXL_CURR_RUN_TIME, ON_LED);  
+                neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  OFF_LED);  
+            }
   			else  {
+                // display total run hours : TRN
   				int hrs = (total_run_time_secs / (60 * 60));
+                  
   				display_total_run_hours(hrs);
-  			}
+                neo_pixel_control (NEO_PXL_CURR_RUN_TIME, OFF_LED);  
+                neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  ON_LED);  
+            }
   		}
     }
     
@@ -442,3 +443,31 @@ void tworks2_PSA_logic (void)  {
     }
 
 }
+
+
+
+
+
+// eof -----------------------
+/*
+ *         if (f_run_hours == 1) {
+            DBG_PRINTLN("pt.1........");
+            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME, ON_LED);  
+            delay(300);
+            DBG_PRINTLN("............");
+            neo_pixel_control (NEO_PXL_CURR_RUN_TIME,  OFF_LED);             
+            DBG_PRINTLN("............");
+        }
+        else  {
+            DBG_PRINTLN("pt.2------------");
+            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME, ON_LED);  
+            delay(300);
+            DBG_PRINTLN("----------------");
+            
+            neo_pixel_control (NEO_PXL_CURR_RUN_TIME,  OFF_LED);  
+            DBG_PRINTLN("----------------");
+        }     
+
+
+        
+ */
