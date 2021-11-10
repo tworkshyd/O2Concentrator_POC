@@ -172,8 +172,8 @@ void loop (void) {
   				int hrs  = ( current_run_time_secs / (60 * 60));
   				display_current_run_hours(hrs, mins);  
 
-                neo_pixel_control (NEO_PXL_CURR_RUN_TIME, ON_LED);  
                 neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  OFF_LED);  
+                neo_pixel_control (NEO_PXL_CURR_RUN_TIME, ON_LED);  
             }
   			else  {
                 // display total run hours : TRN
