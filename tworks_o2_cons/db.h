@@ -71,6 +71,12 @@ extern bool           f_sec_logs_task;
 extern bool           f_sec_change_ui_task;
 extern bool           f_sec_change_o2_task;
 extern bool           f_sec_change_sensor_task;
+extern bool           f_sec_change_alarm_task;
+
+// alarms
+extern bool           f_low_o2concentration_alarm;
+extern bool           f_low_pressure_alarm;
+extern bool           f_high_temperature_alarm;
 
 extern float           o2_concentration;
 extern float           output_pressure;

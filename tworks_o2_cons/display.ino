@@ -385,6 +385,45 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
 
 
+
+void    display_task (void) {
+
+     if (f_system_running)   {
+        display_o2 (o2_concentration);
+        if (f_run_hours == 1) {
+            // display currenr run hours : CRN
+            int secs = ( current_run_time_secs %  60);
+            int mins = ((current_run_time_secs % (60 * 60)) / 60);
+            int hrs  = ( current_run_time_secs / (60 * 60));
+            display_current_run_hours(hrs, mins);  
+
+            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  OFF_LED);  
+            neo_pixel_control (NEO_PXL_CURR_RUN_TIME, ON_LED);  
+        }
+        else  {
+            // display total run hours : TRN
+            int hrs = (total_run_time_secs / (60 * 60));
+              
+            display_total_run_hours(hrs);
+            neo_pixel_control (NEO_PXL_CURR_RUN_TIME, OFF_LED);  
+            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  ON_LED);  
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 ////// scratch pad ////////////////////////////
 
 /*

@@ -34,6 +34,14 @@ bool            f_sec_logs_task;
 bool            f_sec_change_ui_task;
 bool            f_sec_change_o2_task;
 bool            f_sec_change_sensor_task;
+bool            f_sec_change_alarm_task;
+
+
+// alarms
+bool           f_low_o2concentration_alarm;
+bool           f_low_pressure_alarm;
+bool           f_high_temperature_alarm;
+
 
 float           o2_concentration = 93.50;
 float           prev_o2_concentration;

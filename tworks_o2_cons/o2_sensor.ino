@@ -152,12 +152,12 @@ void o2_sensor_scan (void)  {
 
     ADS.readADC(O2_SENSOR_CHANNEL_NO);
     o2_raw_adc_count = ADS.getValue();   
-    DBG_PRINT   ("o2_raw_adc_count : ");
-    DBG_PRINTLN (o2_raw_adc_count);
+    // DBG_PRINT   ("o2_raw_adc_count : ");
+    // DBG_PRINTLN (o2_raw_adc_count);
 
     m_raw_voltage = ((float)o2_raw_adc_count * 1000.0) * 0.000125;
-    DBG_PRINT   ("m_raw_voltage    : ");
-    DBG_PRINTLN (m_raw_voltage, 4);
+    // DBG_PRINT   ("m_raw_voltage    : ");
+    // DBG_PRINTLN (m_raw_voltage, 4);
 
     // temp hard coding till calib menu is ready
     // o2_slope = 0.02065262;  // 48.42; // 0.166;
@@ -176,8 +176,8 @@ void o2_sensor_scan (void)  {
     #endif
 
     
-    DBG_PRINT   ("o2_concentration : ");
-    DBG_PRINTLN (o2_concentration, 4);
+    // DBG_PRINT   ("o2_concentration : ");
+    // DBG_PRINTLN (o2_concentration, 4);
 
 
 }
