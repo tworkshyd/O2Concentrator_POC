@@ -111,13 +111,16 @@ void update_neo_pixel_leds (void)    {
 
         case 1:
             // 2. light-up one by one
-            if (neo_pixel_leds_byte  &  tb_bit8_led_mask[bit_no])    {
-                neo_led_data_send (bit_no);
-                DBG_PRINT ("bit_no : ");
-                DBG_PRINTLN (bit_no, BIN);
+            while (bit_no < 8)
+            {
+                bit_no++;  
+                if (neo_pixel_leds_byte  &  tb_bit8_led_mask[bit_no])    {
+                    neo_led_data_send (bit_no);
+                    DBG_PRINT ("bit_no : ");
+                    DBG_PRINTLN (bit_no, BIN);
+                    break;
+                }  
             }
-
-            bit_no++;            
             if (bit_no >= 8) {
                 state++;
             }            

@@ -123,12 +123,12 @@ void loop (void) {
         f_100msec = 0;
         // 100 milli second tasks go here..
 
-        static bool toggle;
-        toggle = ~toggle;
+//        static uint toggle;
+//        toggle = ~toggle;
 
-        if (toggle) {
+//       if (toggle) {
             update_neo_pixel_leds ();
-        }
+//}
         
     }
     else if (f_1sec) {
