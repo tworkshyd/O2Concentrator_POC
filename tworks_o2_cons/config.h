@@ -104,8 +104,12 @@
 // iii. Pressure value
 #define PRESSURE_VALUE_LOW_THRHLD           (6)         // in psi uints
 
-
-
+// iv. Alarms to LEDs mapping
+#define     LOW_O2C_ALARM       NEO_PXL_ALARM_1            
+#define     LOW_PRESSURE_ALARM  NEO_PXL_ALARM_2             
+#define     HIGH_TEMPER_ALARM   NEO_PXL_ALARM_3          
+#define     UNUSED_ALARM_2      NEO_PXL_ALARM_4             
+#define     UNUSED_ALARM_1      NEO_PXL_ALARM_5
 
 
 

@@ -117,12 +117,19 @@ void loop (void) {
     else if (f_10msec) {
         f_10msec = 0;
         // 10 milli second tasks go here..
-
+        
     }
     else if (f_100msec) {
         f_100msec = 0;
         // 100 milli second tasks go here..
-        update_neo_pixel_leds ();
+
+        static bool toggle;
+        toggle = ~toggle;
+
+        if (toggle) {
+            update_neo_pixel_leds ();
+        }
+        
     }
     else if (f_1sec) {
         f_1sec = 0;
@@ -140,7 +147,7 @@ void loop (void) {
 		if (f_system_running)	{
 			display_o2 (o2_concentration);  
 		}
-   
+       
         // DBG_PRINT (".");
     }
     else if (f_1min) {

@@ -135,8 +135,7 @@ void alarms_task (void)    {
     else {
         return;
     }
-
-
+            
     // comes here once in a secound only..
     // todo
         // check for temperature alarms and O2 concentration alarms
@@ -147,20 +146,27 @@ void alarms_task (void)    {
     if (o2_concentration < O2_CONCENTRATION_LOW_THRHLD) {
         if (!f_low_o2concentration_alarm)   {
             f_low_o2concentration_alarm = 1;
+            neo_pixel_control (LOW_O2C_ALARM,  ON_LED);  
             DBG_PRINTLN ("Low O2 concentration Alarm..!!!");
         }
         else {  // temp for debugging
+            beep_for (100);
             DBG_PRINT (".");
         }
     }
+
+    // temp for debugging
+    output_pressure = 5;
     
     // 2. Low Pressure alarm
     if (output_pressure < PRESSURE_VALUE_LOW_THRHLD) {
         if (!f_low_pressure_alarm)   {
-            f_low_pressure_alarm = 1;
+            f_low_pressure_alarm = 1;            
+            neo_pixel_control (LOW_PRESSURE_ALARM, ON_LED);  
             DBG_PRINTLN ("Low Pressure Alarm..!!!");
         }
         else {  // temp for debugging
+            beep_for (50);
             DBG_PRINT (",");
         }
     }    
@@ -168,10 +174,14 @@ void alarms_task (void)    {
     // 3. High Temperature alarm
     if (tempr_value > TEMPERATURE_HIGH_THRHLD) {
         if (!f_high_temperature_alarm)   {
-            f_high_temperature_alarm = 1;
+            f_high_temperature_alarm = 1;            
+            neo_pixel_control (HIGH_TEMPER_ALARM, ON_LED);
             DBG_PRINTLN ("High temperature Alarm..!!!");
+            // SHUT - DOWN the system
+                // todo
         }
         else {  // temp for debugging
+            beep_for (150);
             DBG_PRINT (";");
         }
     }

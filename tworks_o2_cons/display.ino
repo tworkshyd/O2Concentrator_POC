@@ -118,7 +118,7 @@ void update_neo_pixel_leds (void)    {
             }
 
             bit_no++;            
-            if (bit_no > 8) {
+            if (bit_no >= 8) {
                 state++;
             }            
             break;
@@ -270,31 +270,6 @@ void blank_7segments (void) {
 	
 }
 
-
-// ver1: Display 2.1 digits for O2 concentration
-//void display_o2 (float o2value) {
-//
-//    uint16_t     int_o2value;
-//    uint8_t     decimal_digit;
-//    uint8_t     unit_digit;
-//    uint8_t     tens_digit;
-//
-//    int_o2value   = (uint16_t)(o2value * 10);
-//    decimal_digit = int_o2value % 10;
-//    int_o2value   = int_o2value / 10;
-//    unit_digit    = int_o2value % 10;
-//    int_o2value   = int_o2value / 10;
-//    
-//    tens_digit    = int_o2value % 10;
-//    
-//    //  2.1 digit display for concentration
-//    set7segmentDigit (1, tens_digit, false);
-//    //set7segmentDigit (2, BLANK_DIGIT);    
-//    set7segmentDigit (2, unit_digit, true);
-//    set7segmentDigit (3, decimal_digit, false);
-//
-//    
-//}
 
 // ver2: Display 2.0 digits for O2 concentration
 void display_o2 (float o2value) {
@@ -465,5 +440,29 @@ void display_banner (void) {
 } 
  */
 
+// ver1: Display 2.1 digits for O2 concentration
+//void display_o2 (float o2value) {
+//
+//    uint16_t     int_o2value;
+//    uint8_t     decimal_digit;
+//    uint8_t     unit_digit;
+//    uint8_t     tens_digit;
+//
+//    int_o2value   = (uint16_t)(o2value * 10);
+//    decimal_digit = int_o2value % 10;
+//    int_o2value   = int_o2value / 10;
+//    unit_digit    = int_o2value % 10;
+//    int_o2value   = int_o2value / 10;
+//    
+//    tens_digit    = int_o2value % 10;
+//    
+//    //  2.1 digit display for concentration
+//    set7segmentDigit (1, tens_digit, false);
+//    //set7segmentDigit (2, BLANK_DIGIT);    
+//    set7segmentDigit (2, unit_digit, true);
+//    set7segmentDigit (3, decimal_digit, false);
+//
+//    
+//}
 
     
