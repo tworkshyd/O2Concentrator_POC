@@ -93,13 +93,26 @@
 
 // 8. Alarm Thresholds
 // i. O2 Concentration
-#define O2_CONCENTRATION_LOW_THRHLD         (85)        // in '%'
+#define O2_CONCENTRATION_LOW_THRHLD         (85.0)      // in '%'
 
 // ii. Temperature value
 #define TEMPERATURE_HIGH_THRHLD             (100)       // in Centigrade units
-// Select temperature sensor to use foralarm indication
-#define tempr_value                         (tempr_value_1)
-//#define tempr_value                       (tempr_value_2)
+
+// Available temperature sensors 
+#define TEMPR_SENSOR_1              (1)
+#define TEMPR_SENSOR_1              (2)
+
+// Select temperature sensor to use for alarm indication
+#define TEMPR_SENSOR_SELECTED       TEMPR_SENSOR_1
+
+#if (TEMPR_SENSOR_SELSECTED == TEMPR_SENSOR_1)
+    #define tempr_value             (tempr_value_1)
+
+#else   
+    #define tempr_value             (tempr_value_2)
+
+#endif
+
 
 // iii. Pressure value
 #define PRESSURE_VALUE_LOW_THRHLD           (6)         // in psi uints

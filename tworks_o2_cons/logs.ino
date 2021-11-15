@@ -115,27 +115,16 @@ void log_dump (void)  {
 
 void alarms_task (void)    {
 
- enum ALARM_E    {
-
-    CLEAR_ALARMS,
-    
-    O2C_ALARM           = 0x01,
-    TEMPR_1_ALARM       = 0x02,
-    TEMPR_2_ALARM       = 0x04,
-    PRESSURE_DROP_ALARM = 0x08,
-
-    ALARM_LAST          
-    
-};
-
-
     if (f_sec_change_alarm_task)    {
         f_sec_change_alarm_task = 0;
     }
     else {
         return;
     }
-            
+
+DBG_PRINT  ("entry alarms_byte : ");
+DBG_PRINTLN (alarms_byte);
+
     // comes here once in a secound only..
     // todo
         // check for temperature alarms and O2 concentration alarms
@@ -144,8 +133,10 @@ void alarms_task (void)    {
     
     // 1. Low O2 concentration alarm
     if (o2_concentration < O2_CONCENTRATION_LOW_THRHLD) {
-        if (!f_low_o2concentration_alarm)   {
-            f_low_o2concentration_alarm = 1;
+        if ( !(alarms_byte & O2C_ALARM_BIT) )   {
+            alarms_byte |= O2C_ALARM_BIT;
+DBG_PRINT  ("pt1 alarms_byte : ");
+DBG_PRINTLN (alarms_byte);
             neo_pixel_control (LOW_O2C_ALARM,  ON_LED);  
             DBG_PRINTLN ("Low O2 concentration Alarm..!!!");
         }
@@ -155,13 +146,16 @@ void alarms_task (void)    {
         }
     }
 
-    // temp for debugging
-    output_pressure = 5;
+
+// temp for debugging - must be removed before build
+output_pressure = 5;
     
     // 2. Low Pressure alarm
     if (output_pressure < PRESSURE_VALUE_LOW_THRHLD) {
-        if (!f_low_pressure_alarm)   {
-            f_low_pressure_alarm = 1;            
+        if ( !(alarms_byte & PRESSURE_DROP_ALARM_BIT) )   {
+            alarms_byte |= PRESSURE_DROP_ALARM_BIT;        
+DBG_PRINT  ("pt2 alarms_byte : ");
+DBG_PRINTLN (alarms_byte);
             neo_pixel_control (LOW_PRESSURE_ALARM, ON_LED);  
             DBG_PRINTLN ("Low Pressure Alarm..!!!");
         }
@@ -170,11 +164,17 @@ void alarms_task (void)    {
             DBG_PRINT (",");
         }
     }    
+
+
+// temp for debugging - must be removed before build
+tempr_value = 115;
     
     // 3. High Temperature alarm
     if (tempr_value > TEMPERATURE_HIGH_THRHLD) {
-        if (!f_high_temperature_alarm)   {
-            f_high_temperature_alarm = 1;            
+        if ( !(alarms_byte & TEMPR_ALARM_BIT) )   {
+            alarms_byte |= TEMPR_ALARM_BIT;           
+DBG_PRINT  ("pt3 alarms_byte : ");
+DBG_PRINTLN (alarms_byte);
             neo_pixel_control (HIGH_TEMPER_ALARM, ON_LED);
             DBG_PRINTLN ("High temperature Alarm..!!!");
             // SHUT - DOWN the system
@@ -186,5 +186,7 @@ void alarms_task (void)    {
         }
     }
 
+DBG_PRINT  ("exit alarms_byte : ");
+DBG_PRINTLN (alarms_byte);
 
 }

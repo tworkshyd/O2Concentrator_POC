@@ -38,9 +38,7 @@ bool            f_sec_change_alarm_task;
 
 
 // alarms
-bool           f_low_o2concentration_alarm;
-bool           f_low_pressure_alarm;
-bool           f_high_temperature_alarm;
+bool           alarms_byte;     // can hold upto 8 alarms, 1 bit for each
 
 
 float           o2_concentration = 93.50;

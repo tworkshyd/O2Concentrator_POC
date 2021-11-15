@@ -39,10 +39,9 @@ enum ALARM_E    {
 
     CLEAR_ALARMS,
     
-    O2C_ALARM           = 0x01,
-    TEMPR_1_ALARM       = 0x02,
-    TEMPR_2_ALARM       = 0x04,
-    PRESSURE_DROP_ALARM = 0x08,
+    O2C_ALARM_BIT           = 0x01,
+    TEMPR_ALARM_BIT         = 0x02,
+    PRESSURE_DROP_ALARM_BIT = 0x04,
 
     ALARM_LAST          
     
