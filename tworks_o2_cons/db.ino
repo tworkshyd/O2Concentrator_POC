@@ -38,7 +38,7 @@ bool            f_sec_change_alarm_task;
 
 
 // alarms
-bool           alarms_byte;     // can hold upto 8 alarms, 1 bit for each
+uint8_t         alarms_byte;     // can hold upto 8 alarms, 1 bit for each
 
 
 float           o2_concentration = 93.50;

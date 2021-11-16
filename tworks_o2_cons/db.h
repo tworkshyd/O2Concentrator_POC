@@ -74,7 +74,7 @@ extern bool           f_sec_change_sensor_task;
 extern bool           f_sec_change_alarm_task;
 
 // alarms
-extern bool           alarms_byte;     // can hold upto 8 alarms, 1 bit for each
+extern uint8_t        alarms_byte;     // can hold upto 8 alarms, 1 bit for each
 
 extern float           o2_concentration;
 extern float           output_pressure;
