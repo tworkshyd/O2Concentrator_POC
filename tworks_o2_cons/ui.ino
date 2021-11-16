@@ -54,28 +54,31 @@ void button_check (void)  {
   
     // 3. Alarm Clear Button Press detection
     if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_PRESSED) {   // press detection
-      alarm_clear_bttn_dbnc_dly++;
-      if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
-        alarm_clear_button_pressed = true;
-        alarm_clear_bttn_dbnc_dly = 0;
-        //DBG_PRINT  ("Alarm Clear Button Pressed..");
-      }
-      //DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
-      //DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+        alarm_clear_bttn_dbnc_dly++;
+        if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+            alarm_clear_button_pressed = true;
+            alarm_clear_bttn_dbnc_dly = 0;
+            DBG_PRINTLN  ("Alarm Clear Button Pressed..");
+
+            alarms_byte = 0;
+            DBG_PRINTLN  ("Alarm Cleared..!!");
+        }
+        //DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
+        //DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
     }
-    // 4. Alarm Clear Button Release detection
-    else if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_RELEASED) {   // press detection
-      alarm_clear_bttn_dbnc_dly++;
-      if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
-        alarm_clear_button_pressed = false;
-        alarm_clear_bttn_dbnc_dly = 0;
-        //DBG_PRINT  ("Alarm Clear Button RELEASED");
-      }
-      //DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
-      //DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
-    }
+//    // 4. Alarm Clear Button Release detection
+//    else if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_RELEASED) {   // press detection
+//        alarm_clear_bttn_dbnc_dly++;
+//        if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
+//            alarm_clear_button_pressed = false;
+//            alarm_clear_bttn_dbnc_dly = 0;
+//            DBG_PRINTLN  ("Alarm Clear Button RELEASED");
+//        }
+//        DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
+//        DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+//    }
     else {
-      // nop
+        // nop
     }
       
   
