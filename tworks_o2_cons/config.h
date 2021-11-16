@@ -91,10 +91,38 @@
 
 
 
+// 8. Alarm Thresholds
+// i. O2 Concentration
+#define O2_CONCENTRATION_LOW_THRHLD         (85.0)      // in '%'
+
+// ii. Temperature value
+#define TEMPERATURE_HIGH_THRHLD             (100)       // in Centigrade units
+
+// Available temperature sensors 
+#define TEMPR_SENSOR_1              (1)
+#define TEMPR_SENSOR_1              (2)
+
+// Select temperature sensor to use for alarm indication
+#define TEMPR_SENSOR_SELECTED       TEMPR_SENSOR_1
+
+#if (TEMPR_SENSOR_SELSECTED == TEMPR_SENSOR_1)
+    #define tempr_value             (tempr_value_1)
+
+#else   
+    #define tempr_value             (tempr_value_2)
+
+#endif
 
 
+// iii. Pressure value
+#define PRESSURE_VALUE_LOW_THRHLD           (6)         // in psi uints
 
-
+// iv. Alarms to LEDs mapping
+#define     LOW_O2C_ALARM       NEO_PXL_ALARM_1            
+#define     LOW_PRESSURE_ALARM  NEO_PXL_ALARM_2             
+#define     HIGH_TEMPER_ALARM   NEO_PXL_ALARM_3          
+#define     UNUSED_ALARM_2      NEO_PXL_ALARM_4             
+#define     UNUSED_ALARM_1      NEO_PXL_ALARM_5
 
 
 

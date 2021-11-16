@@ -73,7 +73,9 @@ void neo_led_data_send (uint8_t  select_bits)    {
     else {
         digitalWrite(pd7_neo_data3,    LOW );
     }
-       
+
+
+    delay(150);
     
 }
 
@@ -99,9 +101,9 @@ void update_neo_pixel_leds (void)    {
                 // update neo pixel leds
                 // 1. clear all of them using clear command..
                 neo_led_data_send (NEO_PXL_ALL_OFF);
-                bit_no = 0;
-                DBG_PRINT ("clearing LEDs, bit_no : ");
-                DBG_PRINTLN (bit_no, BIN);
+                bit_no = 1;
+                //DBG_PRINT ("clearing LEDs, bit_no : ");
+                //DBG_PRINTLN (bit_no, BIN);
                 state++;
             }
             else {
@@ -111,14 +113,18 @@ void update_neo_pixel_leds (void)    {
 
         case 1:
             // 2. light-up one by one
-            if (neo_pixel_leds_byte  &  tb_bit8_led_mask[bit_no])    {
-                neo_led_data_send (bit_no);
-                DBG_PRINT ("bit_no : ");
-                DBG_PRINTLN (bit_no, BIN);
+            while (bit_no < 8)
+            {               
+                if (neo_pixel_leds_byte  &  tb_bit8_led_mask[bit_no])    {
+                    neo_led_data_send (bit_no);
+                    //DBG_PRINT ("bit_no : ");
+                    //DBG_PRINTLN (bit_no, BIN);
+                    bit_no++;  
+                    break;
+                }  
+                bit_no++;  
             }
-
-            bit_no++;            
-            if (bit_no > 8) {
+            if (bit_no >= 7) {
                 state++;
             }            
             break;
@@ -150,14 +156,6 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
     else {
         // nop
     }
-
-//    if (check_byte != neo_pixel_leds_byte)   {
-//        DBG_PRINTLN();
-//        DBG_PRINT  ("neo_pixel_leds_byte : ");
-//        DBG_PRINTLN(neo_pixel_leds_byte, BIN);
-//        DBG_PRINTLN();
-//    }
-    //update_neo_pixel_leds ();
     
 }
 
@@ -167,28 +165,26 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
 
 
 //==================== 7 segment driver ========================
-#define NO_OP     (0x00)
-#define DIGIT_0   (0x01)
-#define DIGIT_1   (0x02)
-#define DIGIT_2   (0x03)
-#define DIGIT_3   (0x04)
-#define DIGIT_4   (0x05)
-#define DIGIT_5   (0x06)
-#define DIGIT_6   (0x07)
-#define DIGIT_7   (0x08)
-#define DECODE_MODE   (0x09)
-#define INTENSITY     (0x0A)
-#define SCAN_LIMIT    (0x0B)
-#define SHUT_DOWN     (0x0C)
-#define DISPLAY_TEST  (0x0F)
+#define NO_OP           (0x00)
+#define DIGIT_0         (0x01)
+#define DIGIT_1         (0x02)
+#define DIGIT_2         (0x03)
+#define DIGIT_3         (0x04)
+#define DIGIT_4         (0x05)
+#define DIGIT_5         (0x06)
+#define DIGIT_6         (0x07)
+#define DIGIT_7         (0x08)
+#define DECODE_MODE     (0x09)
+#define INTENSITY       (0x0A)
+#define SCAN_LIMIT      (0x0B)
+#define SHUT_DOWN       (0x0C)
+#define DISPLAY_TEST    (0x0F)
 
-
-
-#define BLANK         (0x0F)
+#define BLANK           (0x0F)
 
 // Local driver defines
-#define DECIMAL_POINT (0x0A)
-#define BLANK_DIGIT   (0x0B)
+#define DECIMAL_POINT   (0x0A)
+#define BLANK_DIGIT     (0x0B)
 
 
 uint8_t   digit_to_seg_value[] = {
@@ -224,14 +220,18 @@ uint8_t   digit_to_seg_value[] = {
     
 void  set7segmentDigit (int digit, int value, uint8_t  point) {
 
-    if (point == true)
+    if (point == true)  {
         point = 0x80;
-    else 
+    }
+    else {
         point = 0;
+    }
+    
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     
     digitalWrite(loadPin_7segment,   LOW);
-    digitalWrite(loadPin_7segment,   HIGH);         
+    digitalWrite(loadPin_7segment,   HIGH);      
+       
 }
 
 void  set7segmentRegister (int reg, int value) {
@@ -270,31 +270,6 @@ void blank_7segments (void) {
 	
 }
 
-
-// ver1: Display 2.1 digits for O2 concentration
-//void display_o2 (float o2value) {
-//
-//    uint16_t     int_o2value;
-//    uint8_t     decimal_digit;
-//    uint8_t     unit_digit;
-//    uint8_t     tens_digit;
-//
-//    int_o2value   = (uint16_t)(o2value * 10);
-//    decimal_digit = int_o2value % 10;
-//    int_o2value   = int_o2value / 10;
-//    unit_digit    = int_o2value % 10;
-//    int_o2value   = int_o2value / 10;
-//    
-//    tens_digit    = int_o2value % 10;
-//    
-//    //  2.1 digit display for concentration
-//    set7segmentDigit (1, tens_digit, false);
-//    //set7segmentDigit (2, BLANK_DIGIT);    
-//    set7segmentDigit (2, unit_digit, true);
-//    set7segmentDigit (3, decimal_digit, false);
-//
-//    
-//}
 
 // ver2: Display 2.0 digits for O2 concentration
 void display_o2 (float o2value) {
@@ -385,6 +360,45 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
 
 
+
+void    display_task (void) {
+
+     if (f_system_running)   {
+        display_o2 (o2_concentration);
+        if (f_run_hours == 1) {
+            // display currenr run hours : CRN
+            int secs = ( current_run_time_secs %  60);
+            int mins = ((current_run_time_secs % (60 * 60)) / 60);
+            int hrs  = ( current_run_time_secs / (60 * 60));
+            display_current_run_hours(hrs, mins);  
+
+            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  OFF_LED);  
+            neo_pixel_control (NEO_PXL_CURR_RUN_TIME, ON_LED);  
+        }
+        else  {
+            // display total run hours : TRN
+            int hrs = (total_run_time_secs / (60 * 60));
+              
+            display_total_run_hours(hrs);
+            neo_pixel_control (NEO_PXL_CURR_RUN_TIME, OFF_LED);  
+            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  ON_LED);  
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 ////// scratch pad ////////////////////////////
 
 /*
@@ -426,5 +440,29 @@ void display_banner (void) {
 } 
  */
 
+// ver1: Display 2.1 digits for O2 concentration
+//void display_o2 (float o2value) {
+//
+//    uint16_t     int_o2value;
+//    uint8_t     decimal_digit;
+//    uint8_t     unit_digit;
+//    uint8_t     tens_digit;
+//
+//    int_o2value   = (uint16_t)(o2value * 10);
+//    decimal_digit = int_o2value % 10;
+//    int_o2value   = int_o2value / 10;
+//    unit_digit    = int_o2value % 10;
+//    int_o2value   = int_o2value / 10;
+//    
+//    tens_digit    = int_o2value % 10;
+//    
+//    //  2.1 digit display for concentration
+//    set7segmentDigit (1, tens_digit, false);
+//    //set7segmentDigit (2, BLANK_DIGIT);    
+//    set7segmentDigit (2, unit_digit, true);
+//    set7segmentDigit (3, decimal_digit, false);
+//
+//    
+//}
 
     

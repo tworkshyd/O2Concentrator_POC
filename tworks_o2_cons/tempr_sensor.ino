@@ -25,19 +25,19 @@ float alpha = 3.85; //0.00385;
 
 void tempr_sensor_scan (void)  {
 
-    DBG_PRINTLN ();
+    //DBG_PRINTLN ();
 
     // Senor - 1
     ADS.readADC(TEMPR_SENSOR_1_CHANNEL_NO);
     tempr1_raw_adc_count = ADS.getValue();   
-    DBG_PRINT   ("tempr1_raw_adc_count : ");
-    DBG_PRINTLN (tempr1_raw_adc_count);
+    //DBG_PRINT   ("tempr1_raw_adc_count : ");
+    //////////////////////////////////////////////////////.DBG_PRINTLN (tempr1_raw_adc_count);
 
     // bits to voltage
     //m_raw_voltage = ((float)tempr1_raw_adc_count) * 0.000125;
     m_raw_voltage = ((float)tempr1_raw_adc_count) * 0.125;
-    DBG_PRINT   ("m_raw_voltage    : ");
-    DBG_PRINTLN (m_raw_voltage, 4);
+//    DBG_PRINT   ("m_raw_voltage    : ");
+//    DBG_PRINTLN (m_raw_voltage, 4);
 
     // Voltage to resistance
     Rx = m_raw_voltage * slope + C;     // y = mx + c
@@ -48,21 +48,21 @@ void tempr_sensor_scan (void)  {
     // tempr_value_1 = tempr_value_1 * 1.8 + 32; 
     
     // Serial.println(tempr_value_1);
-    DBG_PRINT   ("tempr_value_1 : ");
-    DBG_PRINTLN (tempr_value_1, 4);
-    DBG_PRINTLN ();
+//    DBG_PRINT   ("tempr_value_1 : ");
+//    DBG_PRINTLN (tempr_value_1, 4);
+//    DBG_PRINTLN ();
 
     // Senor - 2
     ADS.readADC(TEMPR_SENSOR_2_CHANNEL_NO);
     tempr2_raw_adc_count = ADS.getValue();   
-    DBG_PRINT   ("tempr2_raw_adc_count : ");
-    DBG_PRINTLN (tempr2_raw_adc_count);
+//    DBG_PRINT   ("tempr2_raw_adc_count : ");
+//    DBG_PRINTLN (tempr2_raw_adc_count);
 
     // bits to voltage
     //m_raw_voltage = ((float)tempr2_raw_adc_count) * 0.000125;
     m_raw_voltage = ((float)tempr2_raw_adc_count) * 0.125;
-    DBG_PRINT   ("m_raw_voltage    : ");
-    DBG_PRINTLN (m_raw_voltage, 4);
+//    DBG_PRINT   ("m_raw_voltage    : ");
+//    DBG_PRINTLN (m_raw_voltage, 4);
 
     // Voltage to resistance
     Rx = m_raw_voltage * slope + C;     // y = mx + c
@@ -73,10 +73,10 @@ void tempr_sensor_scan (void)  {
     // tempr_value_2 = tempr_value_2 * 1.8 + 32; 
     
     // Serial.println(tempr_value_2);
-    DBG_PRINT   ("tempr_value_2 : ");
-    DBG_PRINTLN (tempr_value_2, 4);
+//    DBG_PRINT   ("tempr_value_2 : ");
+//    DBG_PRINTLN (tempr_value_2, 4);
 
-    DBG_PRINTLN ();
+    //DBG_PRINTLN ();
     
     
 /*

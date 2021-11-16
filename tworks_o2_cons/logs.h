@@ -35,10 +35,28 @@
 #endif
 
 
+enum ALARM_E    {
+
+    CLEAR_ALARMS,
+    
+    O2C_ALARM_BIT           = 0x01,
+    TEMPR_ALARM_BIT         = 0x02,
+    PRESSURE_DROP_ALARM_BIT = 0x04,
+
+    ALARM_LAST          
+    
+};
+
+
+extern uint8_t      alaram_byte;    // holds one bit for each alarm
+
+
+
+
 
 
 void logs_task (void);
-
+void alarms_task (void);
 
 
 

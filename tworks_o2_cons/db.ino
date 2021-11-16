@@ -34,6 +34,12 @@ bool            f_sec_logs_task;
 bool            f_sec_change_ui_task;
 bool            f_sec_change_o2_task;
 bool            f_sec_change_sensor_task;
+bool            f_sec_change_alarm_task;
+
+
+// alarms
+uint8_t         alarms_byte;     // can hold upto 8 alarms, 1 bit for each
+
 
 float           o2_concentration = 93.50;
 float           prev_o2_concentration;

@@ -117,12 +117,19 @@ void loop (void) {
     else if (f_10msec) {
         f_10msec = 0;
         // 10 milli second tasks go here..
-
+        
     }
     else if (f_100msec) {
         f_100msec = 0;
         // 100 milli second tasks go here..
-        update_neo_pixel_leds ();
+
+//        static uint toggle;
+//        toggle = ~toggle;
+
+//       if (toggle) {
+            update_neo_pixel_leds ();
+//}
+        
     }
     else if (f_1sec) {
         f_1sec = 0;
@@ -131,15 +138,16 @@ void loop (void) {
         f_sec_change_ui_task = 1;
         f_sec_change_o2_task = 1;
         f_sec_change_sensor_task = 1;
+        f_sec_change_alarm_task = 1;
 
         o2_sensor_scan ();
         tempr_sensor_scan ();
         // read_pressure ();
-       
+    
 		if (f_system_running)	{
 			display_o2 (o2_concentration);  
 		}
-   
+       
         // DBG_PRINT (".");
     }
     else if (f_1min) {
@@ -162,28 +170,9 @@ void loop (void) {
         o2_main_task ();
         ui_task_main ();
         logs_task ();
-
-  		if (f_system_running)	{
-  			display_o2 (o2_concentration);
-  			if (f_run_hours == 1) {
-                // display currenr run hours : CRN
-  				int secs = ( current_run_time_secs %  60);
-  				int mins = ((current_run_time_secs % (60 * 60)) / 60);
-  				int hrs  = ( current_run_time_secs / (60 * 60));
-  				display_current_run_hours(hrs, mins);  
-
-                neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  OFF_LED);  
-                neo_pixel_control (NEO_PXL_CURR_RUN_TIME, ON_LED);  
-            }
-  			else  {
-                // display total run hours : TRN
-  				int hrs = (total_run_time_secs / (60 * 60));
-                  
-  				display_total_run_hours(hrs);
-                neo_pixel_control (NEO_PXL_CURR_RUN_TIME, OFF_LED);  
-                neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  ON_LED);  
-            }
-  		}
+        alarms_task ();
+        display_task ();
+        
     }
     
 	init_7segments ();
@@ -298,7 +287,7 @@ void o2_main_task (void)    {
     // else
     time_tag = systemtick_msecs;
 
-    DBG_PRINTLN ("calling PSA logic..");
+    //DBG_PRINTLN ("calling PSA logic..");
 
     //tworks3_PSA_logic();
     tworks2_PSA_logic();
@@ -307,8 +296,8 @@ void o2_main_task (void)    {
     if (nb_delay != prev_nb_delay)  {
         prev_nb_delay = nb_delay;
 
-        DBG_PRINT ("nb_delay : ");
-        DBG_PRINTLN (nb_delay);
+        //DBG_PRINT ("nb_delay : ");
+        //DBG_PRINTLN (nb_delay);
     }
     
 
