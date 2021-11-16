@@ -14,7 +14,7 @@
 //#define OFF (false)
 
 
-#define BUTTON_DEBOUNCE_DLY ( 55)    // in msecs
+#define BUTTON_DEBOUNCE_DLY ( 35)    // in msecs
 
 
 #define HIGH_BEEP           (200)
