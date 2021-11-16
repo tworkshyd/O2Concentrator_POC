@@ -73,7 +73,9 @@ void neo_led_data_send (uint8_t  select_bits)    {
     else {
         digitalWrite(pd7_neo_data3,    LOW );
     }
-       
+
+
+    delay(150);
     
 }
 
@@ -99,9 +101,9 @@ void update_neo_pixel_leds (void)    {
                 // update neo pixel leds
                 // 1. clear all of them using clear command..
                 neo_led_data_send (NEO_PXL_ALL_OFF);
-                bit_no = 0;
-                DBG_PRINT ("clearing LEDs, bit_no : ");
-                DBG_PRINTLN (bit_no, BIN);
+                bit_no = 1;
+                //DBG_PRINT ("clearing LEDs, bit_no : ");
+                //DBG_PRINTLN (bit_no, BIN);
                 state++;
             }
             else {
@@ -112,16 +114,17 @@ void update_neo_pixel_leds (void)    {
         case 1:
             // 2. light-up one by one
             while (bit_no < 8)
-            {
-                bit_no++;  
+            {               
                 if (neo_pixel_leds_byte  &  tb_bit8_led_mask[bit_no])    {
                     neo_led_data_send (bit_no);
-                    DBG_PRINT ("bit_no : ");
-                    DBG_PRINTLN (bit_no, BIN);
+                    //DBG_PRINT ("bit_no : ");
+                    //DBG_PRINTLN (bit_no, BIN);
+                    bit_no++;  
                     break;
                 }  
+                bit_no++;  
             }
-            if (bit_no >= 8) {
+            if (bit_no >= 7) {
                 state++;
             }            
             break;
@@ -141,33 +144,18 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
     if (led_no == 0) {
         // handle this special case seperately
         neo_pixel_leds_byte = 0;
-//DBG_PRINT  ("1. neo_pixel_leds_byte : ");
-//DBG_PRINTLN(neo_pixel_leds_byte, BIN);
     }    
     else if (led_no < 8) {
         if (on_off == true) {
             neo_pixel_leds_byte |=  tb_bit8_led_mask[led_no];
-//DBG_PRINT  ("2. neo_pixel_leds_byte : ");
-//DBG_PRINTLN(neo_pixel_leds_byte, BIN);
         }
         else {
             neo_pixel_leds_byte &= ~tb_bit8_led_mask[led_no];
-//DBG_PRINT  ("3. neo_pixel_leds_byte : ");
-//DBG_PRINTLN(neo_pixel_leds_byte, BIN);
         }
-        delay (150);
     }
     else {
         // nop
     }
-
-//    if (check_byte != neo_pixel_leds_byte)   {
-//        DBG_PRINTLN();
-//        DBG_PRINT  ("neo_pixel_leds_byte : ");
-//        DBG_PRINTLN(neo_pixel_leds_byte, BIN);
-//        DBG_PRINTLN();
-//    }
-    //update_neo_pixel_leds ();
     
 }
 
@@ -177,28 +165,26 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
 
 
 //==================== 7 segment driver ========================
-#define NO_OP     (0x00)
-#define DIGIT_0   (0x01)
-#define DIGIT_1   (0x02)
-#define DIGIT_2   (0x03)
-#define DIGIT_3   (0x04)
-#define DIGIT_4   (0x05)
-#define DIGIT_5   (0x06)
-#define DIGIT_6   (0x07)
-#define DIGIT_7   (0x08)
-#define DECODE_MODE   (0x09)
-#define INTENSITY     (0x0A)
-#define SCAN_LIMIT    (0x0B)
-#define SHUT_DOWN     (0x0C)
-#define DISPLAY_TEST  (0x0F)
+#define NO_OP           (0x00)
+#define DIGIT_0         (0x01)
+#define DIGIT_1         (0x02)
+#define DIGIT_2         (0x03)
+#define DIGIT_3         (0x04)
+#define DIGIT_4         (0x05)
+#define DIGIT_5         (0x06)
+#define DIGIT_6         (0x07)
+#define DIGIT_7         (0x08)
+#define DECODE_MODE     (0x09)
+#define INTENSITY       (0x0A)
+#define SCAN_LIMIT      (0x0B)
+#define SHUT_DOWN       (0x0C)
+#define DISPLAY_TEST    (0x0F)
 
-
-
-#define BLANK         (0x0F)
+#define BLANK           (0x0F)
 
 // Local driver defines
-#define DECIMAL_POINT (0x0A)
-#define BLANK_DIGIT   (0x0B)
+#define DECIMAL_POINT   (0x0A)
+#define BLANK_DIGIT     (0x0B)
 
 
 uint8_t   digit_to_seg_value[] = {
@@ -234,14 +220,18 @@ uint8_t   digit_to_seg_value[] = {
     
 void  set7segmentDigit (int digit, int value, uint8_t  point) {
 
-    if (point == true)
+    if (point == true)  {
         point = 0x80;
-    else 
+    }
+    else {
         point = 0;
+    }
+    
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     
     digitalWrite(loadPin_7segment,   LOW);
-    digitalWrite(loadPin_7segment,   HIGH);         
+    digitalWrite(loadPin_7segment,   HIGH);      
+       
 }
 
 void  set7segmentRegister (int reg, int value) {

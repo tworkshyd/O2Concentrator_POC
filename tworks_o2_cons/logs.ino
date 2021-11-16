@@ -147,8 +147,8 @@ void alarms_task (void)    {
     }
 
 
-// temp for debugging - must be removed before build
-output_pressure = 5;
+//// temp for debugging - must be removed before build
+//output_pressure = 5;
     
     // 2. Low Pressure alarm
     if (output_pressure < PRESSURE_VALUE_LOW_THRHLD) {
@@ -166,8 +166,8 @@ output_pressure = 5;
     }    
 
 
-// temp for debugging - must be removed before build
-tempr_value = 115;
+//// temp for debugging - must be removed before build
+//tempr_value = 115;
     
     // 3. High Temperature alarm
     if (tempr_value > TEMPERATURE_HIGH_THRHLD) {
