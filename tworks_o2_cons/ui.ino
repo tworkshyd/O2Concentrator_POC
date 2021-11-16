@@ -65,9 +65,13 @@ void button_check (void)  {
             neo_pixel_control (LOW_O2C_ALARM, OFF_LED);
             neo_pixel_control (LOW_PRESSURE_ALARM, OFF_LED);
             neo_pixel_control (HIGH_TEMPER_ALARM, OFF_LED);
+            DBG_PRINTLN  ("Alarm Cleared..!!");
         }
         //DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
         //DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+    }
+    else {
+        // nop
     }
      
 }
