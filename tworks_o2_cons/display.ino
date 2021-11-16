@@ -141,14 +141,21 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
     if (led_no == 0) {
         // handle this special case seperately
         neo_pixel_leds_byte = 0;
+//DBG_PRINT  ("1. neo_pixel_leds_byte : ");
+//DBG_PRINTLN(neo_pixel_leds_byte, BIN);
     }    
     else if (led_no < 8) {
         if (on_off == true) {
             neo_pixel_leds_byte |=  tb_bit8_led_mask[led_no];
+//DBG_PRINT  ("2. neo_pixel_leds_byte : ");
+//DBG_PRINTLN(neo_pixel_leds_byte, BIN);
         }
         else {
             neo_pixel_leds_byte &= ~tb_bit8_led_mask[led_no];
+//DBG_PRINT  ("3. neo_pixel_leds_byte : ");
+//DBG_PRINTLN(neo_pixel_leds_byte, BIN);
         }
+        delay (150);
     }
     else {
         // nop

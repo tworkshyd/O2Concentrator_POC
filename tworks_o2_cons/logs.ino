@@ -122,8 +122,8 @@ void alarms_task (void)    {
         return;
     }
 
-DBG_PRINT  ("entry alarms_byte : ");
-DBG_PRINTLN (alarms_byte);
+//DBG_PRINT  ("entry alarms_byte : ");
+//DBG_PRINTLN (alarms_byte);
 
     // comes here once in a secound only..
     // todo
@@ -135,8 +135,8 @@ DBG_PRINTLN (alarms_byte);
     if (o2_concentration < O2_CONCENTRATION_LOW_THRHLD) {
         if ( !(alarms_byte & O2C_ALARM_BIT) )   {
             alarms_byte |= O2C_ALARM_BIT;
-DBG_PRINT  ("pt1 alarms_byte : ");
-DBG_PRINTLN (alarms_byte);
+//DBG_PRINT  ("pt1 alarms_byte : ");
+//DBG_PRINTLN (alarms_byte);
             neo_pixel_control (LOW_O2C_ALARM,  ON_LED);  
             DBG_PRINTLN ("Low O2 concentration Alarm..!!!");
         }
@@ -154,8 +154,8 @@ output_pressure = 5;
     if (output_pressure < PRESSURE_VALUE_LOW_THRHLD) {
         if ( !(alarms_byte & PRESSURE_DROP_ALARM_BIT) )   {
             alarms_byte |= PRESSURE_DROP_ALARM_BIT;        
-DBG_PRINT  ("pt2 alarms_byte : ");
-DBG_PRINTLN (alarms_byte);
+//DBG_PRINT  ("pt2 alarms_byte : ");
+//DBG_PRINTLN (alarms_byte);
             neo_pixel_control (LOW_PRESSURE_ALARM, ON_LED);  
             DBG_PRINTLN ("Low Pressure Alarm..!!!");
         }
@@ -173,8 +173,8 @@ tempr_value = 115;
     if (tempr_value > TEMPERATURE_HIGH_THRHLD) {
         if ( !(alarms_byte & TEMPR_ALARM_BIT) )   {
             alarms_byte |= TEMPR_ALARM_BIT;           
-DBG_PRINT  ("pt3 alarms_byte : ");
-DBG_PRINTLN (alarms_byte);
+//DBG_PRINT  ("pt3 alarms_byte : ");
+//DBG_PRINTLN (alarms_byte);
             neo_pixel_control (HIGH_TEMPER_ALARM, ON_LED);
             DBG_PRINTLN ("High temperature Alarm..!!!");
             // SHUT - DOWN the system
@@ -186,7 +186,7 @@ DBG_PRINTLN (alarms_byte);
         }
     }
 
-DBG_PRINT  ("exit alarms_byte : ");
-DBG_PRINTLN (alarms_byte);
+//DBG_PRINT  ("exit alarms_byte : ");
+//DBG_PRINTLN (alarms_byte);
 
 }
