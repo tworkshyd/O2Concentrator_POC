@@ -10,11 +10,7 @@
 #endif
 
 
-//#define ON  (true)
-//#define OFF (false)
-
-
-#define BUTTON_DEBOUNCE_DLY ( 55)    // in msecs
+#define BUTTON_DEBOUNCE_DLY ( 15)    // in msecs
 
 
 #define HIGH_BEEP           (200)
@@ -24,14 +20,14 @@
 
 
 // Entry Check
-#define CALIBRATION_MODE_ENTRY_CHECK      (5)
-#define FACTORY_MODE_ENTRY_CHECK          (3)
-#define CONFIG_MODE_ENTRY_CHECK           (1)
+#define CALIBRATION_MODE_ENTRY_CHECK    (5)
+#define FACTORY_MODE_ENTRY_CHECK        (3)
+#define CONFIG_MODE_ENTRY_CHECK         (1)
 
-#define START_SWITCH_PRESSED          (LOW)
-#define START_SWITCH_RELEASED         (HIGH)
-#define ALARM_CLEAR_BUTTON_PRESSED    (LOW)
-#define ALARM_CLEAR_BUTTON_RELEASED   (HIGH)
+#define START_SWITCH_PRESSED            (LOW)
+#define START_SWITCH_RELEASED           (HIGH)
+#define ALARM_CLEAR_BUTTON_PRESSED      (LOW)
+#define ALARM_CLEAR_BUTTON_RELEASED     (HIGH)
 
 
 enum UI_STATES_E  {
@@ -54,7 +50,7 @@ enum UI_STATES_E  {
 void ui_init            (void);
 void ui_task_main       (void);
 void power_on_self_test (void);
-void beep_for       (int msecs);
+void beep_for           (int msecs);
 
 
 

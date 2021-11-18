@@ -36,11 +36,13 @@
 #define FW_VERSION_1_2          (12)            // for v1.2
 #define FW_VERSION_1_2_TXT      "Ver 1.2"       // for v1.2
 
+#define FW_VERSION_1_3          (13)            // for v1.3
+#define FW_VERSION_1_3_TXT      "Ver 1.3"       // Alarms added
 
     
 /******************************************************************************/
-#define     FW_VERSION          FW_VERSION_1_0
-#define     FW_VERSION_TXT      FW_VERSION_1_0_TXT
+#define     FW_VERSION          FW_VERSION_1_3
+#define     FW_VERSION_TXT      FW_VERSION_1_3_TXT
 /******************************************************************************/
 
 
@@ -55,6 +57,12 @@
 #elif (FW_VERSION == FW_VERSION_1_2)
     #define CAPP_AT_95_O2                   (0)   // O2c Capping enable / Disable selection
     #define O2_SENSOR                       (1)   // O2 sensor selection among 3 
+    #define ENABLE_USE_OF_RELAY_3_FOR_Z1    (1)   // enabling this results in '1st and 3rd relay reversal'
+
+#elif (FW_VERSION == FW_VERSION_1_3)
+    #define CAPP_AT_95_O2                   (0)   // O2c Capping enable / Disable selection
+    #define O2_SENSOR                       (1)   // O2 sensor selection among 3 
+    // temp
     #define ENABLE_USE_OF_RELAY_3_FOR_Z1    (1)   // enabling this results in '1st and 3rd relay reversal'
 
 #else
@@ -75,7 +83,7 @@
 
 
 // iii. Temperature value
-#define TEMPERATURE_HIGH_THRHLD             (100)       // in Centigrade units
+#define TEMPERATURE_HIGH_THRHLD             (26.0)  //(100.0)       // in Centigrade units
 
 // Available temperature sensors 
 #define TEMPR_SENSOR_1              (1)

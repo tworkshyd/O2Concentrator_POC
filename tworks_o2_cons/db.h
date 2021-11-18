@@ -25,6 +25,7 @@
 #define   EEPROM_TEST_AREA_START          (extEEPROM_START_ADDRESS)
 #define   EEPROM_TEST_AREA_SIZE           (extEEPROM_PAGE_SIZE_IN_BYTES)
 #define   EEPROM_TEST_AREA_END            (EEPROM_TEST_AREA_START + EEPROM_TEST_AREA_SIZE)
+#define   EEPROM_TEST_BUFFER_SIZE         (45)
 
 #define   EEPROM_RECORD_START             (EEPROM_TEST_AREA_END)
 #define   EEPROM_RECORD_AREA_SIZE         (sizeof(EEP_RECORD_T))
@@ -50,7 +51,7 @@ typedef struct eep_record_t {
 
 
 // variable declarations
-extern bool f_eeprom_working;
+extern bool          f_eeprom_working;
 extern EEP_RECORD_T  eep_record;
 extern EEP_RECORD_T  eep_record_default;
 

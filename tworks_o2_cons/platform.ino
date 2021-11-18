@@ -317,7 +317,7 @@ bool compare_buff (byte * buff_a, byte * buff_b, int  len)  {
     return true;
 }
 
-#define EEPROM_TEST_BUFFER_SIZE  (45)
+
     
 void eeptest (void) {
     

@@ -35,28 +35,27 @@
 #endif
 
 
-enum ALARM_E    {
 
-    CLEAR_ALARMS,
     
-    O2C_ALARM_BIT           = 0x01,
-    TEMPR_ALARM_BIT         = 0x02,
-    PRESSURE_DROP_ALARM_BIT = 0x04,
+#define O2C_ALARM_BIT           (0x01)
+#define TEMPR_ALARM_BIT         (0x02)
+#define PRESSURE_DROP_ALARM_BIT (0x04)
 
-    ALARM_LAST          
-    
-};
+#define CRITICAL_ALARMS         (TEMPR_ALARM_BIT | PRESSURE_DROP_ALARM_BIT)
 
-
-extern uint8_t      alaram_byte;    // holds one bit for each alarm
+#define SYSTEM_START_UP_PERIOD  (120)       // delay in seconds, before actually checking for O2 Concentration after power-on
 
 
 
+extern uint8_t      alarms_byte;            // holds one bit for each alarm
 
 
 
-void logs_task (void);
-void alarms_task (void);
+
+
+
+void logs_task      (void);
+void alarms_task    (void);
 
 
 

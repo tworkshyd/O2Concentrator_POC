@@ -17,7 +17,7 @@
 // Sytem tick time
 #define TICK_time (10)
 
-extEEPROM eep(kbits_64, 1, 8);         //device size, number of devices, page size
+extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
 
 unsigned char cycle;
 unsigned char f_crn;
@@ -96,15 +96,12 @@ void setup (void) {
     o2_cons_init ();
     init_7segments ();
     blank_7segments ();
-       
-    // display_o2 (00.0);
-    // display_total_run_hours (0);    
+           
     ui_init ();
 
 }
 
-// temp
-uint8_t f_temp_flag;
+
 
 void loop (void) {
 
@@ -122,14 +119,7 @@ void loop (void) {
     else if (f_100msec) {
         f_100msec = 0;
         // 100 milli second tasks go here..
-
-//        static uint toggle;
-//        toggle = ~toggle;
-
-//       if (toggle) {
-            update_neo_pixel_leds ();
-//}
-        
+        update_neo_pixel_leds ();      
     }
     else if (f_1sec) {
         f_1sec = 0;
@@ -199,13 +189,12 @@ void o2_cons_init (void)    {
 
     //  SET DELAY TIMING HERE
     //**************************************************************************
-
-/*
-    // Following timing settings used with 3 valves (2  - 3/2, 1 - 2/2) circuit; 6 step cycle;
-    Production_Delay    = 5000;
-    Flush_Delay         = 400;
-    PreCharge_Delay     = 700;
-*/
+    /*
+        // Following timing settings used with 3 valves (2  - 3/2, 1 - 2/2) circuit; 6 step cycle;
+        Production_Delay    = 5000;
+        Flush_Delay         = 400;
+        PreCharge_Delay     = 700;
+    */
 
     // Following timing settings used with 2 valves, 1 orifice circuit; 4 step cycle;
     Production_Delay    = 5400;
@@ -213,12 +202,8 @@ void o2_cons_init (void)    {
 
 
     // STARTUP PURGE
-    //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
     do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);
-    //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
     do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
-    //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
-    // do_control (SIEVE_FLUSH_VLV_CNTRL, CLOSE_VALVE);
     do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
     new_delay_msecs (500);
 
@@ -249,7 +234,6 @@ void o2_main_task (void)    {
         f_sec_change_o2_task = 0;
         current_run_time_secs++;
         total_run_time_secs++;
-
 
         // display run hours, 45 seconds current run hours, 15 seconds total runhours
         int secs = ( current_run_time_secs %  60);
@@ -296,10 +280,7 @@ void o2_main_task (void)    {
     if (nb_delay != prev_nb_delay)  {
         prev_nb_delay = nb_delay;
 
-        //DBG_PRINT ("nb_delay : ");
-        //DBG_PRINTLN (nb_delay);
     }
-    
 
 }
 
@@ -376,11 +357,8 @@ void tworks3_PSA_logic (void)  {
 
 void tworks2_values_to_default_postion (void)  {
 
-
-    //**************************************************************************
     do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
     do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE); 
-
 
 }
 
