@@ -83,7 +83,7 @@
 
 
 // iii. Temperature value
-#define TEMPERATURE_HIGH_THRHLD             (26.0)  //(100.0)       // in Centigrade units
+#define TEMPERATURE_HIGH_THRHLD             (100.0)       // in Centigrade units
 
 // Available temperature sensors 
 #define TEMPR_SENSOR_1              (1)

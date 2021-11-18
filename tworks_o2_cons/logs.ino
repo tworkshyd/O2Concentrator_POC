@@ -123,24 +123,23 @@ void alarms_task (void)    {
     // Check for alarms, then set / clear them.
     
     // 1. Low O2 concentration alarm
-    if (f_system_running   &&  (current_run_time_secs > SYSTEM_START_UP_PERIOD )              \
-                           &&  (o2_concentration < O2_CONCENTRATION_LOW_THRHLD) ) {
-        if ( !(alarms_byte & O2C_ALARM_BIT) )   {
+    if ( f_system_running   &&  (current_run_time_secs > SYSTEM_START_UP_PERIOD) )  {
+        if (o2_concentration < O2_CONCENTRATION_LOW_THRHLD)   {
             alarms_byte |= O2C_ALARM_BIT;
             //DBG_PRINT  ("pt1 alarms_byte : ");
             //DBG_PRINTLN (alarms_byte);
             neo_pixel_control (LOW_O2C_ALARM,  ON_LED);  
             DBG_PRINTLN ("Low O2 concentration Alarm..!!!");
-        }
-        else {  // temp for debugging
+
             beep_for (100);
             DBG_PRINT (".");
         }
-    }
-    else if ( o2_concentration > O2_CONCENTRATION_LOW_THRHLD ) {    // no hysteresis here..
-        // clear alarm 
-        alarms_byte &= ~O2C_ALARM_BIT;
-        neo_pixel_control (LOW_O2C_ALARM,  OFF_LED);  
+        else if ( o2_concentration > O2_CONCENTRATION_LOW_THRHLD ) {    // no hysteresis here..
+            // clear alarm 
+            alarms_byte &= ~O2C_ALARM_BIT;
+            neo_pixel_control (LOW_O2C_ALARM,  OFF_LED);  
+            DBG_PRINTLN ("Clearing ...... Low O2 concentration Alarm..!!!");
+        }
     }
     else {
         // nop
