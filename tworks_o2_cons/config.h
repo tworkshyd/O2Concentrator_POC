@@ -63,7 +63,7 @@
     #define CAPP_AT_95_O2                   (0)   // O2c Capping enable / Disable selection
     #define O2_SENSOR                       (1)   // O2 sensor selection among 3 
     // temp
-    #define ENABLE_USE_OF_RELAY_3_FOR_Z1    (1)   // enabling this results in '1st and 3rd relay reversal'
+    // #define ENABLE_USE_OF_RELAY_3_FOR_Z1    (1)   // enabling this results in '1st and 3rd relay reversal'
 
 #else
     #define CAPP_AT_95_O2                   (1)   // O2c Capping enable / Disable selection
@@ -75,7 +75,7 @@
 
 // 3. Alarm Thresholds --------------------------------------------------------------------------
 // i. O2 Concentration
-#define O2_CONCENTRATION_LOW_THRHLD         (85.0)      // in '%'
+#define O2_CONCENTRATION_LOW_THRHLD         (82.0)      // in '%'
 
 
 // ii. Pressure value

@@ -8,6 +8,8 @@
 
 
 uint8_t      alaram_byte;    // holds one bit for each alarm
+bool         f_critical_alarms;
+bool         f_start_alarm_beeps;
 
 
 void logs_task (void) {
@@ -108,6 +110,10 @@ void log_dump (void)  {
 
 void alarms_task (void)    {
 
+    static uint8_t  low_fio2_alarm_dly;
+    static uint8_t  low_pressure_alarm_dly;
+    static uint8_t  high_temperature_alarm_dly;
+
     if (f_sec_change_alarm_task)    {
         f_sec_change_alarm_task = 0;
     }
@@ -125,20 +131,29 @@ void alarms_task (void)    {
     // 1. Low O2 concentration alarm
     if ( f_system_running   &&  (current_run_time_secs > SYSTEM_START_UP_PERIOD) )  {
         if (o2_concentration < O2_CONCENTRATION_LOW_THRHLD)   {
-            alarms_byte |= O2C_ALARM_BIT;
-            //DBG_PRINT  ("pt1 alarms_byte : ");
-            //DBG_PRINTLN (alarms_byte);
-            neo_pixel_control (LOW_O2C_ALARM,  ON_LED);  
-            DBG_PRINTLN ("Low O2 concentration Alarm..!!!");
-
-            beep_for (100);
-            DBG_PRINT (".");
+            
+            if (low_fio2_alarm_dly < TIME_DELAY_BEFORE_ALARM_ASSERTION) {
+                low_fio2_alarm_dly++;
+            }
+            else {
+                alarms_byte |= O2C_ALARM_BIT;
+                //DBG_PRINT  ("pt1 alarms_byte : ");
+                //DBG_PRINTLN (alarms_byte);
+                neo_pixel_control (LOW_O2C_ALARM,  ON_LED);
+                f_start_alarm_beeps = 1;
+                DBG_PRINTLN ("Low O2 concentration Alarm..!!!");
+            }
         }
         else if ( o2_concentration > O2_CONCENTRATION_LOW_THRHLD ) {    // no hysteresis here..
             // clear alarm 
-            alarms_byte &= ~O2C_ALARM_BIT;
-            neo_pixel_control (LOW_O2C_ALARM,  OFF_LED);  
-            DBG_PRINTLN ("Clearing ...... Low O2 concentration Alarm..!!!");
+            if (low_fio2_alarm_dly) {
+                low_fio2_alarm_dly--;
+            }
+            else {
+                alarms_byte &= ~O2C_ALARM_BIT;
+                neo_pixel_control (LOW_O2C_ALARM,  OFF_LED);  
+                DBG_PRINTLN ("Clearing ...... Low O2 concentration Alarm..!!!");
+            }
         }
     }
     else {
@@ -149,24 +164,31 @@ void alarms_task (void)    {
 //output_pressure = 5;
     
     // 2. Low Pressure alarm
-    if (f_system_running   &&  (output_pressure < PRESSURE_VALUE_LOW_THRHLD) ) {
-        if ( !(alarms_byte & PRESSURE_DROP_ALARM_BIT) )   {
-            alarms_byte |= PRESSURE_DROP_ALARM_BIT;        
-            //DBG_PRINT  ("pt2 alarms_byte : ");
-            //DBG_PRINTLN (alarms_byte);
-            neo_pixel_control (LOW_PRESSURE_ALARM, ON_LED);  
-            DBG_PRINTLN ("Low Pressure Alarm..!!!");
-        }
-        else {  // temp for debugging
-            beep_for (50);
-            DBG_PRINT (",");
+    if ( f_system_running )  {
+        if ( (output_pressure < PRESSURE_VALUE_LOW_THRHLD) )   {
+            if (low_pressure_alarm_dly < TIME_DELAY_BEFORE_ALARM_ASSERTION) {
+                low_pressure_alarm_dly++;
+            }
+            else {
+                alarms_byte |= PRESSURE_DROP_ALARM_BIT;        
+                //DBG_PRINT  ("pt2 alarms_byte : ");
+                //DBG_PRINTLN (alarms_byte);
+                neo_pixel_control (LOW_PRESSURE_ALARM, ON_LED);  
+                f_start_alarm_beeps = 1;
+                DBG_PRINTLN ("Low Pressure Alarm..!!!");
+            }
         }
     }    
     else if ( output_pressure > PRESSURE_VALUE_LOW_THRHLD ) {    // no hysteresis here..
         // clear alarm 
-        alarms_byte &= ~PRESSURE_DROP_ALARM_BIT;
-        // Auto clear neo-pixel LED as well?, if so uncomment below line
-        // neo_pixel_control (LOW_PRESSURE_ALARM, OFF_LED);  
+        if (low_pressure_alarm_dly) {
+            low_pressure_alarm_dly--;
+        }
+        else {
+            alarms_byte &= ~PRESSURE_DROP_ALARM_BIT;
+            // Auto clear neo-pixel LED as well?, if so uncomment below line
+            neo_pixel_control (LOW_PRESSURE_ALARM, OFF_LED);  
+        }
     }
     else {
         // nop
@@ -176,30 +198,53 @@ void alarms_task (void)    {
     //tempr_value = 115;
     
     // 3. High Temperature alarm
-    if (f_system_running   &&  (tempr_value > TEMPERATURE_HIGH_THRHLD) ) {
-        if ( !(alarms_byte & TEMPR_ALARM_BIT) )   {
-            alarms_byte |= TEMPR_ALARM_BIT;           
-            //DBG_PRINT  ("pt3 alarms_byte : ");
-            //DBG_PRINTLN (alarms_byte);
-            neo_pixel_control (HIGH_TEMPER_ALARM, ON_LED);
-            DBG_PRINTLN ("High temperature Alarm..!!!");
-            // SHUT - DOWN the system
-                // todo
-        }
-        else {  // temp for debugging
-            beep_for (150);
-            DBG_PRINT (";");
+    if ( f_system_running )  {
+        if (tempr_value > TEMPERATURE_HIGH_THRHLD)   {
+            if (high_temperature_alarm_dly < TIME_DELAY_BEFORE_ALARM_ASSERTION)  {
+                high_temperature_alarm_dly++;
+            }
+            else {
+                alarms_byte |= TEMPR_ALARM_BIT;           
+                //DBG_PRINT  ("pt3 alarms_byte : ");
+                //DBG_PRINTLN (alarms_byte);
+                neo_pixel_control (HIGH_TEMPER_ALARM, ON_LED);
+                f_start_alarm_beeps = 1;
+                DBG_PRINTLN ("High temperature Alarm..!!!");
+                // SHUT - DOWN the system
+                    // todo
+            }
         }
     }
     else if ( tempr_value < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
         // clear alarm 
-        alarms_byte &= ~TEMPR_ALARM_BIT;
-        // Auto clear neo-pixel LED as well?, if so uncomment below line
-        // neo_pixel_control (HIGH_TEMPER_ALARM, OFF_LED);  
+        if (high_temperature_alarm_dly) {
+            high_temperature_alarm_dly--;
+        }
+        else {
+            alarms_byte &= ~TEMPR_ALARM_BIT;
+            // Auto clear neo-pixel LED as well?, if so uncomment below line
+            neo_pixel_control (HIGH_TEMPER_ALARM, OFF_LED);  
+        }
     }
     else {
         // nop
     }
+
+
+    // Shutdown criteria
+    if (alarms_byte & CRITICAL_ALARMS)  {
+        f_critical_alarms = 1;
+    }
+    else {
+        f_critical_alarms = 0;
+    }
+
+    if (f_start_alarm_beeps)   {
+        beep_for (100);
+        DBG_PRINT (",");
+    }
+
+    
     //DBG_PRINT  ("exit alarms_byte : ");
     //DBG_PRINTLN (alarms_byte);
 

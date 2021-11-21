@@ -62,6 +62,7 @@ void button_check (void)  {
             DBG_PRINT  ("Alarm Clear Button Pressed..");
     
             alarms_byte = 0;
+            f_start_alarm_beeps = 0;
             neo_pixel_control (LOW_O2C_ALARM, OFF_LED);
             neo_pixel_control (LOW_PRESSURE_ALARM, OFF_LED);
             neo_pixel_control (HIGH_TEMPER_ALARM, OFF_LED);
@@ -155,7 +156,7 @@ void ui_task_main (void)    {
             break;
         case UI_SYS_ON_CHECK:
             // System ON check
-            if ( start_switch_pressed == true && !(alarms_byte & CRITICAL_ALARMS) )  {
+            if ( start_switch_pressed == true && !f_critical_alarms )  {
                 f_system_running = true;
 
                 DBG_PRINTLN("Start Button Pressed..!");
@@ -189,7 +190,7 @@ void ui_task_main (void)    {
             }
 
             // System OFF check
-            if (start_switch_pressed == false || (alarms_byte & CRITICAL_ALARMS))  {
+            if (start_switch_pressed == false || f_critical_alarms)  {
                 ui_state = UI_SYS_OFF_CHECK;
             }
             else {

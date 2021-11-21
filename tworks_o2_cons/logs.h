@@ -43,12 +43,14 @@
 
 #define CRITICAL_ALARMS         (TEMPR_ALARM_BIT | PRESSURE_DROP_ALARM_BIT)
 
-#define SYSTEM_START_UP_PERIOD  (120)       // delay in seconds, before actually checking for O2 Concentration after power-on
+#define SYSTEM_START_UP_PERIOD              (120)       // delay in seconds, before actually checking for O2 Concentration after power-on
+#define TIME_DELAY_BEFORE_ALARM_ASSERTION   (5)         // delay in seconds,
 
 
 
 extern uint8_t      alarms_byte;            // holds one bit for each alarm
-
+extern bool         f_critical_alarms;
+extern bool         f_start_alarm_beeps;
 
 
 
