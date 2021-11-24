@@ -42,7 +42,7 @@
 
 /* pin assignments for prototyped board
 // 1. LCD display port mappings
-#define RS                (7)
+#define RS              (7)
 #define EN              (8)
 #define D4              (9)
 #define D5              (10)

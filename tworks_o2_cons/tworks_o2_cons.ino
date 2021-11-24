@@ -33,7 +33,18 @@ void setup (void) {
     Serial.begin (115200);
     DBG_PRINTLN ();
     DBG_PRINTLN ();
-    DBG_PRINTLN ("Serial port initialized..!!");
+    DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
+    DBG_PRINTLN ("Oxygen Concentrator\n");
+    DBG_PRINTLN ("Harware Board Revision : " HW_REVISION_TXT);
+    DBG_PRINTLN ("Firmware Version       : " FW_VERSION_TXT);
+    DBG_PRINT   ("Build Time             : ");
+    DBG_PRINT   (__DATE__);
+    DBG_PRINT   (", ");
+    DBG_PRINTLN (__TIME__);
+
+    
+    DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
+    DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
     platform_init ();
     ads_init ();
     db_init ();

@@ -24,28 +24,34 @@ void lcd_clear_buf (char * bufp) {
 
 
 //==================== 7 segment driver ========================
-#define NO_OP     (0x00)
-#define DIGIT_0   (0x01)
-#define DIGIT_1   (0x02)
-#define DIGIT_2   (0x03)
-#define DIGIT_3   (0x04)
-#define DIGIT_4   (0x05)
-#define DIGIT_5   (0x06)
-#define DIGIT_6   (0x07)
-#define DIGIT_7   (0x08)
-#define DECODE_MODE   (0x09)
-#define INTENSITY     (0x0A)
-#define SCAN_LIMIT    (0x0B)
-#define SHUT_DOWN     (0x0C)
-#define DISPLAY_TEST  (0x0F)
+#define NO_OP           (0x00)
+#define DIGIT_0         (0x01)
+#define DIGIT_1         (0x02)
+#define DIGIT_2         (0x03)
+#define DIGIT_3         (0x04)
+#define DIGIT_4         (0x05)
+#define DIGIT_5         (0x06)
+#define DIGIT_6         (0x07)
+#define DIGIT_7         (0x08)
+#define DECODE_MODE     (0x09)
+#define INTENSITY       (0x0A)
+#define SCAN_LIMIT      (0x0B)
+#define SHUT_DOWN       (0x0C)
+#define DISPLAY_TEST    (0x0F)
 
 
 
-#define BLANK         (0x0F)
+#define BLANK           (0x0F)
 
 // Local driver defines
-#define DECIMAL_POINT (0x0A)
-#define BLANK_DIGIT   (0x0B)
+// To display '0' to '9' on 7-segments use the value as is..
+// after '9' use ..
+#define _HYPHEN         (0x0A)
+#define LETTER_E        (0x0B)
+#define LETTER_H        (0x0c)
+#define LETTER_L        (0x0d)
+#define DECIMAL_POINT   (0x0E)
+#define BLANK_DIGIT     (0x0F)
 
 
 uint8_t   digit_to_seg_value[] = {
@@ -60,8 +66,14 @@ uint8_t   digit_to_seg_value[] = {
     0b01110000,  // '7' 
     0b01111111,  // '8' 
     0b01111011,  // '9' 
-    0b10000000,  // '.' -- 0x0A prints decimal point
-    0b00000000,  // ' ' -- 0x0B blanks digit
+    
+    0b00000001,  // '-' 
+    0b01001111,  // 'E' 
+    0b00110111,  // 'H' 
+    0b00001110,  // 'L' 
+    
+    0b10000000,  // '.' -- 0x0E prints decimal point
+    0b00000000,  // ' ' -- 0x0F blanks digit
   
 };
 
@@ -81,14 +93,18 @@ uint8_t   digit_to_seg_value[] = {
     
 void  set7segmentDigit (int digit, int value, uint8_t  point) {
 
-    if (point == true)
+    if (point == true)  {
         point = 0x80;
-    else 
+    }
+    else {
         point = 0;
+    }
+    
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     
     digitalWrite(loadPin_7segment,   LOW);
-    digitalWrite(loadPin_7segment,   HIGH);         
+    digitalWrite(loadPin_7segment,   HIGH);      
+       
 }
 
 void  set7segmentRegister (int reg, int value) {
@@ -127,31 +143,6 @@ void blank_7segments (void) {
 	
 }
 
-
-// ver1: Display 2.1 digits for O2 concentration
-//void display_o2 (float o2value) {
-//
-//    uint16_t     int_o2value;
-//    uint8_t     decimal_digit;
-//    uint8_t     unit_digit;
-//    uint8_t     tens_digit;
-//
-//    int_o2value   = (uint16_t)(o2value * 10);
-//    decimal_digit = int_o2value % 10;
-//    int_o2value   = int_o2value / 10;
-//    unit_digit    = int_o2value % 10;
-//    int_o2value   = int_o2value / 10;
-//    
-//    tens_digit    = int_o2value % 10;
-//    
-//    //  2.1 digit display for concentration
-//    set7segmentDigit (1, tens_digit, false);
-//    //set7segmentDigit (2, BLANK_DIGIT);    
-//    set7segmentDigit (2, unit_digit, true);
-//    set7segmentDigit (3, decimal_digit, false);
-//
-//    
-//}
 
 // ver2: Display 2.0 digits for O2 concentration
 void display_o2 (float o2value) {
@@ -229,7 +220,8 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
     // digit 2
     set7segmentDigit (5, digit1, false);
     // digit 3
-    set7segmentDigit (6, BLANK_DIGIT, true);
+    set7segmentDigit (6, BLANK_DIGIT, true); // to display '.'
+    //set7segmentDigit (6, _HYPHEN, false);    // to display '-'
     // digit 4
     set7segmentDigit (7, digit5, false);
     // digit 5
@@ -283,5 +275,29 @@ void display_banner (void) {
 } 
  */
 
+// ver1: Display 2.1 digits for O2 concentration
+//void display_o2 (float o2value) {
+//
+//    uint16_t     int_o2value;
+//    uint8_t     decimal_digit;
+//    uint8_t     unit_digit;
+//    uint8_t     tens_digit;
+//
+//    int_o2value   = (uint16_t)(o2value * 10);
+//    decimal_digit = int_o2value % 10;
+//    int_o2value   = int_o2value / 10;
+//    unit_digit    = int_o2value % 10;
+//    int_o2value   = int_o2value / 10;
+//    
+//    tens_digit    = int_o2value % 10;
+//    
+//    //  2.1 digit display for concentration
+//    set7segmentDigit (1, tens_digit, false);
+//    //set7segmentDigit (2, BLANK_DIGIT);    
+//    set7segmentDigit (2, unit_digit, true);
+//    set7segmentDigit (3, decimal_digit, false);
+//
+//    
+//}
 
     
