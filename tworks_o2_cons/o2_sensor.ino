@@ -55,7 +55,7 @@ float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};          // b
 
 #elif  (O2_SENSOR == 5) 
     // 2. for Envitec sensor marked as S2 for demo device
-    float x_samples[NUM_OF_SAMPLES_O2]     = {  8.75, 129.75,  601.75};     // default calib values
+    float x_samples[NUM_OF_SAMPLES_O2]     = {  2.875, 117.125,  625.250};     // default calib values
 
 #else 
     float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
