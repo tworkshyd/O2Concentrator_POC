@@ -95,7 +95,7 @@
 
 
 // Select O2 sensor (hard-coding calibration values)
-#define O2_SENSOR                       (2)   // O2 sensor selection among 3 
+#define O2_SENSOR                       (3)   // O2 sensor selection among 3 
 
 
 
