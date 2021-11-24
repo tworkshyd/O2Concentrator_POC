@@ -70,24 +70,32 @@
 /******************************************************************************/
 
 
-#if (FW_VERSION == FW_VERSION_1_0)
-    #define CAPP_AT_95_O2                   (1)   // O2c Capping enable / Disable selection
-    #define O2_SENSOR                       (3)   // O2 sensor selection among 3 
-    
-#elif (FW_VERSION == FW_VERSION_1_1)
-    #define CAPP_AT_95_O2                   (1)   // O2c Capping enable / Disable selection
-    #define O2_SENSOR                       (2)   // O2 sensor selection among 3 
+//#if (FW_VERSION == FW_VERSION_1_0)
+//    #define CAPP_AT_95_O2                   (1)   // O2c Capping enable / Disable selection
+//    #define O2_SENSOR                       (3)   // O2 sensor selection among 3 
+//    
+//#elif (FW_VERSION == FW_VERSION_1_1)
+//    #define CAPP_AT_95_O2                   (1)   // O2c Capping enable / Disable selection
+//    #define O2_SENSOR                       (2)   // O2 sensor selection among 3 
+//
+//#elif (FW_VERSION == FW_VERSION_1_2)
+//    #define CAPP_AT_95_O2                   (0)   // O2c Capping enable / Disable selection
+//    #define O2_SENSOR                       (1)   // O2 sensor selection among 3 
+//    #define ENABLE_USE_OF_RELAY_3_FOR_Z1    (1)   // enabling this results in '1st and 3rd relay reversal'
+//
+//#else
+//    #define CAPP_AT_95_O2                   (1)   // O2c Capping enable / Disable selection
+//    #define O2_SENSOR                       (3)   // O2 sensor selection among 3 
+//
+//#endif
 
-#elif (FW_VERSION == FW_VERSION_1_2)
-    #define CAPP_AT_95_O2                   (0)   // O2c Capping enable / Disable selection
-    #define O2_SENSOR                       (1)   // O2 sensor selection among 3 
-    #define ENABLE_USE_OF_RELAY_3_FOR_Z1    (1)   // enabling this results in '1st and 3rd relay reversal'
 
-#else
-    #define CAPP_AT_95_O2                   (1)   // O2c Capping enable / Disable selection
-    #define O2_SENSOR                       (3)   // O2 sensor selection among 3 
+// Select capping enable / disable
+#define CAPP_AT_95_O2                   (1)   // O2c Capping enable / Disable selection
 
-#endif
+
+// Select O2 sensor (hard-coding calibration values)
+#define O2_SENSOR                       (1)   // O2 sensor selection among 3 
 
 
 
