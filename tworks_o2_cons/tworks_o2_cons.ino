@@ -132,7 +132,7 @@ void loop (void) {
 
         o2_sensor_scan ();
         tempr_sensor_scan ();
-        // read_pressure ();
+        read_pressure ();
     
 		if (f_system_running)	{
 			display_o2 (o2_concentration);  

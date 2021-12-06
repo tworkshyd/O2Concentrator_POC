@@ -43,8 +43,13 @@ uint8_t         alarms_byte;     // can hold upto 8 alarms, 1 bit for each
 
 float           o2_concentration = 93.50;
 float           prev_o2_concentration;
-float           output_pressure  = 25.03;
+float           output_pressure;//  = 25.03;
 float           prev_output_pressure  = 25;
+volatile int16_t  pressure_raw_adc_count;
+volatile float    pressure_slope;
+volatile float    pressure_const_val;
+volatile float    pressure_raw_m_voltage;
+
 
 unsigned int    current_run_time_secs;
 unsigned int    prev_current_run_time_secs;
