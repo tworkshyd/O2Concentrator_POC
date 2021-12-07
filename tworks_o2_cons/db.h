@@ -82,8 +82,9 @@ extern float           output_pressure;
 extern float           prev_o2_concentration;
 extern float           prev_output_pressure;
 extern volatile int16_t  pressure_raw_adc_count;
-extern volatile float    pressure_slope;
-extern volatile float    pressure_const_val;
+extern volatile float    pressureZero;
+extern volatile float    pressureMax;
+extern volatile float    pressuretransducermaxPSI;
 extern volatile float    pressure_raw_m_voltage;
 
 

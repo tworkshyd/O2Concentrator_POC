@@ -176,6 +176,7 @@ void alarms_task (void)    {
                 neo_pixel_control (LOW_PRESSURE_ALARM, ON_LED);  
                 f_start_alarm_beeps = 1;
                 DBG_PRINTLN ("Low Pressure Alarm..!!!");
+				low_pressure_alarm_dly = 0;
             }
         }
     }    

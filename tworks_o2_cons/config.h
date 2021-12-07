@@ -79,7 +79,7 @@
 
 
 // ii. Pressure value
-#define PRESSURE_VALUE_LOW_THRHLD           (6)         // in psi uints
+#define PRESSURE_VALUE_LOW_THRHLD           (6.0)         // in psi uints
 
 
 // iii. Temperature value

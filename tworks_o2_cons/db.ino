@@ -45,11 +45,12 @@ float           o2_concentration = 93.50;
 float           prev_o2_concentration;
 float           output_pressure;//  = 25.03;
 float           prev_output_pressure  = 25;
-volatile int16_t  pressure_raw_adc_count;
-volatile float    pressure_slope;
-volatile float    pressure_const_val;
-volatile float    pressure_raw_m_voltage;
 
+volatile int16_t  pressure_raw_adc_count;
+volatile float    pressure_raw_m_voltage;
+volatile float pressureZero = 3969.0;				//102.4; //analog reading of pressure transducer at 0psi
+volatile float pressureMax  = 361890.0;				//921.6; //analog reading of pressure transducer at 100psi
+volatile float pressuretransducermaxPSI = 0.2 * 1000000;	//36000.0;	//100; //psi value of transducer being used
 
 unsigned int    current_run_time_secs;
 unsigned int    prev_current_run_time_secs;
