@@ -7,12 +7,14 @@ Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "tworks_o2_cons", "tworks_o2
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|ARM = Debug|ARM
-		Release|ARM = Release|ARM
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Debug|ARM.ActiveCfg = Debug|AVR
-		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Release|ARM.ActiveCfg = Release|AVR
+		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Debug|AVR.ActiveCfg = Debug|AVR
+		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Debug|AVR.Build.0 = Debug|AVR
+		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Release|AVR.ActiveCfg = Release|AVR
+		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

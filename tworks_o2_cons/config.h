@@ -103,11 +103,11 @@
 #endif
 
 // iv. Alarms to LEDs mapping
-#define     LOW_O2C_ALARM           NEO_PXL_ALARM_1            
-#define     LOW_PRESSURE_ALARM      NEO_PXL_ALARM_2             
-#define     HIGH_TEMPER_ALARM       NEO_PXL_ALARM_3          
-#define     UNUSED_ALARM_2          NEO_PXL_ALARM_4             
-#define     UNUSED_ALARM_1          NEO_PXL_ALARM_5
+#define     UNUSED_ALARM_1          NEO_PXL_ALARM_1
+#define     LOW_O2C_ALARM           NEO_PXL_ALARM_2            
+#define     LOW_PRESSURE_ALARM      NEO_PXL_ALARM_3             
+#define     HIGH_TEMPER_ALARM       NEO_PXL_ALARM_4          
+#define     UNUSED_ALARM_2          NEO_PXL_ALARM_5
 
 
 
@@ -129,7 +129,7 @@
 #define O2C_CAP_VALUE_MAX           (95.0)
 
 // 8.
-// Select by uncommeting the required events from below list
+// Select by uncommenting the required events from below list
 //  Note: these uncommented events print only if 'ENABLE_EVENT_LOGS' is enabled 
 #define CHANGE_IN_O2_LEVEL    
 #define CHANGE_IN_PRESSURE    

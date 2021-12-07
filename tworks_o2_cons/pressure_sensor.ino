@@ -123,11 +123,11 @@ void read_pressure (void) {
 
 	ADS.readADC(PRESSURE_SENSOR_CHANNL_NO);
 	pressure_raw_adc_count = ADS.getValue();
-	DBG_PRINT   ("pressure_raw_adc_count    : ");
-	DBG_PRINTLN (pressure_raw_adc_count);
+// 	DBG_PRINT   ("pressure_raw_adc_count    : ");
+// 	DBG_PRINTLN (pressure_raw_adc_count);
 	pressure_raw_m_voltage = ((float)pressure_raw_adc_count * 1000.0) * 0.000125;
-	DBG_PRINT   ("pressure_raw_m_voltage    : ");
-	DBG_PRINTLN (pressure_raw_m_voltage, 4);
+// 	DBG_PRINT   ("pressure_raw_m_voltage    : ");
+// 	DBG_PRINTLN (pressure_raw_m_voltage, 4);
 
 
 
@@ -143,9 +143,9 @@ void read_pressure (void) {
 	float mv_at_23psi = 3722.10;	// in mV, 23 Psi  = 0.16 MPa
 	output_pressure = ((pressure_raw_m_voltage - mv_at_0psi) * (23.0 - 0.0)) / (mv_at_23psi - mv_at_0psi);
 
-	DBG_PRINT   ("pressure : ");
-	DBG_PRINT (output_pressure, 1); //prints value from previous line to serial
-	DBG_PRINTLN (" Psi"); //prints label to serial
+// 	DBG_PRINT   ("pressure : ");
+// 	DBG_PRINT (output_pressure, 1); //prints value from previous line to serial
+// 	DBG_PRINTLN (" Psi"); //prints label to serial
 
 /*	output_pressure *= 145.0;
 	DBG_PRINT   ("pressure : ");

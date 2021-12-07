@@ -34,8 +34,6 @@ void button_check (void)  {
             start_switch_dbnc_dly = 0;
             //DBG_PRINT  ("Start_switch Pressed");
         }
-        //DBG_PRINT  ("start_switch_dbnc_dly : ");
-        //DBG_PRINTLN(start_switch_dbnc_dly);
     }
     // 2. Start Switch Release detection
     else if (start_switch_state == START_SWITCH_RELEASED) {   // press detection
@@ -45,8 +43,7 @@ void button_check (void)  {
             start_switch_dbnc_dly = 0;
             //DBG_PRINT  ("Start_switch RELEASED");
         }
-        //DBG_PRINT  ("start_switch_dbnc_dly : ");
-        //DBG_PRINTLN(start_switch_dbnc_dly);
+
     }
     else {
         // nop
@@ -59,17 +56,9 @@ void button_check (void)  {
         if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
             alarm_clear_button_pressed = true;
             alarm_clear_bttn_dbnc_dly = 0;
-            DBG_PRINT  ("Alarm Clear Button Pressed..");
-    
-            alarms_byte = 0;
-            f_start_alarm_beeps = 0;
-            neo_pixel_control (LOW_O2C_ALARM, OFF_LED);
-            neo_pixel_control (LOW_PRESSURE_ALARM, OFF_LED);
-            neo_pixel_control (HIGH_TEMPER_ALARM, OFF_LED);
-            DBG_PRINTLN  ("Alarm Cleared..!!");
-        }
-        //DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
-        //DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
+			DBG_PRINT   (__FILE__);
+			DBG_PRINTLN (" : Alarm Clear Button Pressed..");
+		}
     }
     else {
         // nop

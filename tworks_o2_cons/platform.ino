@@ -77,7 +77,7 @@ void new_delay_msecs (unsigned int  time_delay) {
     unsigned long int   time_tag;
 
 
-    DBG_PRINT ("/");
+    //DBG_PRINT ("/");
     time_tag = systemtick_msecs;
     while (time_elapsed (time_tag) < time_delay)
     {
