@@ -43,7 +43,7 @@ void tempr_sensor_scan (void)  {
     // Resistance to Temperature
     tempr_value_1 = (Rx / R0 - 1.0) / alpha;     // from Rx = R0 (1 + alpha * X)
     
-    // Uncommect to convet celsius to fehrenheit
+    // Uncomment to convert Celsius to Fahrenheit
     // tempr_value_1 = tempr_value_1 * 1.8 + 32; 
     
     // Serial.println(tempr_value_1);

@@ -86,21 +86,21 @@
 #define TEMPERATURE_HIGH_THRHLD             (100.0)       // in Centigrade units
 
 // Available temperature sensors 
-#define TEMPR_SENSOR_1              (1)
-#define TEMPR_SENSOR_1              (2)
-
+// #define TEMPR_SENSOR_1              (1)
+// #define TEMPR_SENSOR_2              (2)
+// 
 // Select temperature sensor to use for alarm indication
-#define TEMPR_SENSOR_SELECTED               TEMPR_SENSOR_1
-
-//------------------------------------------------------------------------------------------------
-
-#if (TEMPR_SENSOR_SELSECTED == TEMPR_SENSOR_1)
-    #define tempr_value             (tempr_value_1)
-
-#else   
-    #define tempr_value             (tempr_value_2)
-
-#endif
+// #define TEMPR_SENSOR_SELECTED               TEMPR_SENSOR_1
+// 
+// ------------------------------------------------------------------------------------------------
+// 
+// #if (TEMPR_SENSOR_SELSECTED == TEMPR_SENSOR_1)
+//     #define tempr_value             (tempr_value_1)
+// 
+// #else   
+//     #define tempr_value             (tempr_value_2)
+// 
+// #endif
 
 // iv. Alarms to LEDs mapping
 #define     UNUSED_ALARM_1          NEO_PXL_ALARM_1

@@ -247,7 +247,7 @@ void alarms_task (void)    {
     
     // 3. High Temperature alarm
     if ( f_system_running )  {
-        if (tempr_value > TEMPERATURE_HIGH_THRHLD)   {
+        if (tempr_value_1 > TEMPERATURE_HIGH_THRHLD)   {
             if (high_temperature_alarm_dly < TIME_DELAY_BEFORE_HIGH_TEMPR_ALARM_ASSERTION)  {
                 high_temperature_alarm_dly++;
 				DBG_PRINTLN ();
@@ -265,12 +265,12 @@ void alarms_task (void)    {
             }
         }
     
-		else if ( tempr_value < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
+		else if ( tempr_value_1 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
 			// clear alarm 
 			if (high_temperature_alarm_dly) {
 				high_temperature_alarm_dly--;
 				DBG_PRINTLN ();
-				DBG_PRINTLN ("Alarm Clearing : High Temperature Alarm.. ticking ...");
+				DBG_PRINT   ("Alarm Clearing : High Temperature Alarm.. ticking ...");
 				DBG_PRINT   (high_temperature_alarm_dly);
 			}
 			else {
