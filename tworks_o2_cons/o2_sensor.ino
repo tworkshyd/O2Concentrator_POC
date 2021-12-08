@@ -9,7 +9,7 @@
 
 #define NUM_OF_SAMPLES_O2   (3)
 
-
+/*
 #if  (O2_SENSOR == 1)
     // 1. for Envitec sensor marked as S1 for demo device
     float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
@@ -30,6 +30,36 @@
 #else 
     float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
     float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
+
+#endif
+*/
+
+
+float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+
+// Hard coding calibration parameters for all 5 machines.
+#if    (O2_SENSOR == 1)
+// 1. for Envitec sensor marked as S1 for demo device
+float x_samples[NUM_OF_SAMPLES_O2]     = { 10.625, 177.875, 677.251};   // default calib values
+
+#elif  (O2_SENSOR == 2)
+// 2. for Envitec sensor marked as S2 for demo device
+float x_samples[NUM_OF_SAMPLES_O2]     = { 17.125, 134.875,  617.875};     // default calib values
+
+#elif  (O2_SENSOR == 3)
+// 3. for Envitec sensor marked as S3 for demo device
+float x_samples[NUM_OF_SAMPLES_O2]     = { 26.250, 144.125,  653.625};   // default calib values
+
+#elif  (O2_SENSOR == 4)
+// 1. for Envitec sensor marked as S1 for demo device
+float x_samples[NUM_OF_SAMPLES_O2]     = { 1.125, 120.375, 632.125};   // default calib values
+
+#elif  (O2_SENSOR == 5)
+// 2. for Envitec sensor marked as S2 for demo device
+float x_samples[NUM_OF_SAMPLES_O2]     = {  2.875, 117.125,  625.250};     // default calib values
+
+#else
+float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
 
 #endif
 
