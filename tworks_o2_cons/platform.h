@@ -149,12 +149,6 @@
 #define RLY_4           (A3)
 #define DDIR            (12)
 
-// Alias names
-//#define ZT1_SOLINOID    RLY_1
-//#define ZT2_SOLINOID    RLY_2
-//#define BCK_F_SOLINOID  RLY_3
-
-
 // 3. Buzzer
 #define buzzr_cntrl_pin  	(A5)
 
@@ -206,9 +200,7 @@
 #define BUTTON_ACTIVE       (LOW)
 
 // Digital output Controls
-// #define BUUZZER_CNTRL(x)         (digitalWrite(buzzr_cntrl_pin, !x))
 #define BUUZZER_CNTRL(x)            (do_control(BUZZER_CONTROL, x))
-//#define compr_cntrl_pin_CNTRL(x)  (digitalWrite(compr_cntrl_pin, x))
 #define COMPRSSR_CNTRL(x)           (do_control(COMPRESSOR_CONTROL, x))
 
 
@@ -235,6 +227,8 @@
 
 #define BUZZ_ON             (0) 
 #define BUZZ_OFF            (1) 
+
+
 
 
 extern volatile unsigned long systemtick_msecs;

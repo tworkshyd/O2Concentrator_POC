@@ -60,26 +60,27 @@ void ads_init (void)  {
 
 void test_ads1115 (void)  {
   
-  ADS.setGain(0);
+    ADS.setGain(0);
+    
+    while (1)
+    {
 
-  while (1)
-  {
-
-    int16_t val_0 = ADS.readADC(0);  
-    int16_t val_1 = ADS.readADC(1);  
-    int16_t val_2 = ADS.readADC(2);  
-    int16_t val_3 = ADS.readADC(3);  
+        int16_t val_0 = ADS.readADC(0);  
+        int16_t val_1 = ADS.readADC(1);  
+        int16_t val_2 = ADS.readADC(2);  
+        int16_t val_3 = ADS.readADC(3);  
+        
+        float f = ADS.toVoltage(1);  // voltage factor
+        
+        Serial.print("\tAnalog0: "); Serial.print(val_0); Serial.print('\t'); Serial.println(val_0 * f, 3);
+        Serial.print("\tAnalog1: "); Serial.print(val_1); Serial.print('\t'); Serial.println(val_1 * f, 3);
+        Serial.print("\tAnalog2: "); Serial.print(val_2); Serial.print('\t'); Serial.println(val_2 * f, 3);
+        Serial.print("\tAnalog3: "); Serial.print(val_3); Serial.print('\t'); Serial.println(val_3 * f, 3);
+        Serial.println();
+        
+        delay(1000);
+    }
   
-    float f = ADS.toVoltage(1);  // voltage factor
-  
-    Serial.print("\tAnalog0: "); Serial.print(val_0); Serial.print('\t'); Serial.println(val_0 * f, 3);
-    Serial.print("\tAnalog1: "); Serial.print(val_1); Serial.print('\t'); Serial.println(val_1 * f, 3);
-    Serial.print("\tAnalog2: "); Serial.print(val_2); Serial.print('\t'); Serial.println(val_2 * f, 3);
-    Serial.print("\tAnalog3: "); Serial.print(val_3); Serial.print('\t'); Serial.println(val_3 * f, 3);
-    Serial.println();
-  
-    delay(1000);
-  }
 }
 
 
@@ -90,8 +91,7 @@ void test_ads1115 (void)  {
     convert from byte to float
     use in algo to calc m and c values.
 */
-int sensor_zero_calibration (void)
-{
+int sensor_zero_calibration (void)  {
 
     float x = 0, y = 0;
     float sigmaX = 0, sigmaY = 0;
@@ -104,7 +104,6 @@ int sensor_zero_calibration (void)
 
     for (int index = 0; index < NUM_OF_SAMPLES_O2; index++)
     {
-
         y = y_samples[index];
         x = x_samples[index];
         
@@ -116,25 +115,21 @@ int sensor_zero_calibration (void)
         DBG_PRINT ("      x : "); DBG_PRINTLN (x);        DBG_PRINT ("      y : "); DBG_PRINTLN (y);
         DBG_PRINT (" sigmaX : "); DBG_PRINTLN (sigmaX);   DBG_PRINT (" sigmaY : "); DBG_PRINTLN (sigmaY);
         DBG_PRINT ("sigmaXX : "); DBG_PRINTLN (sigmaXX);  DBG_PRINT ("sigmaXY : "); DBG_PRINTLN (sigmaXY);
-        
     }
     
     denominator = (NUM_OF_SAMPLES_O2 * sigmaXX) - (sigmaX * sigmaX);
     DBG_PRINT ("dnmnatr : "); DBG_PRINTLN (denominator);
 
-    
     if (denominator != 0) {      
         o2_slope = ((NUM_OF_SAMPLES_O2 * sigmaXY) - (sigmaX * sigmaY)) / denominator;
         o2_const_val = ((sigmaY * sigmaXX) - (sigmaX * sigmaXY)) / denominator;
         result = SUCCESS;
-        
     } 
     else {      
         o2_slope = 0;
         o2_const_val = 0;
         result =  ERROR_SENSOR_CALIBRATION;
         DBG_PRINTLN ("Error: O2 calibration failed!!");
-
     }
 
     DBG_PRINTLN ("");
@@ -160,8 +155,8 @@ void o2_sensor_scan (void)  {
     // DBG_PRINTLN (m_raw_voltage, 4);
 
     // temp hard coding till calib menu is ready
-    // o2_slope = 0.02065262;  // 48.42; // 0.166;
-    // o2_const_val = -4.68815;  //227; //1.3228;
+    // o2_slope     = 0.02065262;       //48.42;    //0.166;
+    // o2_const_val = -4.68815;         //227;      //1.3228;
     
     o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
 

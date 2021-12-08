@@ -25,6 +25,7 @@
 #define   EEPROM_TEST_AREA_START          (extEEPROM_START_ADDRESS)
 #define   EEPROM_TEST_AREA_SIZE           (extEEPROM_PAGE_SIZE_IN_BYTES)
 #define   EEPROM_TEST_AREA_END            (EEPROM_TEST_AREA_START + EEPROM_TEST_AREA_SIZE)
+#define   EEPROM_TEST_BUFFER_SIZE         (45)
 
 #define   EEPROM_RECORD_START             (EEPROM_TEST_AREA_END)
 #define   EEPROM_RECORD_AREA_SIZE         (sizeof(EEP_RECORD_T))
@@ -50,7 +51,7 @@ typedef struct eep_record_t {
 
 
 // variable declarations
-extern bool f_eeprom_working;
+extern bool          f_eeprom_working;
 extern EEP_RECORD_T  eep_record;
 extern EEP_RECORD_T  eep_record_default;
 
@@ -80,6 +81,13 @@ extern float           o2_concentration;
 extern float           output_pressure;
 extern float           prev_o2_concentration;
 extern float           prev_output_pressure;
+extern volatile int16_t  pressure_raw_adc_count;
+extern volatile float    pressureZero;
+extern volatile float    pressureMax;
+extern volatile float    pressuretransducermaxPSI;
+extern volatile float    pressure_raw_m_voltage;
+
+
 
 extern unsigned int    current_run_time_secs;
 extern unsigned int    prev_current_run_time_secs;

@@ -3,18 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Atmel Studio Solution File, Format Version 11.00
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "tworks_o2_cons", "tworks_o2_cons.cppproj", "{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}"
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "tworks_o2_cons", "tworks_o2_cons.cppproj", "{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|ARM = Debug|ARM
-		Release|ARM = Release|ARM
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Debug|ARM.ActiveCfg = Debug|ARM
-		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Debug|ARM.Build.0 = Debug|ARM
-		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Release|ARM.ActiveCfg = Release|ARM
-		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Release|ARM.Build.0 = Release|ARM
+		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Debug|AVR.ActiveCfg = Debug|AVR
+		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Debug|AVR.Build.0 = Debug|AVR
+		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Release|AVR.ActiveCfg = Release|AVR
+		{7EBE2AF8-E602-485A-9F78-D8DCF792A28D}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

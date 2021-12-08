@@ -16,7 +16,9 @@ void lcd_clear_buf (char * bufp) {
 
     if (bufp) {
         for (i = 0; i < LCD_COLS; i++)
+        {
             bufp[i] = ' ';
+        }
     }
     bufp[i] = '\0';
 }
