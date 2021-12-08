@@ -68,7 +68,7 @@ void tempr_sensor_scan (void)  {
     // Resistance to Temperature
     tempr_value_2 = (Rx / R0 - 1.0) / alpha;     // from Rx = R0 (1 + alpha * X)
     
-    // Uncommect to convet celsius to fehrenheit
+    // Uncomment to convert Celsius to Fahrenheits
     // tempr_value_2 = tempr_value_2 * 1.8 + 32; 
     
     // Serial.println(tempr_value_2);
@@ -78,27 +78,6 @@ void tempr_sensor_scan (void)  {
     // DBG_PRINTLN ();
     
     
-/*
-    // temp hard coding till calib menu is ready
-    // o2_slope = 0.02065262;  // 48.42; // 0.166;
-    // o2_const_val = -4.68815;  //227; //1.3228;
-    
-    o2_concentration = ((m_raw_voltage * o2_slope) + o2_const_val);
-
-
-
-    #if (CAPP_AT_95_O2 == 1)
-    // capping O2C value.. to restrict it below.. 95% of FiO2   
-    if (o2_concentration > O2C_CAP_VALUE_MAX) {
-        o2_concentration = O2C_CAP_VALUE_MAX;
-        DBG_PRINT(", Capping limit hit-->");
-    }  
-    #endif
-
-    
-    DBG_PRINT   ("o2_concentration : ");
-    DBG_PRINTLN (o2_concentration, 4);
-*/
 
 }
 

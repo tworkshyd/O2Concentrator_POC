@@ -165,8 +165,12 @@ void o2_sensor_scan (void)  {
     #if (CAPP_AT_95_O2 == 1)
     // capping O2C value.. to restrict it below.. 95% of FiO2   
     if (o2_concentration > O2C_CAP_VALUE_MAX) {
+		DBG_PRINTLN ();
+		DBG_PRINT   ("FiO2 value : ");
+		DBG_PRINT   (o2_concentration);
         o2_concentration = O2C_CAP_VALUE_MAX;
-        DBG_PRINT(", Capping limit hit-->");
+        DBG_PRINT   (" exceeding capping limit : ");
+		DBG_PRINTLN (o2_concentration);
     }  
     #endif
 

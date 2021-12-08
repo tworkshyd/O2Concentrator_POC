@@ -1,7 +1,6 @@
-
+// display.ino
 
 #include "display.h"
-//#include "LedControl.h"
 
 
 char     lcd_temp_string[LCD_COLS + 1];
@@ -104,8 +103,6 @@ void update_neo_pixel_leds (void)    {
                 // 1. clear all of them using clear command..
                 neo_led_data_send (NEO_PXL_ALL_OFF);
                 bit_no = 1;
-                //DBG_PRINT ("clearing LEDs, bit_no : ");
-                //DBG_PRINTLN (bit_no, BIN);
                 state++;
             }
             else {
@@ -119,8 +116,6 @@ void update_neo_pixel_leds (void)    {
             {               
                 if (neo_pixel_leds_byte  &  tb_bit8_led_mask[bit_no])    {
                     neo_led_data_send (bit_no);
-                    //DBG_PRINT ("bit_no : ");
-                    //DBG_PRINTLN (bit_no, BIN);
                     bit_no++;  
                     break;
                 }  
@@ -342,8 +337,6 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
     digit5    = mins % 10;
 
     
-
-    
     // digit 1
     set7segmentDigit (4, digit2, false);
     // digit 2
@@ -402,69 +395,3 @@ void    display_task (void) {
 
 
 ////// scratch pad ////////////////////////////
-
-/*
- 
- This method will display the characters for the
- word "Arduino" one after the other on digit 0. 
-/*
-void display_banner (void) {
-
-    //
-     * a = 'a'      j = 
-     * b =          k = 
-     * c =          l = 
-     * d = 'd'      m =
-     * e =          n = 
-     * f =
-     * g =
-     * h =
-     * i = 
-     
-    
-    lc.setChar(0,0,'a',false);
-    delay(delaytime);
-    lc.setRow(0,0,0x05);
-    delay(delaytime);
-    lc.setChar(0,0,'d',false);
-    delay(delaytime);
-    lc.setRow(0,0,0x1c);
-    delay(delaytime);
-    lc.setRow(0,0,B00010000);
-    delay(delaytime);
-    lc.setRow(0,0,0x15);
-    delay(delaytime);
-    lc.setRow(0,0,0x1D);
-    delay(delaytime);
-    lc.clearDisplay(0);
-    delay(delaytime);
-    
-} 
- */
-
-// ver1: Display 2.1 digits for O2 concentration
-//void display_o2 (float o2value) {
-//
-//    uint16_t     int_o2value;
-//    uint8_t     decimal_digit;
-//    uint8_t     unit_digit;
-//    uint8_t     tens_digit;
-//
-//    int_o2value   = (uint16_t)(o2value * 10);
-//    decimal_digit = int_o2value % 10;
-//    int_o2value   = int_o2value / 10;
-//    unit_digit    = int_o2value % 10;
-//    int_o2value   = int_o2value / 10;
-//    
-//    tens_digit    = int_o2value % 10;
-//    
-//    //  2.1 digit display for concentration
-//    set7segmentDigit (1, tens_digit, false);
-//    //set7segmentDigit (2, BLANK_DIGIT);    
-//    set7segmentDigit (2, unit_digit, true);
-//    set7segmentDigit (3, decimal_digit, false);
-//
-//    
-//}
-
-    

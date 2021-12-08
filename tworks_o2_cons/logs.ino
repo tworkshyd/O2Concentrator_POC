@@ -160,6 +160,7 @@ void alarms_task (void)    {
 		}			
 	}
 
+
     // Check for alarms, then set / clear them.
     
     // 1. Low O2 concentration alarm
@@ -174,8 +175,6 @@ void alarms_task (void)    {
             }
             else {
                 alarms_byte |= O2C_ALARM_BIT;
-                //DBG_PRINT  ("pt1 alarms_byte : ");
-                //DBG_PRINTLN (alarms_byte);
                 neo_pixel_control (LOW_O2C_ALARM,  ON_LED);
                 f_start_alarm_beeps = 1;
 				DBG_PRINTLN ();
@@ -200,9 +199,7 @@ void alarms_task (void)    {
         // nop
     }
 
-//// temp for debugging - must be removed before build
-//output_pressure = 5;
-    
+
     // 2. Low Pressure alarm
     if ( f_system_running )  {
         if ( (output_pressure < (PRESSURE_VALUE_LOW_THRHLD - 0.5)) )   {
@@ -214,8 +211,6 @@ void alarms_task (void)    {
             }
             else {
                 alarms_byte |= PRESSURE_DROP_ALARM_BIT;        
-                //DBG_PRINT  ("pt2 alarms_byte : ");
-                //DBG_PRINTLN (alarms_byte);
                 neo_pixel_control (LOW_PRESSURE_ALARM, ON_LED);  
                 f_start_alarm_beeps = 1;
 				DBG_PRINTLN ();
@@ -242,8 +237,6 @@ void alarms_task (void)    {
         // nop
     }
 
-    //// temp for debugging - must be removed before build
-    //tempr_value = 115;
     
     // 3. High Temperature alarm
     if ( f_system_running )  {
@@ -299,3 +292,5 @@ void alarms_task (void)    {
 
     
 }
+
+
