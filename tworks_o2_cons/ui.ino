@@ -32,7 +32,6 @@ void button_check (void)  {
         if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
             start_switch_pressed = true; 
             start_switch_dbnc_dly = 0;
-            //DBG_PRINT  ("Start_switch Pressed");
         }
     }
     // 2. Start Switch Release detection
@@ -41,7 +40,6 @@ void button_check (void)  {
         if (start_switch_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
             start_switch_pressed = false;
             start_switch_dbnc_dly = 0;
-            //DBG_PRINT  ("Start_switch RELEASED");
         }
 
     }
@@ -56,21 +54,10 @@ void button_check (void)  {
         if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
             alarm_clear_button_pressed = true;
             alarm_clear_bttn_dbnc_dly = 0;
-	    DBG_PRINT   (__FILE__);
-	    DBG_PRINTLN (" : Alarm Clear Button Pressed..");
-	}
+			DBG_PRINT   (__FILE__);
+			DBG_PRINTLN (" : Alarm Clear Button Pressed..");
+		}
     }
-//    // 4. Alarm Clear Button Release detection
-//    else if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_RELEASED) {   // press detection
-//        alarm_clear_bttn_dbnc_dly++;
-//        if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
-//            alarm_clear_button_pressed = false;
-//            alarm_clear_bttn_dbnc_dly = 0;
-//            DBG_PRINTLN  ("Alarm Clear Button RELEASED");
-//        }
-//        DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
-//        DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
-//    }
     else {
         // nop
     }
@@ -159,6 +146,7 @@ void ui_task_main (void)    {
             if ( start_switch_pressed == true && !f_critical_alarms )  {
                 f_system_running = true;
 
+                DBG_PRINTLN();
                 DBG_PRINTLN("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
                 lcd.print("Start Button Pressed");
@@ -208,9 +196,16 @@ void ui_task_main (void)    {
             current_run_time_secs = 0;
             save_record ();
             
-            DBG_PRINTLN("Stop Button Pressed!");
-            lcd.setCursor(0, 3);
-            lcd.print("Stop Button Pressed ");
+			if (!f_critical_alarms)	{
+				DBG_PRINTLN("Stop Button Pressed!");
+				lcd.setCursor(0, 3);
+				lcd.print("Stop Button Pressed ");
+			}
+			else {
+				DBG_PRINTLN("Critical Alarm(s) triggered..!!!");
+				lcd.setCursor(0, 3);
+				lcd.print("Alarm Triggered..!!!");
+			}
             COMPRSSR_CNTRL (COMPRSSR_OFF);
             beep_for (SYS_OFF_BEEP);   // msecs
 
