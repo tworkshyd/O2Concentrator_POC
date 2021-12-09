@@ -27,4 +27,5 @@
 #include "o2_sensor.ino"
 #include "platform.ino"
 #include "pressure_sensor.ino"
+#include "tempr_sensor.ino"
 #include "ui.ino"

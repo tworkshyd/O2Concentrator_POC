@@ -77,7 +77,7 @@ void new_delay_msecs (unsigned int  time_delay) {
     unsigned long int   time_tag;
 
 
-    DBG_PRINT ("/");
+    //DBG_PRINT ("/");
     time_tag = systemtick_msecs;
     while (time_elapsed (time_tag) < time_delay)
     {
@@ -94,47 +94,43 @@ void platform_init (void) {
     lcd.begin(LCD_COLS, LCD_ROWS);
 
     // pin mode setting
-    pinMode(RLY_1,          OUTPUT);
-    pinMode(RLY_2,          OUTPUT);
-    pinMode(RLY_3,          OUTPUT);
-    pinMode(RLY_4,          OUTPUT);
-    
-    pinMode(DDIR,           OUTPUT);
-    digitalWrite(DDIR,      HIGH);
+    pinMode(RLY_1,            OUTPUT);
+    pinMode(RLY_2,            OUTPUT);
+    pinMode(RLY_3,            OUTPUT);
+    pinMode(RLY_4,            OUTPUT);   
+    pinMode(DDIR,             OUTPUT);
+    digitalWrite(DDIR,        HIGH);
 
-    pinMode(buzzr_cntrl_pin, OUTPUT);
-    pinMode(compr_cntrl_pin, OUTPUT);
-    pinMode(startSwitchPin,  INPUT );
-    pinMode(startSwitchPin,  INPUT_PULLUP);
+    pinMode(buzzr_cntrl_pin,  OUTPUT);
+    pinMode(compr_cntrl_pin,  OUTPUT);
+    pinMode(startSwitchPin,   INPUT );
+    pinMode(startSwitchPin,   INPUT_PULLUP);
     pinMode(alarmClearButton, INPUT );
     pinMode(alarmClearButton, INPUT_PULLUP);
     
-
     // default pin-state
-    /* 
-        digitalWrite(RLY_1,     HIGH);
-        digitalWrite(RLY_2,     HIGH);
-        digitalWrite(RLY_3,     HIGH);
-        digitalWrite(RLY_4,     HIGH);
-    */
-
-    digitalWrite(buzzr_cntrl_pin, LOW);
-    digitalWrite(compr_cntrl_pin, LOW );
-
+    digitalWrite(buzzr_cntrl_pin,   LOW);
+    digitalWrite(compr_cntrl_pin,   LOW );
 
     // Serial 7 segment interface
-    pinMode(dataPin_7segment,        OUTPUT);
-    pinMode(clckPin_7segment,        OUTPUT);
-    pinMode(loadPin_7segment,        OUTPUT);
+    pinMode(dataPin_7segment,       OUTPUT);
+    pinMode(clckPin_7segment,       OUTPUT);
+    pinMode(loadPin_7segment,       OUTPUT);
 
-    digitalWrite(dataPin_7segment,   LOW );
-    digitalWrite(clckPin_7segment,   LOW );
-    digitalWrite(loadPin_7segment,   LOW );
+    digitalWrite(dataPin_7segment,  LOW );
+    digitalWrite(clckPin_7segment,  LOW );
+    digitalWrite(loadPin_7segment,  LOW );
 
+    // neo-pixel leds interface
+    pinMode(miso_neo_data1,         OUTPUT);
+    pinMode(pd6_neo_data2,          OUTPUT);
+    pinMode(pd7_neo_data3,          OUTPUT);
+
+    digitalWrite(miso_neo_data1,    LOW );
+    digitalWrite(pd6_neo_data2,     LOW );
+    digitalWrite(pd7_neo_data3,     LOW );
 
     DBG_PRINTLN("GPIO init done..");
-
-    
 
 }
 
@@ -142,8 +138,8 @@ void platform_init (void) {
 bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
 
 
-    DBG_PRINT ("do_id : ");
-    DBG_PRINTLN (do_id);
+    // DBG_PRINT ("do_id : ");
+    // DBG_PRINTLN (do_id);
 
     switch (do_id)
     {
@@ -184,8 +180,8 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
     // temp
     // Serial.println(bit_value); Serial.println(do_id); Serial.println(do_byte);
 
-    DBG_PRINT ("do_byte : ");
-    DBG_PRINTLN(do_byte);
+    // DBG_PRINT ("do_byte : ");
+    // DBG_PRINTLN(do_byte);
 
 }
 
@@ -216,29 +212,31 @@ bool eeprom_init (void) {
 
     // temp
     DBG_PRINTLN();
-    DBG_PRINT ("extEEPROM_START_ADDRESS : ");
+    DBG_PRINT ("extEEPROM_START_ADDRESS      : ");
     DBG_PRINTLN(extEEPROM_START_ADDRESS);
-    DBG_PRINT ("extEEPROM_SIZE_IN_BITS : ");
+    DBG_PRINT ("extEEPROM_SIZE_IN_BITS       : ");
     DBG_PRINTLN(extEEPROM_SIZE_IN_BITS);
     DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES : ");
     DBG_PRINTLN(extEEPROM_PAGE_SIZE_IN_BYTES);
-    DBG_PRINT ("extEEPROM_SIZE_IN_BYTES : ");
+    DBG_PRINT ("extEEPROM_SIZE_IN_BYTES      : ");
     DBG_PRINTLN(extEEPROM_SIZE_IN_BYTES);    
-    DBG_PRINT ("extEEPROM_LAST_ADDRESS : ");
+    DBG_PRINT ("extEEPROM_LAST_ADDRESS       : ");
     DBG_PRINTLN(extEEPROM_LAST_ADDRESS);
 
-    DBG_PRINT ("EEPROM_TEST_AREA_START : ");
+    DBG_PRINTLN();
+    DBG_PRINT ("EEPROM_TEST_AREA_START       : ");
     DBG_PRINTLN(EEPROM_TEST_AREA_START);
-    DBG_PRINT ("EEPROM_TEST_AREA_SIZE : ");
+    DBG_PRINT ("EEPROM_TEST_AREA_SIZE        : ");
     DBG_PRINTLN(EEPROM_TEST_AREA_SIZE);    
-    DBG_PRINT ("EEPROM_TEST_AREA_END : ");
+    DBG_PRINT ("EEPROM_TEST_AREA_END         : ");
     DBG_PRINTLN(EEPROM_TEST_AREA_END);
 
-    DBG_PRINT ("EEPROM_RECORD_START : ");
+    DBG_PRINTLN();
+    DBG_PRINT ("EEPROM_RECORD_START          : ");
     DBG_PRINTLN(EEPROM_RECORD_START);
-    DBG_PRINT ("EEPROM_RECORD_AREA_SIZE : ");
+    DBG_PRINT ("EEPROM_RECORD_AREA_SIZE      : ");
     DBG_PRINTLN(EEPROM_RECORD_AREA_SIZE);    
-    DBG_PRINT ("EEPROM_RECORD_AREA_END : ");
+    DBG_PRINT ("EEPROM_RECORD_AREA_END       : ");
     DBG_PRINTLN(EEPROM_RECORD_AREA_END);
 
     return true;
@@ -254,18 +252,10 @@ void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
     }
 
     offset_bytes = address % extEEPROM_PAGE_SIZE_IN_BYTES;
-    partial_len  = extEEPROM_PAGE_SIZE_IN_BYTES - offset_bytes;
-//    DBG_PRINT ("extEEPROM_PAGE_SIZE_IN_BYTES :");   
-//    DBG_PRINTLN (extEEPROM_PAGE_SIZE_IN_BYTES);   
-//    DBG_PRINT ("offset_bytes :");   
-//    DBG_PRINTLN (offset_bytes);   
-//    DBG_PRINT ("partial_len :");   
-//    DBG_PRINTLN (partial_len);   
-
+    partial_len  = extEEPROM_PAGE_SIZE_IN_BYTES - offset_bytes;  
 
     if (partial_len > n_bytes) {       
         partial_len = n_bytes;
-
     }
 
     if (partial_len)  {
@@ -327,7 +317,7 @@ bool compare_buff (byte * buff_a, byte * buff_b, int  len)  {
     return true;
 }
 
-#define EEPROM_TEST_BUFFER_SIZE  (45)
+
     
 void eeptest (void) {
     

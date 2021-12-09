@@ -34,11 +34,23 @@ bool            f_sec_logs_task;
 bool            f_sec_change_ui_task;
 bool            f_sec_change_o2_task;
 bool            f_sec_change_sensor_task;
+bool            f_sec_change_alarm_task;
+
+
+// alarms
+uint8_t         alarms_byte;     // can hold upto 8 alarms, 1 bit for each
+
 
 float           o2_concentration = 93.50;
 float           prev_o2_concentration;
-float           output_pressure  = 25.03;
+float           output_pressure;//  = 25.03;
 float           prev_output_pressure  = 25;
+
+volatile int16_t  pressure_raw_adc_count;
+volatile float    pressure_raw_m_voltage;
+volatile float pressureZero = 3969.0;				//102.4; //analog reading of pressure transducer at 0psi
+volatile float pressureMax  = 361890.0;				//921.6; //analog reading of pressure transducer at 100psi
+volatile float pressuretransducermaxPSI = 0.2 * 1000000;	//36000.0;	//100; //psi value of transducer being used
 
 unsigned int    current_run_time_secs;
 unsigned int    prev_current_run_time_secs;
@@ -62,6 +74,10 @@ volatile float    m_raw_voltage;
 
 uint8_t   start_switch_pressed;
 uint8_t   alarm_clear_button_pressed;
+
+unsigned char   f_display_crn;
+uint8_t         neo_pixel_leds_byte;   // holds led light-up info, 1 - on, 0 - off from LSB as alarm-1
+uint8_t         prev_neo_pixel_leds;
 
 void db_init (void) {
 
