@@ -4,6 +4,7 @@
 
 //#include <UniversalTimer.h>
 #include <extEEPROM.h>
+#include "tempr_sensor.h"
 #include "o2_sensor.h"
 #include "platform.h"
 #include "o2_cons.h"
@@ -16,7 +17,7 @@
 // Sytem tick time
 #define TICK_time (10)
 
-extEEPROM eep(kbits_64, 1, 8);         //device size, number of devices, page size
+extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
 
 unsigned char cycle;
 unsigned char f_crn;
@@ -30,21 +31,20 @@ void o2_main_task (void);
 
 void setup (void) {
 
+    // Serial port initialization
     Serial.begin (115200);
-    DBG_PRINTLN ();
+    
     DBG_PRINTLN ();
     DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
-    DBG_PRINTLN ("Oxygen Concentrator\n");
+    DBG_PRINTLN ("Oxygen Concentrator Project\n");
     DBG_PRINTLN ("Harware Board Revision : " HW_REVISION_TXT);
     DBG_PRINTLN ("Firmware Version       : " FW_VERSION_TXT);
     DBG_PRINT   ("Build Time             : ");
     DBG_PRINT   (__DATE__);
     DBG_PRINT   (", ");
     DBG_PRINTLN (__TIME__);
+    DBG_PRINTLN ();
 
-    
-    DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
-    DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
     platform_init ();
     ads_init ();
     db_init ();
@@ -59,7 +59,7 @@ void setup (void) {
         DBG_PRINTLN ("EEprom retrieved record...");
         DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
         DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
-        DBG_PRINT   ("eep_record.total_run_time_secs   : ");
+        DBG_PRINT   ("eep_record.total_run_time_secs      : ");
         DBG_PRINTLN (eep_record.total_run_time_secs);
 
         // update system variables
@@ -95,13 +95,12 @@ void setup (void) {
     
     o2_cons_init ();
     init_7segments ();
-	  blank_7segments ();
-       
-    // display_o2 (00.0);
-    // display_total_run_hours (0);    
+    blank_7segments ();
+           
     ui_init ();
 
 }
+
 
 
 void loop (void) {
@@ -115,12 +114,12 @@ void loop (void) {
     else if (f_10msec) {
         f_10msec = 0;
         // 10 milli second tasks go here..
-
+        
     }
     else if (f_100msec) {
         f_100msec = 0;
         // 100 milli second tasks go here..
-
+        update_neo_pixel_leds ();      
     }
     else if (f_1sec) {
         f_1sec = 0;
@@ -129,13 +128,17 @@ void loop (void) {
         f_sec_change_ui_task = 1;
         f_sec_change_o2_task = 1;
         f_sec_change_sensor_task = 1;
+        f_sec_change_alarm_task = 1;
 
         o2_sensor_scan ();
-        // read_pressure ();
-    		if (f_system_running)	{
-    			display_o2 (o2_concentration);  
-    		}
-        DBG_PRINT (".");
+        tempr_sensor_scan ();
+        read_pressure ();
+    
+		if (f_system_running)	{
+			display_o2 (o2_concentration);  
+		}
+       
+        // DBG_PRINT (".");
     }
     else if (f_1min) {
         f_1min = 0;
@@ -157,26 +160,13 @@ void loop (void) {
         o2_main_task ();
         ui_task_main ();
         logs_task ();
-
-
-  		if (f_system_running)	{
-  			display_o2 (o2_concentration);
-  			if (f_run_hours == 1) {
-  				int secs = ( current_run_time_secs %  60);
-  				int mins = ((current_run_time_secs % (60 * 60)) / 60);
-  				int hrs  = ( current_run_time_secs / (60 * 60));
-  				display_current_run_hours(hrs, mins);
-  			}
-  			else  {
-  				int hrs = (total_run_time_secs / (60 * 60));
-  				display_total_run_hours(hrs);
-  			}
-  		}
+        alarms_task ();
+        display_task ();
+        
     }
-
-	  init_7segments ();
-
-
+    
+	init_7segments ();
+  
 }
 
 
@@ -187,9 +177,9 @@ void o2_cons_init (void)    {
     sensor_zero_calibration ();
 
     // temp
-//    DBG_PRINTLN ("Warning..: Hard coding slope and constant for Fio2");
-//    o2_slope = 0.1734;
-//    o2_const_val = 0.9393;
+    //    DBG_PRINTLN ("Warning..: Hard coding slope and constant for Fio2");
+    //    o2_slope = 0.1734;
+    //    o2_const_val = 0.9393;
     
     DBG_PRINTLN ("");
     DBG_PRINT   ("o2_slope : ");
@@ -199,13 +189,12 @@ void o2_cons_init (void)    {
 
     //  SET DELAY TIMING HERE
     //**************************************************************************
-
-/*
-    // Following timing settings used with 3 valves (2  - 3/2, 1 - 2/2) circuit; 6 step cycle;
-    Production_Delay    = 5000;
-    Flush_Delay         = 400;
-    PreCharge_Delay     = 700;
-*/
+    /*
+        // Following timing settings used with 3 valves (2  - 3/2, 1 - 2/2) circuit; 6 step cycle;
+        Production_Delay    = 5000;
+        Flush_Delay         = 400;
+        PreCharge_Delay     = 700;
+    */
 
     // Following timing settings used with 2 valves, 1 orifice circuit; 4 step cycle;
     Production_Delay    = 5400;
@@ -213,12 +202,8 @@ void o2_cons_init (void)    {
 
 
     // STARTUP PURGE
-    //digitalWrite(Sieve_A_Valve_Z1,      OPEN_VALVE);
     do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);
-    //digitalWrite(Sieve_B_Valve_Z2,      OPEN_VALVE);
     do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
-    //digitalWrite(PreCharge_Valve_BCKF,  OPEN_VALVE);
-    // do_control (SIEVE_FLUSH_VLV_CNTRL, CLOSE_VALVE);
     do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
     new_delay_msecs (500);
 
@@ -249,7 +234,6 @@ void o2_main_task (void)    {
         f_sec_change_o2_task = 0;
         current_run_time_secs++;
         total_run_time_secs++;
-
 
         // display run hours, 45 seconds current run hours, 15 seconds total runhours
         int secs = ( current_run_time_secs %  60);
@@ -287,7 +271,7 @@ void o2_main_task (void)    {
     // else
     time_tag = systemtick_msecs;
 
-    DBG_PRINTLN ("calling PSA logic..");
+    //DBG_PRINTLN ("calling PSA logic..");
 
     //tworks3_PSA_logic();
     tworks2_PSA_logic();
@@ -296,10 +280,7 @@ void o2_main_task (void)    {
     if (nb_delay != prev_nb_delay)  {
         prev_nb_delay = nb_delay;
 
-        DBG_PRINT ("nb_delay : ");
-        DBG_PRINTLN (nb_delay);
     }
-    
 
 }
 
@@ -376,11 +357,8 @@ void tworks3_PSA_logic (void)  {
 
 void tworks2_values_to_default_postion (void)  {
 
-
-    //**************************************************************************
     do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
     do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE); 
-
 
 }
 
@@ -432,3 +410,31 @@ void tworks2_PSA_logic (void)  {
     }
 
 }
+
+
+
+
+
+// eof -----------------------
+/*
+ *         if (f_run_hours == 1) {
+            DBG_PRINTLN("pt.1........");
+            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME, ON_LED);  
+            delay(300);
+            DBG_PRINTLN("............");
+            neo_pixel_control (NEO_PXL_CURR_RUN_TIME,  OFF_LED);             
+            DBG_PRINTLN("............");
+        }
+        else  {
+            DBG_PRINTLN("pt.2------------");
+            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME, ON_LED);  
+            delay(300);
+            DBG_PRINTLN("----------------");
+            
+            neo_pixel_control (NEO_PXL_CURR_RUN_TIME,  OFF_LED);  
+            DBG_PRINTLN("----------------");
+        }     
+
+
+        
+ */

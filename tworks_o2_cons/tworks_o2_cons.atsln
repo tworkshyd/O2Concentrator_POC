@@ -11,10 +11,8 @@ Global
 		Release|ARM = Release|ARM
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Debug|ARM.ActiveCfg = Debug|ARM
-		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Debug|ARM.Build.0 = Debug|ARM
-		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Release|ARM.ActiveCfg = Release|ARM
-		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Release|ARM.Build.0 = Release|ARM
+		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Debug|ARM.ActiveCfg = Debug|AVR
+		{C3AE5B9D-28E8-4945-A9CA-1A6F5275AD32}.Release|ARM.ActiveCfg = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
