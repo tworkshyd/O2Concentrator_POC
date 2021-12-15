@@ -239,8 +239,20 @@ void alarms_task (void)    {
 
     
     // 3. High Temperature alarm
+	// Note: Practically observed that if temperature sensor is not connected the temperature value is reaching 150.0 constant
+	//		Hence taking this as a condition for checking temperature sensor absence and discarding its value if condition check
+	float temp_tempr_value_1 = tempr_value_1;
+	float temp_tempr_value_2 = tempr_value_2;
+	if (tempr_value_1 >= INVALID_TEMPERATURE_VALUE)	{
+		temp_tempr_value_1 = TEMPERATURE_HIGH_THRHLD - 1.0;		// just one deg. less to avoid alarm
+	}
+	if (tempr_value_2 >= INVALID_TEMPERATURE_VALUE)	{
+		temp_tempr_value_2 = TEMPERATURE_HIGH_THRHLD - 1.0;		// just one deg. less to avoid alarm
+	}
+	
     if ( f_system_running )  {
-        if (tempr_value_1 > TEMPERATURE_HIGH_THRHLD)   {
+	//if (tempr_value_1 > TEMPERATURE_HIGH_THRHLD)   {
+        if ( (temp_tempr_value_1 > TEMPERATURE_HIGH_THRHLD)	 ||  (temp_tempr_value_2 > TEMPERATURE_HIGH_THRHLD) )	{
             if (high_temperature_alarm_dly < TIME_DELAY_BEFORE_HIGH_TEMPR_ALARM_ASSERTION)  {
                 high_temperature_alarm_dly++;
 				DBG_PRINTLN ();
@@ -258,7 +270,8 @@ void alarms_task (void)    {
             }
         }
     
-		else if ( tempr_value_1 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
+// 		else if ( tempr_value_1 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
+		else if ( temp_tempr_value_1 < TEMPERATURE_HIGH_THRHLD  &&  temp_tempr_value_2 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
 			// clear alarm 
 			if (high_temperature_alarm_dly) {
 				high_temperature_alarm_dly--;
