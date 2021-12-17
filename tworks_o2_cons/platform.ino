@@ -142,6 +142,182 @@ void platform_init (void) {
 }
 
 
+void test_gpios (void) {
+
+// 	timer_init ();
+
+	// set up the LCD's number of columns and rows:
+	lcd.begin(LCD_COLS, LCD_ROWS);
+
+	DBG_PRINTLN("GPIO testing...");
+
+	// pin mode setting
+	pinMode (RLY_1,            OUTPUT);
+	DBG_PRINTLN ("RLY_1 = HIGH");
+	digitalWrite (RLY_1,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("RLY_1 = low");
+	digitalWrite (RLY_1,        LOW);
+	delay(1300);
+	
+	pinMode (RLY_2,            OUTPUT);
+	DBG_PRINTLN ("RLY_2 = HIGH");
+	digitalWrite (RLY_2,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("RLY_2 = low");
+	digitalWrite (RLY_2,        LOW);
+	delay(1300);
+
+	pinMode (RLY_3,            OUTPUT);
+	DBG_PRINTLN ("RLY_3 = HIGH");
+	digitalWrite (RLY_3,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("RLY_3 = low");
+	digitalWrite (RLY_3,        LOW);
+	delay(1300);
+
+	#if   (HW_REVISION == HW_REV_1_0)
+		pinMode (RLY_4,            OUTPUT);
+		DBG_PRINTLN ("RLY_4 = HIGH");
+		digitalWrite (RLY_4,        HIGH);
+		delay(1300);
+		DBG_PRINTLN ("RLY_4 = low");
+		digitalWrite (RLY_4,        LOW);
+		delay(1300);
+	#elif (HW_REVISION == HW_REV_2_0)
+		// nop
+	#else
+		// nop
+	#endif
+	
+	pinMode (DDIR,            OUTPUT);
+	DBG_PRINTLN ("DDIR = HIGH");
+	digitalWrite (DDIR,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("DDIR = low");
+	digitalWrite (DDIR,        LOW);
+	delay(1300);
+
+	DBG_PRINTLN ("setting to default state.");
+	DBG_PRINTLN ("DDIR = HIGH");
+	digitalWrite(DDIR,        HIGH);
+
+	pinMode (buzzr_cntrl_pin,  OUTPUT);
+	DBG_PRINTLN ("buzzr_cntrl_pin = HIGH");
+	digitalWrite (buzzr_cntrl_pin,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("buzzr_cntrl_pin = low");
+	digitalWrite (buzzr_cntrl_pin,        LOW);
+	delay(1300);
+
+	pinMode(compr_cntrl_pin,             OUTPUT);
+	DBG_PRINTLN ("compr_cntrl_pin = HIGH");
+	digitalWrite (compr_cntrl_pin,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("compr_cntrl_pin = low");
+	digitalWrite (compr_cntrl_pin,        LOW);
+	delay(1300);
+
+// 	pinMode(startSwitchPin,   INPUT );
+// 	pinMode(startSwitchPin,   INPUT_PULLUP);
+// 	DBG_PRINTLN ("startSwitchPin = HIGH");
+// 	digitalWrite (startSwitchPin,        HIGH);
+// 	delay(1300);
+// 	DBG_PRINTLN ("startSwitchPin = low");
+// 	digitalWrite (startSwitchPin,        LOW);
+// 	delay(1300);
+
+
+
+// 	pinMode(alarmClearButton, INPUT );
+// 	pinMode(alarmClearButton, INPUT_PULLUP);
+// 	DBG_PRINTLN ("alarmClearButton = HIGH");
+// 	digitalWrite (alarmClearButton,        HIGH);
+// 	delay(1300);
+// 	DBG_PRINTLN ("alarmClearButton = low");
+// 	digitalWrite (alarmClearButton,        LOW);
+// 	delay(1300);
+
+
+	
+	// default pin-state
+	digitalWrite(buzzr_cntrl_pin,   LOW);
+	DBG_PRINTLN ("buzzr_cntrl_pin = HIGH");
+	digitalWrite (buzzr_cntrl_pin,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("buzzr_cntrl_pin = low");
+	digitalWrite (buzzr_cntrl_pin,        LOW);
+	delay(1300);
+
+
+
+
+	// Serial 7 segment interface
+	pinMode(dataPin_7segment,       OUTPUT);
+	DBG_PRINTLN ("compr_cntrl_pin = HIGH");
+	digitalWrite (compr_cntrl_pin,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("compr_cntrl_pin = low");
+	digitalWrite (compr_cntrl_pin,        LOW);
+	delay(1300);
+
+	pinMode(clckPin_7segment,       OUTPUT);
+	DBG_PRINTLN ("compr_cntrl_pin = HIGH");
+	digitalWrite (compr_cntrl_pin,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("compr_cntrl_pin = low");
+	digitalWrite (compr_cntrl_pin,        LOW);
+	delay(1300);
+
+	pinMode(loadPin_7segment,       OUTPUT);
+	DBG_PRINTLN ("compr_cntrl_pin = HIGH");
+	digitalWrite (compr_cntrl_pin,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("compr_cntrl_pin = low");
+	digitalWrite (compr_cntrl_pin,        LOW);
+	delay(1300);
+
+
+	DBG_PRINTLN ("setting to default state...");
+	digitalWrite(dataPin_7segment,  LOW );
+	digitalWrite(clckPin_7segment,  LOW );
+	digitalWrite(loadPin_7segment,  LOW );
+
+	// neo-pixel leds interface
+	pinMode(miso_neo_data1,         OUTPUT);
+	DBG_PRINTLN ("miso_neo_data1 = HIGH");
+	digitalWrite (miso_neo_data1,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("miso_neo_data1 = low");
+	digitalWrite (miso_neo_data1,        LOW);
+	delay(1300);
+
+	pinMode(pd6_neo_data2,          OUTPUT);
+	DBG_PRINTLN ("pd6_neo_data2 = HIGH");
+	digitalWrite (pd6_neo_data2,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("pd6_neo_data2 = low");
+	digitalWrite (pd6_neo_data2,        LOW);
+	delay(1300);
+
+	pinMode(pd7_neo_data3,          OUTPUT);
+	DBG_PRINTLN ("pd7_neo_data3 = HIGH");
+	digitalWrite (pd7_neo_data3,        HIGH);
+	delay(1300);
+	DBG_PRINTLN ("pd7_neo_data3 = low");
+	digitalWrite (pd7_neo_data3,        LOW);
+	delay(1300);
+
+
+	DBG_PRINTLN ("setting to default state..");
+	digitalWrite(miso_neo_data1,    LOW );
+	digitalWrite(pd6_neo_data2,     LOW );
+	digitalWrite(pd7_neo_data3,     LOW );
+
+	DBG_PRINTLN("GPIO init done..");
+
+}
+
 bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
 
 

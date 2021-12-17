@@ -45,6 +45,11 @@ void setup (void) {
     DBG_PRINTLN (__TIME__);
     DBG_PRINTLN ();
 
+
+	//temp
+	//test_gpios ();
+
+
     platform_init ();
     ads_init ();
     db_init ();
@@ -98,6 +103,7 @@ void setup (void) {
     blank_7segments ();
            
     ui_init ();
+	
 
 }
 
