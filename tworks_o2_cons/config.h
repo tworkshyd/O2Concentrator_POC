@@ -5,27 +5,20 @@
 
 
 /* A. Hardware Boards --------------------------------------------------------
- 	Revision log -------------------------------------------------------------
- ---------------------------------------------------------------------------*/
-//  Rev 1.0 - having 3 boards(Display board, sensor board and control board), 
+//  Rev 1.0 - with 3 boards (Display board, sensor board and control board),
 //			with control board MCU Atmega1284, dated 21/05/2021
-#define HW_REV_1_0          (10)        // for rev 1.0
-#define HW_REV_1_0_TXT      "Rev 1.0"
-
-//  Rev 2.0 - having 2 boards(Display board, and control board, with control 
+//  Rev 2.0 - with 2 boards (Display board, and control board, with control
 //			board MCU Atmega1284, dated 25/10/2021
-#define HW_REV_2_0          (20)        // for rev 2.0
-#define HW_REV_2_0_TXT      "Rev 2.0"
-// ---------------------------------------------------------------------------
 
 /* ---------------------------------------------------------------------------
  * Select appropriate H/W board revision, as per the board used..
  * ------------------------------------------------------------------------ */
-#define		HW_REVISION          HW_REV_1_0
-#define		HW_REVISION_TXT      HW_REV_1_0_TXT
+//#define		HW_REVISION          HW_REV_1_0		// Rev 1.0 - with 3 boards
+#define			HW_REVISION          HW_REV_2_0		// Rev 2.0 - with 2 boards
+
+
+
 // ---------------------------------------------------------------------------
-
-
 
 
 /* B. Firmware version management --------------------------------------------

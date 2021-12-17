@@ -97,7 +97,14 @@ void platform_init (void) {
     pinMode(RLY_1,            OUTPUT);
     pinMode(RLY_2,            OUTPUT);
     pinMode(RLY_3,            OUTPUT);
-    pinMode(RLY_4,            OUTPUT);   
+#if   (HW_REVISION == HW_REV_1_0)
+    pinMode(RLY_4,            OUTPUT);
+#elif (HW_REVISION == HW_REV_2_0)
+	// nop
+#else
+	// nop
+#endif
+	
     pinMode(DDIR,             OUTPUT);
     digitalWrite(DDIR,        HIGH);
 
