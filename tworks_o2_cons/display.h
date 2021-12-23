@@ -80,6 +80,7 @@ extern char     lcd_temp_string[LCD_COLS + 1];
 void lcd_clear_buf		(char * bufp);
 void init_7segments		(void);
 void blank_7segments	(void);
+void test_7segments		(void);
 void display_banner		(void);
 void scrollDigits		(void);
 void test_7segments		(void);

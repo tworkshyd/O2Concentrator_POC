@@ -231,11 +231,14 @@ void  set7segmentDigit (int digit, int value, uint8_t  point) {
         point = 0;
     }
     
-    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
-    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     
     digitalWrite(loadPin_7segment,   LOW);
+	
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit);
+	
+    shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, digit_to_seg_value[value] | point);     	
+
     digitalWrite(loadPin_7segment,   HIGH);      
-       
+
 }
 
 void  set7segmentRegister (int reg, int value) {
@@ -256,24 +259,105 @@ void init_7segments (void) {
     
     set7segmentRegister (INTENSITY, 0x07);
     set7segmentRegister (SHUT_DOWN, 1);
- 
+	 
 }
 
 
 
 void blank_7segments (void) {
 	
-	set7segmentDigit (1, BLANK_DIGIT, false);
-	set7segmentDigit (2, BLANK_DIGIT, false);
-	set7segmentDigit (3, BLANK_DIGIT, false);
-	set7segmentDigit (4, BLANK_DIGIT, false);
-	set7segmentDigit (5, BLANK_DIGIT, false);
-// 	set7segmentDigit (6, BLANK_DIGIT, false);
-// 	set7segmentDigit (7, BLANK_DIGIT, false);
-// 	set7segmentDigit (8, BLANK_DIGIT, false);
+	set7segmentDigit (1, BLANK, false);
+	set7segmentDigit (2, BLANK, false);
+	set7segmentDigit (3, BLANK, false);
+	set7segmentDigit (4, BLANK, false);
+	set7segmentDigit (5, BLANK, false);
+// 	set7segmentDigit (6, BLANK, false);
+// 	set7segmentDigit (7, BLANK, false);
+// 	set7segmentDigit (8, BLANK, false);
 	
 }
 
+
+
+void test_7segments (void)	{
+	
+	int		dly = 3000;
+	
+	
+	DBG_PRINTLN ("test_7segments(). entry..");
+
+	// digit 1
+	set7segmentDigit (1, 0, true);
+	
+	DBG_PRINTLN ("1.");
+
+	// digit 2
+	set7segmentDigit (2, 1, false);
+	// digit 3
+	set7segmentDigit (3, 2, false); // to display '.'
+	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+	// digit 4
+	set7segmentDigit (4, 3, false);
+	// digit 5
+	set7segmentDigit (5, 4, false);
+	delay (dly);
+	
+	// digit 1
+	set7segmentDigit (1, 1, false);
+	// digit 2
+	set7segmentDigit (2, 2, true);
+	// digit 3
+	set7segmentDigit (3, 3, false); // to display '.'
+	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+	// digit 4
+	set7segmentDigit (4, 4, false);
+	// digit 5
+	set7segmentDigit (5, 5, false);
+	delay (dly);
+		
+	// digit 1
+	set7segmentDigit (1, 6, false);
+	// digit 2
+	set7segmentDigit (2, 7, false);
+	// digit 3
+	set7segmentDigit (3, 8, true); // to display '.'
+	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+	// digit 4
+	set7segmentDigit (4, 9, false);
+	// digit 5
+	set7segmentDigit (5, 0, false);
+	delay (dly);
+	
+	// digit 1
+	set7segmentDigit (1, 7, false);
+	// digit 2
+	set7segmentDigit (2, 8, false);
+	// digit 3
+	set7segmentDigit (3, 9, false); // to display '.'
+	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+	// digit 4
+	set7segmentDigit (4, 0, true);
+	// digit 5
+	set7segmentDigit (5, 1, false);
+	delay (dly);
+	
+	// digit 1
+	set7segmentDigit (1, 8, false);
+	// digit 2
+	set7segmentDigit (2, 9, false);
+	// digit 3
+	set7segmentDigit (3, 0, false); // to display '.'
+	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+	// digit 4
+	set7segmentDigit (4, 1, false);
+	// digit 5
+	set7segmentDigit (5, 2, true);
+	delay (dly);
+	
+	DBG_PRINTLN ("test_7segments(). exit..");
+
+		
+}
 
 // ver2: Display 2.0 digits for O2 concentration
 // void display_o2 (float o2value) {
@@ -362,6 +446,10 @@ void blank_7segments (void) {
 void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
 	uint8_t     digit1, digit2, digit3, digit4, digit5;
+	
+	
+	// init_7segments ();
+
 
 	// validate parameters
 	mins  = mins % 60;
@@ -380,11 +468,11 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
 	
 	// digit 1
-	set7segmentDigit (1, digit2, false);
+	set7segmentDigit (1, digit2, false );
 	// digit 2
 	set7segmentDigit (2, digit1, false);
 	// digit 3
-	set7segmentDigit (3, BLANK_DIGIT, true); // to display '.'
+	set7segmentDigit (3, BLANK, true); // to display '.'
 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
 	// digit 4
 	set7segmentDigit (4, digit5, false);

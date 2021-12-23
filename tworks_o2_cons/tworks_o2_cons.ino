@@ -90,19 +90,28 @@ void setup (void) {
 
     }
 
-
-    // temp test area ---------------------
-    // eeptest ();    
-    // test_ads1115 ();
-    // test_7segments ();
-    // ------------------------------------
-
     
     o2_cons_init ();
     init_7segments ();
     blank_7segments ();
            
     ui_init ();
+	
+    // temp test area ---------------------
+    // eeptest ();    
+    // test_ads1115 ();
+    // test_7segments ();
+// 	while (1)
+// 	{
+// 		DBG_PRINTLN ("7-segments display test...");
+// 		test_7segments ();
+// 		DBG_PRINTLN ("7.");
+// 		
+// 	}
+
+    // ------------------------------------
+	
+	
 	
 
 }
@@ -253,6 +262,7 @@ void o2_main_task (void)    {
 //                 case 0:
 //                 case 1:
 //                 case 2:
+DBG_PRINTLN ("calling display_current_run_hours()..");
                   display_current_run_hours(hrs, mins);
                   f_crn = 1;
                   f_trn = 0;
