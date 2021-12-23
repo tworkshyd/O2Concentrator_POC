@@ -140,9 +140,9 @@ void loop (void) {
         tempr_sensor_scan ();
         read_pressure ();
     
-		if (f_system_running)	{
-			display_o2 (o2_concentration);  
-		}
+// 		if (f_system_running)	{
+// 			display_o2 (o2_concentration);  
+// 		}
        
         // DBG_PRINT (".");
     }
@@ -246,28 +246,28 @@ void o2_main_task (void)    {
         int mins = ((current_run_time_secs % (60 * 60)) / 60);
         int hrs  = ( current_run_time_secs / (60 * 60));
            
-        if ((current_run_time_secs % 15) == 0) {
-            quadrant++;
-            switch (quadrant) 
-            {
-                case 0:
-                case 1:
-                case 2:
+//         if ((current_run_time_secs % 15) == 0) {
+//             quadrant++;
+//             switch (quadrant) 
+//             {
+//                 case 0:
+//                 case 1:
+//                 case 2:
                   display_current_run_hours(hrs, mins);
                   f_crn = 1;
                   f_trn = 0;
 		          f_run_hours = 1;
-                  break;
-               case 3:
-                  hrs = (total_run_time_secs / (60 * 60));
-                  display_total_run_hours(hrs);
-                  quadrant = 0;
-                  f_crn = 0;
-                  f_trn = 1;  
-				  f_run_hours = 0;           
-                  break;
-            }
-        }
+//                   break;
+//                case 3:
+//                   hrs = (total_run_time_secs / (60 * 60));
+//                   display_total_run_hours(hrs);
+//                   quadrant = 0;
+//                   f_crn = 0;
+//                   f_trn = 1;  
+// 				  f_run_hours = 0;           
+//                   break;
+//             }
+//         }
     }
     
     if (time_elapsed (time_tag) < nb_delay)  {
