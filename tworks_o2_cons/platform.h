@@ -116,7 +116,14 @@
 
 
 // 5. Sensor inputs
-	#define Prss_sns_1_adc			(A7)    // 'A7' temp assignment to avoid compiler errors
+#if   (HW_REVISION == HW_REV_1_0)
+	#define Prss_sns_1_adc		(A7)    // 'A7' temp assignment to avoid compiler errors
+
+#elif (HW_REVISION == HW_REV_2_0)
+	// nop
+#else
+	// nop
+#endif
 
 
 // 6. Button input
@@ -162,8 +169,8 @@
 
 #elif (HW_REVISION == HW_REV_2_0)
 	#define miso_neo_data1      (6)
-	#define pd6_neo_data2       (A6)
-	#define pd7_neo_data3       (A7)
+	#define pd6_neo_data2       (A7)
+	#define pd7_neo_data3       (A6)
 
 #else
 	// nop
@@ -228,6 +235,34 @@
 //------------------------------------------------
 	#define BUZZ_ON             (0)
 	#define BUZZ_OFF            (1)
+
+
+
+
+
+
+/* ===========================================================================
+ * 3. Alarm LEDs position selection (Alarms to LEDs mapping)
+ * ======================================================================== */
+#if   (HW_REVISION == HW_REV_1_0)
+	#define     UNUSED_ALARM_1          NEO_PXL_LED_1
+	#define     LOW_O2C_ALARM           NEO_PXL_LED_2
+	#define     LOW_PRESSURE_ALARM      NEO_PXL_LED_3
+	#define     HIGH_TEMPER_ALARM       NEO_PXL_LED_4
+	#define     UNUSED_ALARM_2          NEO_PXL_LED_5
+
+#elif (HW_REVISION == HW_REV_2_0)
+	#define     UNUSED_ALARM_1          NEO_PXL_LED_2
+	#define     LOW_O2C_ALARM           NEO_PXL_LED_5
+	#define     LOW_PRESSURE_ALARM      NEO_PXL_LED_1
+	#define     HIGH_TEMPER_ALARM       NEO_PXL_LED_4
+
+#else
+	// nop
+#endif
+// ---------------------------------------------------------------------------
+
+
 
 
 

@@ -19,32 +19,81 @@
 
 
 //==================== Neo-pixel LED driver ====================
-/*
- * JP5 of display board of rev1.0 SCH,
- * --------------------------------------------------
- *      MISO    PD6     PD7     |       output
- * --------------------------------------------------
- *      0       0       0       |   all off
- *      0       0       1       |   Alarm-1
- *      0       1       0       |   Alarm-2
- *      0       1       1       |   Alarm-3
- *      1       0       0       |   Alarm-4
- *      1       0       1       |   Alarm-5
- *      1       1       0       |   Current Run Time
- *      1       1       1       |   Total Run Time
- * --------------------------------------------------
-*/
-#define     NEO_PXL_ALL_OFF             (0b000)
-#define     NEO_PXL_ALARM_1             (0b001)
-#define     NEO_PXL_ALARM_2             (0b010)
-#define     NEO_PXL_ALARM_3             (0b011)
-#define     NEO_PXL_ALARM_4             (0b100)
-#define     NEO_PXL_ALARM_5             (0b101)
-#define     NEO_PXL_CURR_RUN_TIME       (0b110)
-#define     NEO_PXL_TOTAL_RUN_TIME      (0b111)
+#if   (HW_REVISION == HW_REV_1_0)
+	/*
+	 * JP5 of display board of rev1.0 SCH,
+	 * --------------------------------------------------
+	 *      MISO    PD6     PD7     |       output
+	 * --------------------------------------------------
+	 *      0       0       0       |   all off
+	 *      0       0       1       |   Alarm-1
+	 *      0       1       0       |   Alarm-2
+	 *      0       1       1       |   Alarm-3
+	 *      1       0       0       |   Alarm-4
+	 *      1       0       1       |   Alarm-5
+	 *      1       1       0       |   Current Run Time
+	 *      1       1       1       |   Total Run Time
+	 * --------------------------------------------------
+	*/
+	#define     NEO_PXL_ALL_OFF             (0b000)
+	#define     NEO_PXL_LED_1             (0b001)
+	#define     NEO_PXL_LED_2             (0b010)
+	#define     NEO_PXL_LED_3             (0b011)
+	#define     NEO_PXL_LED_4             (0b100)
+	#define     NEO_PXL_LED_5             (0b101)
+	#define     NEO_PXL_CURR_RUN_TIME       (0b110)
+	#define     NEO_PXL_TOTAL_RUN_TIME      (0b111)
 
-#define     ON_LED                      (true)
-#define     OFF_LED                     (false)
+	#define     ON_LED                      (true)
+	#define     OFF_LED                     (false)
+
+
+#elif (HW_REVISION == HW_REV_2_0)
+	/*
+	LEDs position on display board of Rev 2.0
+	----------------------------------------------------------------------------
+	|																			|
+	|			NPLED#1		NPLED#2		NPLED#3		"LED#1"		NPLED#4			|
+	|																			|
+	|			alarm#1		alarm#2		alarm#3		   -	    unused			|
+	|																			|
+	.																			.																		
+	.																			.
+	.																			.
+	|																			|
+	----------------------------------------------------------------------------
+	Note: LED#1 is not a neo-pixcel and is a supply failure alarm LED triggers 
+			directly from power failure circuit.
+	
+	 * JP5 of display board of rev2.0 SCH,
+	 * --------------------------------------------------
+	 *      MISO    PD6     PD7     |       output
+	 * --------------------------------------------------
+	 *      0       0       0       |   all off
+	 *      0       1       0       |   Alarm-1 (NPLED#4)
+	 *      1       0       0       |   Alarm-2 (NPLED#3)
+	 *      0       0       1       |   Alarm-3 (NPLED#2)
+	 *      0       1       1       |   Alarm-4 (NPLED#1)
+	 * --------------------------------------------------
+	*/
+
+	#define     NEO_PXL_ALL_OFF				(0b000)
+	#define     NEO_PXL_LED_1				(0b001)
+	#define     NEO_PXL_LED_2				(0b010)
+	#define     NEO_PXL_LED_3				(0b011)
+	#define     NEO_PXL_LED_4				(0b100)
+	#define     NEO_PXL_LED_5				(0b101)
+	#define     NEO_PXL_LED_6				(0b110)
+	#define     NEO_PXL_LED_7				(0b111)
+
+
+	#define     ON_LED                      (true)
+	#define     OFF_LED                     (false)
+
+#else
+	// nop
+#endif
+
 
 
 /*
@@ -78,6 +127,13 @@ extern char     lcd_temp_string[LCD_COLS + 1];
 
 
 void lcd_clear_buf		(char * bufp);
+
+void neo_led_data_send		(uint8_t  select_bits);
+void update_neo_pixel_leds	(void);    
+void neo_pixel_control		(uint8_t led_no, uint8_t on_off);    
+void neo_pixel_leds_test	(void);
+
+
 void init_7segments		(void);
 void blank_7segments	(void);
 void test_7segments		(void);

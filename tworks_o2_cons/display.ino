@@ -26,30 +26,6 @@ void lcd_clear_buf (char * bufp) {
 
 
 //==================== Neo-pixel LED driver ====================
-/*
- * JP5 of display board of rev1.0 SCH,
- * --------------------------------------------------
- *      MISO    PD6     PD7     |       output
- * --------------------------------------------------
- *      0       0       0       |   all off
- *      0       0       1       |   Alarm-1
- *      0       1       0       |   Alarm-2
- *      0       1       1       |   Alarm-3
- *      1       0       0       |   Alarm-4
- *      1       0       1       |   Alarm-5
- *      1       1       0       |   Current Run Time
- *      1       1       1       |   Total Run Time
- * --------------------------------------------------
-*/
-//#define     NEO_PXL_ALL_OFF             (0b000)
-//#define     NEO_PXL_ALARM_1             (0b001)
-//#define     NEO_PXL_ALARM_2             (0b010)
-//#define     NEO_PXL_ALARM_3             (0b011)
-//#define     NEO_PXL_ALARM_4             (0b100)
-//#define     NEO_PXL_ALARM_5             (0b101)
-//#define     NEO_PXL_CURR_RUN_TIME       (0b110)
-//#define     NEO_PXL_TOTAL_RUN_TIME      (0b111)
-
 void neo_led_data_send (uint8_t  select_bits)    {
 
     // bit 2
@@ -68,7 +44,7 @@ void neo_led_data_send (uint8_t  select_bits)    {
         digitalWrite(pd6_neo_data2,    LOW );
     }
 
-    // bit 20
+    // bit 0
     if (select_bits & 0x01) {   //0b001)    {
         digitalWrite(pd7_neo_data3,    HIGH );
     }
@@ -78,6 +54,7 @@ void neo_led_data_send (uint8_t  select_bits)    {
 
 
     delay(150);
+	
     
 }
 
@@ -122,7 +99,7 @@ void update_neo_pixel_leds (void)    {
                 }  
                 bit_no++;  
             }
-            if (bit_no >= 7) {
+            if (bit_no > 7) {
                 state++;
             }            
             break;
@@ -139,8 +116,8 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
 
     uint8_t     check_byte = neo_pixel_leds_byte;
     
-    if (led_no == 0) {
-        // handle this special case seperately
+    if (led_no == 0) {	// all LEDs at once		
+        // handle this special case separately
         neo_pixel_leds_byte = 0;
     }    
     else if (led_no < 8) {
@@ -159,6 +136,105 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
 
 
 
+void neo_pixel_leds_test (void)	{
+
+	static int state = 0;
+	
+// 	switch (state)
+// 	{
+// 		case 0:	
+// 			neo_pixel_control (NEO_PXL_ALL_OFF       ,  OFF_LED);
+// 			DBG_PRINTLN ("NEO_PXL_ALL");
+// // 			neo_pixel_control (NEO_PXL_ALL_OFF       ,  ON_LED);
+// // 			DBG_PRINTLN ("NEO_PXL_ALL");
+// 			break;		
+// 		case 1:	
+// // 			neo_pixel_control (NEO_PXL_LED_1       ,  OFF_LED);
+// 			neo_pixel_control (NEO_PXL_LED_1       ,  ON_LED);
+// 			DBG_PRINTLN ("NEO_PXL_LED_1");
+// 			break;
+// 		case 2:	
+//  			neo_pixel_control (NEO_PXL_LED_1       ,  OFF_LED);
+// 			neo_pixel_control (NEO_PXL_LED_2       ,  ON_LED);
+// 			DBG_PRINTLN ("NEO_PXL_LED_2");
+// 			break;
+// 		case 3:	
+//  			neo_pixel_control (NEO_PXL_LED_2       ,  OFF_LED);
+// 			neo_pixel_control (NEO_PXL_LED_3       ,  ON_LED);
+// 			DBG_PRINTLN ("NEO_PXL_LED_3");
+// 			break;
+// 		case 4:	
+// 			neo_pixel_control (NEO_PXL_LED_3       ,  OFF_LED);
+// 			neo_pixel_control (NEO_PXL_LED_4       ,  ON_LED);
+// 			DBG_PRINTLN ("NEO_PXL_LED_4");
+// 			break;
+// 		case 5:	
+// 			neo_pixel_control (NEO_PXL_LED_4       ,  OFF_LED);
+// 			neo_pixel_control (NEO_PXL_LED_5       ,  ON_LED);
+// 			DBG_PRINTLN ("NEO_PXL_LED_5");
+// 			break;
+// 		case 6:	
+// 			neo_pixel_control (NEO_PXL_LED_5 ,  OFF_LED);
+// 			neo_pixel_control (NEO_PXL_LED_6 ,  ON_LED);
+// 			DBG_PRINTLN ("NEO_PXL_LED_6");
+// 			break;
+// 		case 7:	
+// 			neo_pixel_control (NEO_PXL_LED_6,  OFF_LED);
+// 			neo_pixel_control (NEO_PXL_LED_7,  ON_LED);
+// 			DBG_PRINTLN ("NEO_PXL_TOTAL_RUN_TIME");
+// 			break;
+// 		
+// 	}
+// 	state++;
+// 	if (state > 7)	{
+// 		state = 0;
+// 	}
+	
+// 		#define                NEO_PXL_LED_5
+// 		#define           NEO_PXL_LED_1
+// 		#define            NEO_PXL_LED_4
+	switch (state)
+	{
+		case 0:
+		neo_pixel_control (NEO_PXL_ALL_OFF       ,  OFF_LED);
+		DBG_PRINTLN ("NEO_PXL_ALL");
+		// 			neo_pixel_control (NEO_PXL_ALL_OFF       ,  ON_LED);
+		// 			DBG_PRINTLN ("NEO_PXL_ALL");
+		break;
+		case 1:
+		// 			neo_pixel_control (NEO_PXL_LED_1       ,  OFF_LED);
+		neo_pixel_control (LOW_O2C_ALARM       ,  ON_LED);
+		DBG_PRINTLN ("LOW_O2C_ALARM");
+		break;
+		case 2:
+		neo_pixel_control (LOW_O2C_ALARM       ,  OFF_LED);
+		neo_pixel_control (LOW_PRESSURE_ALARM       ,  ON_LED);
+		DBG_PRINTLN ("LOW_PRESSURE_ALARM");
+		break;
+		case 3:
+		neo_pixel_control (LOW_PRESSURE_ALARM       ,  OFF_LED);
+		neo_pixel_control (HIGH_TEMPER_ALARM       ,  ON_LED);
+		DBG_PRINTLN ("HIGH_TEMPER_ALARM");
+		break;
+
+		
+	}
+	state++;
+	if (state > 3)	{
+		state = 0;
+	}	
+	
+    update_neo_pixel_leds ();
+    delay (333);
+    update_neo_pixel_leds ();
+    delay (333);
+    update_neo_pixel_leds ();
+    delay (333);
+	
+	delay(3000);
+	neo_pixel_control (NEO_PXL_ALL_OFF       ,  OFF_LED);
+
+}
 
 
 
@@ -279,85 +355,85 @@ void blank_7segments (void) {
 
 
 
-void test_7segments (void)	{
-	
-	int		dly = 3000;
-	
-	
-	DBG_PRINTLN ("test_7segments(). entry..");
-
-	// digit 1
-	set7segmentDigit (1, 0, true);
-	
-	DBG_PRINTLN ("1.");
-
-	// digit 2
-	set7segmentDigit (2, 1, false);
-	// digit 3
-	set7segmentDigit (3, 2, false); // to display '.'
-	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-	// digit 4
-	set7segmentDigit (4, 3, false);
-	// digit 5
-	set7segmentDigit (5, 4, false);
-	delay (dly);
-	
-	// digit 1
-	set7segmentDigit (1, 1, false);
-	// digit 2
-	set7segmentDigit (2, 2, true);
-	// digit 3
-	set7segmentDigit (3, 3, false); // to display '.'
-	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-	// digit 4
-	set7segmentDigit (4, 4, false);
-	// digit 5
-	set7segmentDigit (5, 5, false);
-	delay (dly);
-		
-	// digit 1
-	set7segmentDigit (1, 6, false);
-	// digit 2
-	set7segmentDigit (2, 7, false);
-	// digit 3
-	set7segmentDigit (3, 8, true); // to display '.'
-	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-	// digit 4
-	set7segmentDigit (4, 9, false);
-	// digit 5
-	set7segmentDigit (5, 0, false);
-	delay (dly);
-	
-	// digit 1
-	set7segmentDigit (1, 7, false);
-	// digit 2
-	set7segmentDigit (2, 8, false);
-	// digit 3
-	set7segmentDigit (3, 9, false); // to display '.'
-	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-	// digit 4
-	set7segmentDigit (4, 0, true);
-	// digit 5
-	set7segmentDigit (5, 1, false);
-	delay (dly);
-	
-	// digit 1
-	set7segmentDigit (1, 8, false);
-	// digit 2
-	set7segmentDigit (2, 9, false);
-	// digit 3
-	set7segmentDigit (3, 0, false); // to display '.'
-	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-	// digit 4
-	set7segmentDigit (4, 1, false);
-	// digit 5
-	set7segmentDigit (5, 2, true);
-	delay (dly);
-	
-	DBG_PRINTLN ("test_7segments(). exit..");
-
-		
-}
+// void test_7segments (void)	{
+// 	
+// 	int		dly = 3000;
+// 	
+// 	
+// 	DBG_PRINTLN ("test_7segments(). entry..");
+// 
+// 	// digit 1
+// 	set7segmentDigit (1, 0, true);
+// 	
+// 	DBG_PRINTLN ("1.");
+// 
+// 	// digit 2
+// 	set7segmentDigit (2, 1, false);
+// 	// digit 3
+// 	set7segmentDigit (3, 2, false); // to display '.'
+// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+// 	// digit 4
+// 	set7segmentDigit (4, 3, false);
+// 	// digit 5
+// 	set7segmentDigit (5, 4, false);
+// 	delay (dly);
+// 	
+// 	// digit 1
+// 	set7segmentDigit (1, 1, false);
+// 	// digit 2
+// 	set7segmentDigit (2, 2, true);
+// 	// digit 3
+// 	set7segmentDigit (3, 3, false); // to display '.'
+// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+// 	// digit 4
+// 	set7segmentDigit (4, 4, false);
+// 	// digit 5
+// 	set7segmentDigit (5, 5, false);
+// 	delay (dly);
+// 		
+// 	// digit 1
+// 	set7segmentDigit (1, 6, false);
+// 	// digit 2
+// 	set7segmentDigit (2, 7, false);
+// 	// digit 3
+// 	set7segmentDigit (3, 8, true); // to display '.'
+// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+// 	// digit 4
+// 	set7segmentDigit (4, 9, false);
+// 	// digit 5
+// 	set7segmentDigit (5, 0, false);
+// 	delay (dly);
+// 	
+// 	// digit 1
+// 	set7segmentDigit (1, 7, false);
+// 	// digit 2
+// 	set7segmentDigit (2, 8, false);
+// 	// digit 3
+// 	set7segmentDigit (3, 9, false); // to display '.'
+// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+// 	// digit 4
+// 	set7segmentDigit (4, 0, true);
+// 	// digit 5
+// 	set7segmentDigit (5, 1, false);
+// 	delay (dly);
+// 	
+// 	// digit 1
+// 	set7segmentDigit (1, 8, false);
+// 	// digit 2
+// 	set7segmentDigit (2, 9, false);
+// 	// digit 3
+// 	set7segmentDigit (3, 0, false); // to display '.'
+// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
+// 	// digit 4
+// 	set7segmentDigit (4, 1, false);
+// 	// digit 5
+// 	set7segmentDigit (5, 2, true);
+// 	delay (dly);
+// 	
+// 	DBG_PRINTLN ("test_7segments(). exit..");
+// 
+// 		
+// }
 
 // ver2: Display 2.0 digits for O2 concentration
 // void display_o2 (float o2value) {
