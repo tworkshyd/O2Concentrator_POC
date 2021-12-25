@@ -78,6 +78,7 @@ void neo_led_data_send (uint8_t  select_bits)    {
 
 
     delay(150);
+	
     
 }
 
@@ -140,7 +141,7 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
     uint8_t     check_byte = neo_pixel_leds_byte;
     
     if (led_no == 0) {
-        // handle this special case seperately
+        // handle this special case separately
         neo_pixel_leds_byte = 0;
     }    
     else if (led_no < 8) {
@@ -159,6 +160,58 @@ void neo_pixel_control (uint8_t led_no, uint8_t on_off)    {
 
 
 
+void neo_pixel_leds_test (void)	{
+
+	int state = 0;
+	
+	switch (state)
+	{
+		case 0:	
+			neo_pixel_control (NEO_PXL_ALL_OFF       ,  OFF_LED);
+			neo_pixel_control (NEO_PXL_ALL_OFF       ,  ON_LED);
+			DBG_PRINTLN ("NEO_PXL_ALL");
+			break;		
+		case 1:	
+			neo_pixel_control (NEO_PXL_ALARM_1       ,  OFF_LED);
+			neo_pixel_control (NEO_PXL_ALARM_1       ,  ON_LED);
+			DBG_PRINTLN ("NEO_PXL_ALARM_1");
+			break;
+		case 2:	
+			neo_pixel_control (NEO_PXL_ALARM_2       ,  OFF_LED);
+			neo_pixel_control (NEO_PXL_ALARM_2       ,  ON_LED);
+			DBG_PRINTLN ("NEO_PXL_ALARM_2");
+			break;
+		case 3:	
+			neo_pixel_control (NEO_PXL_ALARM_3       ,  OFF_LED);
+			neo_pixel_control (NEO_PXL_ALARM_3       ,  ON_LED);
+			DBG_PRINTLN ("NEO_PXL_ALARM_3");
+			break;
+		case 4:	
+			neo_pixel_control (NEO_PXL_ALARM_4       ,  OFF_LED);
+			neo_pixel_control (NEO_PXL_ALARM_4       ,  ON_LED);
+			DBG_PRINTLN ("NEO_PXL_ALARM_4");
+			break;
+		case 5:	
+			neo_pixel_control (NEO_PXL_ALARM_5       ,  OFF_LED);
+			neo_pixel_control (NEO_PXL_ALARM_5       ,  ON_LED);
+			DBG_PRINTLN ("NEO_PXL_ALARM_5");
+			break;
+		case 6:	
+			neo_pixel_control (NEO_PXL_CURR_RUN_TIME ,  OFF_LED);
+			neo_pixel_control (NEO_PXL_CURR_RUN_TIME ,  ON_LED);
+			DBG_PRINTLN ("NEO_PXL_CURR_RUN_TIME");
+			break;
+		case 7:	
+			neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  OFF_LED);
+			neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  ON_LED);
+			DBG_PRINTLN ("NEO_PXL_TOTAL_RUN_TIME");
+			break;
+		
+	}
+	
+	delay (1000);
+
+}
 
 
 

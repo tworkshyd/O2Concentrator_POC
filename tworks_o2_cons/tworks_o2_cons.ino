@@ -101,13 +101,27 @@ void setup (void) {
     // eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
-// 	while (1)
-// 	{
+	while (1)
+	{
 // 		DBG_PRINTLN ("7-segments display test...");
 // 		test_7segments ();
 // 		DBG_PRINTLN ("7.");
-// 		
-// 	}
+		
+		DBG_PRINTLN ("Neo-pixcels test...");
+// 		neo_pixel_leds_test ();
+
+        digitalWrite(miso_neo_data1,    HIGH );
+        digitalWrite(pd6_neo_data2,    HIGH );
+        digitalWrite(pd7_neo_data3,    HIGH );
+	delay (10);
+        digitalWrite(miso_neo_data1,    LOW );
+        digitalWrite(pd6_neo_data2,    LOW );
+        digitalWrite(pd7_neo_data3,    LOW );
+	delay (10);
+
+	}
+
+
 
     // ------------------------------------
 	

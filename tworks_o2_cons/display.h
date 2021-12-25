@@ -78,6 +78,13 @@ extern char     lcd_temp_string[LCD_COLS + 1];
 
 
 void lcd_clear_buf		(char * bufp);
+
+void neo_led_data_send		(uint8_t  select_bits);
+void update_neo_pixel_leds	(void);    
+void neo_pixel_control		(uint8_t led_no, uint8_t on_off);    
+void neo_pixel_leds_test	(void);
+
+
 void init_7segments		(void);
 void blank_7segments	(void);
 void test_7segments		(void);

@@ -116,7 +116,14 @@
 
 
 // 5. Sensor inputs
-	#define Prss_sns_1_adc			(A7)    // 'A7' temp assignment to avoid compiler errors
+#if   (HW_REVISION == HW_REV_1_0)
+	#define Prss_sns_1_adc		(A7)    // 'A7' temp assignment to avoid compiler errors
+
+#elif (HW_REVISION == HW_REV_2_0)
+	// nop
+#else
+	// nop
+#endif
 
 
 // 6. Button input
