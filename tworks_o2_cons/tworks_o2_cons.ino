@@ -101,25 +101,25 @@ void setup (void) {
     // eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
-	while (1)
-	{
-// 		DBG_PRINTLN ("7-segments display test...");
-// 		test_7segments ();
-// 		DBG_PRINTLN ("7.");
-		
-		DBG_PRINTLN ("Neo-pixcels test...");
+// 	while (1)
+// 	{
+// // 		DBG_PRINTLN ("7-segments display test...");
+// // 		test_7segments ();
+// // 		DBG_PRINTLN ("7.");
+// 		
+// 		DBG_PRINTLN ("Neo-pixcels test...");
 // 		neo_pixel_leds_test ();
-
-        digitalWrite(miso_neo_data1,    HIGH );
-        digitalWrite(pd6_neo_data2,    HIGH );
-        digitalWrite(pd7_neo_data3,    HIGH );
-	delay (10);
-        digitalWrite(miso_neo_data1,    LOW );
-        digitalWrite(pd6_neo_data2,    LOW );
-        digitalWrite(pd7_neo_data3,    LOW );
-	delay (10);
-
-	}
+// 
+// //         digitalWrite(miso_neo_data1,    HIGH );
+// //         digitalWrite(pd6_neo_data2,    HIGH );
+// //         digitalWrite(pd7_neo_data3,    HIGH );
+// // 	delay (10);
+// //         digitalWrite(miso_neo_data1,    LOW );
+// //         digitalWrite(pd6_neo_data2,    LOW );
+// //         digitalWrite(pd7_neo_data3,    LOW );
+// // 	delay (10);
+// 
+// 	}
 
 
 
@@ -264,7 +264,7 @@ void o2_main_task (void)    {
         current_run_time_secs++;
         total_run_time_secs++;
 
-        // display run hours, 45 seconds current run hours, 15 seconds total runhours
+        // display run hours, 45 seconds current run hours, 15 seconds total run hours
         int secs = ( current_run_time_secs %  60);
         int mins = ((current_run_time_secs % (60 * 60)) / 60);
         int hrs  = ( current_run_time_secs / (60 * 60));
@@ -276,7 +276,6 @@ void o2_main_task (void)    {
 //                 case 0:
 //                 case 1:
 //                 case 2:
-DBG_PRINTLN ("calling display_current_run_hours()..");
                   display_current_run_hours(hrs, mins);
                   f_crn = 1;
                   f_trn = 0;

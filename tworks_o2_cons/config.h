@@ -74,11 +74,8 @@
 /* ===========================================================================
  * 3. Alarm LEDs position selection (Alarms to LEDs mapping)
  * ======================================================================== */
-#define     UNUSED_ALARM_1          NEO_PXL_ALARM_1
-#define     LOW_O2C_ALARM           NEO_PXL_ALARM_2
-#define     LOW_PRESSURE_ALARM      NEO_PXL_ALARM_3
-#define     HIGH_TEMPER_ALARM       NEO_PXL_ALARM_4
-#define     UNUSED_ALARM_2          NEO_PXL_ALARM_5
+
+	// Please look into 'platform.h' file
 // ---------------------------------------------------------------------------
 
 
