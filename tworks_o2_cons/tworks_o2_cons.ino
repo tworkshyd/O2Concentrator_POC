@@ -189,7 +189,9 @@ void loop (void) {
         o2_main_task ();
         ui_task_main ();
         logs_task ();
-        alarms_task ();
+	#if (ENABLE_ALARMS)
+		alarms_task ();
+	#endif
         display_task ();
         
     }
