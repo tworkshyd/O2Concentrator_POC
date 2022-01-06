@@ -270,7 +270,7 @@ void alarms_task (void)    {
             }
         }
     
-// 		else if ( tempr_value_1 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
+		// else if ( tempr_value_1 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
 		else if ( temp_tempr_value_1 < TEMPERATURE_HIGH_THRHLD  &&  temp_tempr_value_2 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
 			// clear alarm 
 			if (high_temperature_alarm_dly) {
@@ -306,4 +306,6 @@ void alarms_task (void)    {
     
 }
 
+
+// EoF -------------
 

@@ -77,7 +77,6 @@ void new_delay_msecs (unsigned int  time_delay) {
     unsigned long int   time_tag;
 
 
-    //DBG_PRINT ("/");
     time_tag = systemtick_msecs;
     while (time_elapsed (time_tag) < time_delay)
     {
@@ -218,27 +217,6 @@ void test_gpios (void) {
 	digitalWrite (compr_cntrl_pin,        LOW);
 	delay(1300);
 
-// 	pinMode(startSwitchPin,   INPUT );
-// 	pinMode(startSwitchPin,   INPUT_PULLUP);
-// 	DBG_PRINTLN ("startSwitchPin = HIGH");
-// 	digitalWrite (startSwitchPin,        HIGH);
-// 	delay(1300);
-// 	DBG_PRINTLN ("startSwitchPin = low");
-// 	digitalWrite (startSwitchPin,        LOW);
-// 	delay(1300);
-
-
-
-// 	pinMode(alarmClearButton, INPUT );
-// 	pinMode(alarmClearButton, INPUT_PULLUP);
-// 	DBG_PRINTLN ("alarmClearButton = HIGH");
-// 	digitalWrite (alarmClearButton,        HIGH);
-// 	delay(1300);
-// 	DBG_PRINTLN ("alarmClearButton = low");
-// 	digitalWrite (alarmClearButton,        LOW);
-// 	delay(1300);
-
-
 	
 	// default pin-state
 	digitalWrite(buzzr_cntrl_pin,   LOW);
@@ -248,8 +226,6 @@ void test_gpios (void) {
 	DBG_PRINTLN ("buzzr_cntrl_pin = low");
 	digitalWrite (buzzr_cntrl_pin,        LOW);
 	delay(1300);
-
-
 
 
 	// Serial 7 segment interface
@@ -302,7 +278,7 @@ void test_gpios (void) {
 
 	pinMode(pd7_neo_data3,          OUTPUT);
 	DBG_PRINTLN ("pd7_neo_data3 = HIGH");
-	digitalWrite (pd7_neo_data3,        HIGH);
+	digitalWrite (pd7_neo_data3,       HIGH);
 	delay(1300);
 	DBG_PRINTLN ("pd7_neo_data3 = low");
 	digitalWrite (pd7_neo_data3,        LOW);
@@ -360,11 +336,6 @@ bool do_control (DO_CONTROLS_E do_id, bool bit_value) {
         }
     }
 
-    // temp
-    // Serial.println(bit_value); Serial.println(do_id); Serial.println(do_byte);
-
-    // DBG_PRINT ("do_byte : ");
-    // DBG_PRINTLN(do_byte);
 
 }
 
@@ -567,19 +538,7 @@ void save_record (void) {
             
 }
 
+
+
+
 /////////////////// scrap area /////////////////////////////////
-/*
-    // temp : test for LCD pins
-    while (1)
-    {
-        digitalWrite(dataPin_7segment,   LOW );
-        digitalWrite(clckPin_7segment,   LOW );
-        digitalWrite(loadPin_7segment,   LOW );
-        delay(1000);
-        digitalWrite(dataPin_7segment,   HIGH );
-        digitalWrite(clckPin_7segment,   HIGH );
-        digitalWrite(loadPin_7segment,   HIGH );
-        delay(1000);
-        
-     }
-*/

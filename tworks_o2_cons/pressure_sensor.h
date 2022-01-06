@@ -4,11 +4,8 @@
 #define   pressure_sensor_h
 
 
+// Function prototypes
 void read_pressure (void);
-
-
-
-
 
 
 

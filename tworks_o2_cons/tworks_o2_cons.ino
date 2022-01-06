@@ -1,8 +1,9 @@
+// Sketch uses 20220 bytes (15%) of program storage space. Maximum is 130048 bytes.
+// Global variables use 2386 bytes (14%) of dynamic memory, leaving 13998 bytes for local variables. Maximum is 16384 bytes.
 
 
 // tworks_o2_cons.c
 
-//#include <UniversalTimer.h>
 #include <extEEPROM.h>
 #include "tempr_sensor.h"
 #include "o2_sensor.h"
@@ -14,7 +15,7 @@
 #include "db.h"
 #include "ui.h"
 
-// Sytem tick time
+// System tick time
 #define TICK_time (10)
 
 extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
@@ -46,7 +47,7 @@ void setup (void) {
     DBG_PRINTLN ();
 
 
-	//temp
+	// temp
 	//test_gpios ();
 
 
@@ -101,31 +102,26 @@ void setup (void) {
     // eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
-// 	while (1)
-// 	{
-// // 		DBG_PRINTLN ("7-segments display test...");
-// // 		test_7segments ();
-// // 		DBG_PRINTLN ("7.");
-// 		
-// 		DBG_PRINTLN ("Neo-pixcels test...");
-// 		neo_pixel_leds_test ();
-// 
-// //         digitalWrite(miso_neo_data1,    HIGH );
-// //         digitalWrite(pd6_neo_data2,    HIGH );
-// //         digitalWrite(pd7_neo_data3,    HIGH );
-// // 	delay (10);
-// //         digitalWrite(miso_neo_data1,    LOW );
-// //         digitalWrite(pd6_neo_data2,    LOW );
-// //         digitalWrite(pd7_neo_data3,    LOW );
-// // 	delay (10);
-// 
-// 	}
-
-
-
+	// 	while (1)
+	// 	{
+	// // 		DBG_PRINTLN ("7-segments display test...");
+	// // 		test_7segments ();
+	// // 		DBG_PRINTLN ("7.");
+	// 		
+	// 		DBG_PRINTLN ("Neo-pixcels test...");
+	// 		neo_pixel_leds_test ();
+	// 
+	// //         digitalWrite(miso_neo_data1,    HIGH );
+	// //         digitalWrite(pd6_neo_data2,    HIGH );
+	// //         digitalWrite(pd7_neo_data3,    HIGH );
+	// // 	delay (10);
+	// //         digitalWrite(miso_neo_data1,    LOW );
+	// //         digitalWrite(pd6_neo_data2,    LOW );
+	// //         digitalWrite(pd7_neo_data3,    LOW );
+	// // 	delay (10);
+	// 
+	// 	}
     // ------------------------------------
-	
-	
 	
 
 }
@@ -163,9 +159,9 @@ void loop (void) {
         tempr_sensor_scan ();
         read_pressure ();
     
-// 		if (f_system_running)	{
-// 			display_o2 (o2_concentration);  
-// 		}
+		// 		if (f_system_running)	{
+		// 			display_o2 (o2_concentration);  
+		// 		}
        
         // DBG_PRINT (".");
     }
@@ -302,9 +298,6 @@ void o2_main_task (void)    {
     // else
     time_tag = systemtick_msecs;
 
-    //DBG_PRINTLN ("calling PSA logic..");
-
-    //tworks3_PSA_logic();
     tworks2_PSA_logic();
 
 
@@ -315,75 +308,6 @@ void o2_main_task (void)    {
 
 }
 
-
-
-void tworks3_PSA_logic (void)  {
-
-    switch (cycle)
-    {
-        case 0:
-            //CYCLE 1
-            //**************************************************************************
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
-            do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
-            do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
-            nb_delay = Production_Delay;
-            cycle++;
-            break;
-        case 1:
-            //CYCLE 2
-            //**************************************************************************
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
-            do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
-            do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
-            nb_delay = Flush_Delay;
-            cycle++;
-            break;
-        case 2:
-            //CYCLE 3
-            //**************************************************************************
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
-            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
-            nb_delay = PreCharge_Delay;
-            cycle++;
-            break;
-        case 3:
-            //CYCLE 4
-            //**************************************************************************
-            do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
-            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
-            nb_delay = Production_Delay;
-            cycle++;
-            break;
-
-        case 4:
-            //CYCLE 5
-            //**************************************************************************
-            do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
-            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
-            nb_delay = Flush_Delay;
-            cycle++;
-            break;
-
-        case 5:
-            //CYCLE 6
-            //**************************************************************************
-            do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
-            do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
-            do_control (SIEVE_FLUSH_VLV_CNTRL,    OPEN_VALVE);
-            nb_delay = PreCharge_Delay;
-            cycle++;
-            break;
-        default:
-            cycle = 0;
-            nb_delay = 0;
-            break;
-    }
-
-}
 
 
 void tworks2_values_to_default_postion (void)  {
@@ -447,25 +371,3 @@ void tworks2_PSA_logic (void)  {
 
 
 // eof -----------------------
-/*
- *         if (f_run_hours == 1) {
-            DBG_PRINTLN("pt.1........");
-            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME, ON_LED);  
-            delay(300);
-            DBG_PRINTLN("............");
-            neo_pixel_control (NEO_PXL_CURR_RUN_TIME,  OFF_LED);             
-            DBG_PRINTLN("............");
-        }
-        else  {
-            DBG_PRINTLN("pt.2------------");
-            neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME, ON_LED);  
-            delay(300);
-            DBG_PRINTLN("----------------");
-            
-            neo_pixel_control (NEO_PXL_CURR_RUN_TIME,  OFF_LED);  
-            DBG_PRINTLN("----------------");
-        }     
-
-
-        
- */

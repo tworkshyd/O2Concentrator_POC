@@ -140,59 +140,6 @@ void neo_pixel_leds_test (void)	{
 
 	static int state = 0;
 	
-// 	switch (state)
-// 	{
-// 		case 0:	
-// 			neo_pixel_control (NEO_PXL_ALL_OFF       ,  OFF_LED);
-// 			DBG_PRINTLN ("NEO_PXL_ALL");
-// // 			neo_pixel_control (NEO_PXL_ALL_OFF       ,  ON_LED);
-// // 			DBG_PRINTLN ("NEO_PXL_ALL");
-// 			break;		
-// 		case 1:	
-// // 			neo_pixel_control (NEO_PXL_LED_1       ,  OFF_LED);
-// 			neo_pixel_control (NEO_PXL_LED_1       ,  ON_LED);
-// 			DBG_PRINTLN ("NEO_PXL_LED_1");
-// 			break;
-// 		case 2:	
-//  			neo_pixel_control (NEO_PXL_LED_1       ,  OFF_LED);
-// 			neo_pixel_control (NEO_PXL_LED_2       ,  ON_LED);
-// 			DBG_PRINTLN ("NEO_PXL_LED_2");
-// 			break;
-// 		case 3:	
-//  			neo_pixel_control (NEO_PXL_LED_2       ,  OFF_LED);
-// 			neo_pixel_control (NEO_PXL_LED_3       ,  ON_LED);
-// 			DBG_PRINTLN ("NEO_PXL_LED_3");
-// 			break;
-// 		case 4:	
-// 			neo_pixel_control (NEO_PXL_LED_3       ,  OFF_LED);
-// 			neo_pixel_control (NEO_PXL_LED_4       ,  ON_LED);
-// 			DBG_PRINTLN ("NEO_PXL_LED_4");
-// 			break;
-// 		case 5:	
-// 			neo_pixel_control (NEO_PXL_LED_4       ,  OFF_LED);
-// 			neo_pixel_control (NEO_PXL_LED_5       ,  ON_LED);
-// 			DBG_PRINTLN ("NEO_PXL_LED_5");
-// 			break;
-// 		case 6:	
-// 			neo_pixel_control (NEO_PXL_LED_5 ,  OFF_LED);
-// 			neo_pixel_control (NEO_PXL_LED_6 ,  ON_LED);
-// 			DBG_PRINTLN ("NEO_PXL_LED_6");
-// 			break;
-// 		case 7:	
-// 			neo_pixel_control (NEO_PXL_LED_6,  OFF_LED);
-// 			neo_pixel_control (NEO_PXL_LED_7,  ON_LED);
-// 			DBG_PRINTLN ("NEO_PXL_TOTAL_RUN_TIME");
-// 			break;
-// 		
-// 	}
-// 	state++;
-// 	if (state > 7)	{
-// 		state = 0;
-// 	}
-	
-// 		#define                NEO_PXL_LED_5
-// 		#define           NEO_PXL_LED_1
-// 		#define            NEO_PXL_LED_4
 	switch (state)
 	{
 		case 0:
@@ -283,19 +230,6 @@ uint8_t   digit_to_seg_value[] = {
     0b00000000,  // ' ' -- 0x0F blanks digit
   
 };
-
-//#define  DIGIT_0    0b01111110  // '0' 
-//#define  DIGIT_1    0b00110000  // '1' 
-//#define  DIGIT_2    0b01101101  // '2' 
-//#define  DIGIT_3    0b01111001  // '3' 
-//#define  DIGIT_4    0b00110011  // '4' 
-//#define  DIGIT_5    0b01011011  // '5' 
-//#define  DIGIT_6    0b01011111  // '6' 
-//#define  DIGIT_7    0b01110000  // '7' 
-//#define  DIGIT_8    0b01111111  // '8' 
-//#define  DIGIT_9    0b01111011  // '9' 
-//#define  POINT      0b10000000  // '.' -- 0x0A prints decimal point
-//#define  BLANK      0b10000000  // ' ' -- 0x0B blanks digit
 
     
 void  set7segmentDigit (int digit, int value, uint8_t  point) {

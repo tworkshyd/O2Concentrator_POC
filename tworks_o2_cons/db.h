@@ -75,12 +75,12 @@ extern bool           f_sec_change_sensor_task;
 extern bool           f_sec_change_alarm_task;
 
 // alarms
-extern uint8_t        alarms_byte;     // can hold upto 8 alarms, 1 bit for each
+extern uint8_t			alarms_byte;     // can hold upto 8 alarms, 1 bit for each
 
-extern float           o2_concentration;
-extern float           output_pressure;
-extern float           prev_o2_concentration;
-extern float           prev_output_pressure;
+extern float             o2_concentration;
+extern float             output_pressure;
+extern float			 prev_o2_concentration;
+extern float			 prev_output_pressure;
 extern volatile int16_t  pressure_raw_adc_count;
 extern volatile float    pressureZero;
 extern volatile float    pressureMax;
@@ -95,13 +95,13 @@ extern unsigned int    last_cycle_run_time_secs;
 extern unsigned long   total_run_time_secs;
 
 
-extern unsigned long int Production_Delay;     // delay variable creation
+extern unsigned long int Production_Delay;				// delay variable creation
 extern volatile unsigned long int Flush_Delay;          // delay variable creation
-extern unsigned long int PreCharge_Delay;      // delay variable creation
+extern unsigned long int PreCharge_Delay;				// delay variable creation
 
 extern unsigned long int nb_delay;
 extern unsigned long int prev_nb_delay;
-extern unsigned char     do_byte;              // holds all digital outputs current status
+extern unsigned char     do_byte;						// holds all digital outputs current status
 
 extern volatile int16_t  o2_raw_adc_count;
 extern volatile float    o2_slope;
@@ -113,10 +113,11 @@ extern uint8_t   alarm_clear_button_pressed;
 
 extern unsigned char    f_run_hours;
 extern unsigned char    f_display_crn;
-extern uint8_t          neo_pixel_leds_byte;   // holds led light-up info, 1 - on, 0 - off from LSB as alarm-1
+extern uint8_t          neo_pixel_leds_byte;			// holds led light-up info, 1 - on, 0 - off from LSB as alarm-1
 extern uint8_t          prev_neo_pixel_leds;
 
 
+// Function declarations
 void db_init (void);
 
 

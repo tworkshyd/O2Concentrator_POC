@@ -34,9 +34,6 @@
 #define DBG_PRINT       //  Serial.print
 #endif
 
-
-
-    
 #define O2C_ALARM_BIT           (0x01)
 #define TEMPR_ALARM_BIT         (0x02)
 #define PRESSURE_DROP_ALARM_BIT (0x04)
