@@ -114,7 +114,7 @@
  * 6. Alarms Enable / Disable
  * ======================================================================== */
 // uncomment below line to enable alarms
-// #define ENABLE_ALARMS		(1)
+#define ENABLE_ALARMS		(1)
 // ---------------------------------------------------------------------------
 
 
@@ -122,8 +122,3 @@
 
 
 #endif  // '#ifndef config_h' ends here..
-
-
-
-
-
