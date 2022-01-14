@@ -149,6 +149,7 @@ void loop (void) {
     else if (f_1sec) {
         f_1sec = 0;
         // 1 second tasks go here..
+		f_sec_disp_task = 1;
         f_sec_logs_task = 1;
         f_sec_change_ui_task = 1;
         f_sec_change_o2_task = 1;

@@ -30,6 +30,7 @@ bool volatile   f_msec, f_10msec, f_100msec;
 bool volatile   f_1sec, f_1min, f_1hr;
 
 bool            f_system_running;
+bool            f_sec_disp_task;
 bool            f_sec_logs_task;
 bool            f_sec_change_ui_task;
 bool            f_sec_change_o2_task;

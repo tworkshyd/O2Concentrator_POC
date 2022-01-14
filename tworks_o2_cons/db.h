@@ -68,6 +68,7 @@ extern volatile bool  f_msec, f_10msec, f_100msec;
 extern volatile bool  f_1sec, f_1min, f_1hr;
 
 extern bool           f_system_running;
+extern bool           f_sec_disp_task;
 extern bool           f_sec_logs_task;
 extern bool           f_sec_change_ui_task;
 extern bool           f_sec_change_o2_task;
