@@ -168,7 +168,7 @@ void ui_task_main (void)    {
 
                 lcd.clear();
                 lcd.setCursor(0, 0);
-                sprintf(lcd_temp_string, "O2 CONC   PRESSURE ");
+                // sprintf(lcd_temp_string, "O2 CONC   PRESSURE ");
                 DBG_PRINTLN(lcd_temp_string);
                 //        "...................."
                 lcd.print(lcd_temp_string);
