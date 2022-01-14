@@ -121,6 +121,43 @@ void setup (void) {
 	// // 	delay (10);
 	// 
 	// 	}
+	//     // LCD pin mappings
+	//     pinMode(EN,            OUTPUT);
+	//     pinMode(RS,            OUTPUT);
+	//     pinMode(D4,            OUTPUT);
+	//     pinMode(D5,            OUTPUT);
+	//     pinMode(D6,            OUTPUT);
+	//     pinMode(D7,            OUTPUT);
+
+
+	//     while (1)
+	//     {
+	// 	    
+	// 	    digitalWrite(EN,  HIGH );
+	// 	    digitalWrite(RS,  HIGH );
+	// 	    digitalWrite(D4,  HIGH );
+	// 	    digitalWrite(D5,  HIGH );
+	// 	    digitalWrite(D6,  HIGH );
+	// 	    digitalWrite(D7,  HIGH );
+	// 
+	// 	    delay (10);
+	// 	    digitalWrite(EN,  LOW );
+	// 	    delay (10);
+	// 	    digitalWrite(RS,  LOW );
+	// 	    delay (10);
+	// 	    digitalWrite(D4,  LOW );
+	// 	    delay (10);
+	// 	    digitalWrite(D5,  LOW );
+	// 	    delay (10);
+	// 	    digitalWrite(D6,  LOW );
+	// 	    delay (10);
+	// 	    digitalWrite(D7,  LOW );
+	// 
+	// 
+	// 	    delay (50);	
+	// 	}
+    ui_print_welcome ();
+
     // ------------------------------------
 	
 

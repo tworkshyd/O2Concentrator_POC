@@ -25,7 +25,7 @@ void config_timer1  (void)  {
 
     // turn on CTC mode
     TCCR1B |= (1 << WGM12);
-    // Set CS12, CS11 and CS10 bits for 64 prescaler
+    // Set CS12, CS11 and CS10 bits for 64 pre-scaler
     TCCR1B |= (1 << CS11) | (1 << CS10);
 
     // enable timer compare interrupt
@@ -90,7 +90,8 @@ void platform_init (void) {
     timer_init ();
 
     // set up the LCD's number of columns and rows:
-    lcd.begin(LCD_COLS, LCD_ROWS);
+     lcd.begin(LCD_COLS, LCD_ROWS);
+
 
     // pin mode setting
     pinMode(RLY_1,            OUTPUT);

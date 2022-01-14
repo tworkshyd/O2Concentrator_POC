@@ -72,12 +72,27 @@
 //----------------------------------------------------------------------------
 
 // 1. LCD display port mappings
+#if   (HW_REVISION == HW_REV_1_0)
+	// todo - recheck SCH and update accordingly
 	#define RS		        (18)
 	#define EN		        (19)
 	#define D4		        (20)
 	#define D5		        (21)
 	#define D6		        (22)
 	#define D7		        (23)
+
+#elif (HW_REVISION == HW_REV_2_0)
+	#define RS		        (18)
+	#define EN		        (19)
+	#define D4		        (20)
+	#define D5		        (21)
+	#define D6		        (22)
+	#define D7		        (23)
+	
+#else
+	// nop
+#endif
+
 
 // 2. Relay Controls
 	#define RLY_1           (A0)

@@ -3,6 +3,13 @@
 #include "display.h"
 
 
+
+
+LiquidCrystal   lcd(RS, EN, D4, D5, D6, D7);
+LedControl      lc = LedControl(dataPin_7segment, clckPin_7segment, loadPin_7segment, 1);
+
+
+
 char     lcd_temp_string[LCD_COLS + 1];
 /* we always wait a bit between updates of the display */
 unsigned long delaytime = 50;
