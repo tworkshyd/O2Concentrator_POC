@@ -263,6 +263,7 @@ void  set7segmentDigit (int seg_no, int value, uint8_t  point) {
 #define	DISP_CHAR_9			(0b01111011)  // '9'
 
 #define	DISP_CHAR_HYPHEN    (0b00000001)  // '-'
+#define	DISP_CHAR_A			(0b01110111)  // 'A'
 #define	DISP_CHAR_E			(0b01001111)  // 'E'
 #define	DISP_CHAR_H			(0b00110111)  // 'H'
 #define	DISP_CHAR_L			(0b00001110)  // 'L'
@@ -293,6 +294,7 @@ void  set7segment_disp_char (int seg_no, char character) {
 		case '9':	value = DISP_CHAR_9		;	break;
 
 		case '-':	value = DISP_CHAR_HYPHEN;	break;
+		case 'A':	value = DISP_CHAR_A		;	break;
 		case 'E':	value = DISP_CHAR_E		;	break;
 		case 'H':	value = DISP_CHAR_H		;	break;
 		case 'L':	value = DISP_CHAR_L		;	break;
@@ -476,6 +478,113 @@ void display_o2 (float o2value) {
 }
 
 
+void display_pressure (float pressure_value) {
+
+	uint16_t    int_pressure_value;
+	uint8_t     unit_digit;
+	uint8_t     tens_digit;
+	uint8_t     decm_digit1;
+	uint8_t     decm_digit2;
+	
+
+	//     int_o2value   = round (o2value);
+	int_pressure_value   = (unsigned int) (pressure_value * 100.0);
+	
+	decm_digit2		= int_pressure_value % 10;
+	int_pressure_value   = int_pressure_value / 10;
+	decm_digit1		= int_pressure_value % 10;
+	int_pressure_value   = int_pressure_value / 10;
+	unit_digit		= int_pressure_value % 10;
+	int_pressure_value   = int_pressure_value / 10;
+	tens_digit		= int_pressure_value % 10;
+	
+	
+	// digit 1
+	set7segment_disp_char (1, 'P');
+	// digit 2
+	set7segmentDigit (2, tens_digit, false);
+	// digit 3
+	set7segmentDigit (3, unit_digit, true);		// to display '.'
+	// digit 4
+	set7segmentDigit (4, decm_digit1, false);
+	// digit 5
+	set7segmentDigit (5, decm_digit2, false);
+	
+	
+	
+}
+
+
+void display_o2_moving_avg (float avg) {
+
+	uint16_t    int_pressure_value;
+	uint8_t     unit_digit;
+	uint8_t     tens_digit;
+	uint8_t     decm_digit1;
+	uint8_t     decm_digit2;
+	
+
+	//     int_o2value   = round (o2value);
+	int_pressure_value   = (unsigned int) (avg * 100.0);
+	
+	decm_digit2		= int_pressure_value % 10;
+	int_pressure_value   = int_pressure_value / 10;
+	decm_digit1		= int_pressure_value % 10;
+	int_pressure_value   = int_pressure_value / 10;
+	unit_digit		= int_pressure_value % 10;
+	int_pressure_value   = int_pressure_value / 10;
+	tens_digit		= int_pressure_value % 10;
+	
+	
+	// digit 1
+	set7segment_disp_char (1, 'A');
+	// digit 2
+	set7segmentDigit (2, tens_digit, false);
+	// digit 3
+	set7segmentDigit (3, unit_digit, true);		// to display '.'
+	// digit 4
+	set7segmentDigit (4, decm_digit1, false);
+	// digit 5
+	set7segmentDigit (5, decm_digit2, false);
+	
+	
+}
+
+void display_temprature (float tempr_value) {
+
+	uint16_t    int_temr_value;
+	uint8_t     unit_digit;
+	uint8_t     tens_digit;
+	uint8_t     decm_digit1;
+	uint8_t     decm_digit2;
+	
+
+	//     int_o2value   = round (o2value);
+	int_temr_value   = (unsigned int) (tempr_value * 100.0);
+	
+	decm_digit2		= int_temr_value % 10;
+	int_temr_value   = int_temr_value / 10;
+	decm_digit1		= int_temr_value % 10;
+	int_temr_value   = int_temr_value / 10;
+	unit_digit		= int_temr_value % 10;
+	int_temr_value   = int_temr_value / 10;
+	tens_digit		= int_temr_value % 10;
+	
+	
+	// digit 1
+	set7segment_disp_char (1, 't');
+	// digit 2
+	set7segmentDigit (2, tens_digit, false);
+	// digit 3
+	set7segmentDigit (3, unit_digit, true);		// to display '.'
+	// digit 4
+	set7segmentDigit (4, decm_digit1, false);
+	// digit 5
+	set7segmentDigit (5, decm_digit2, false);
+	
+	
+	
+}
 
 
 // void display_total_run_hours (uint32_t runhours) {
@@ -580,53 +689,45 @@ void    display_task (void) {
 	
 	switch (state)
 	{
-		case 0:
-            secs = ( current_run_time_secs %  60);
-            mins = ((current_run_time_secs % (60 * 60)) / 60);
-            hrs  = ( current_run_time_secs / (60 * 60));
-            display_current_run_hours(hrs, mins);
-			stay_time = CURR_RUN_TIME_SECS;
+		
+		default:
+			state = 0;
 			break;
 		case 1:
 		//temp
-		o2_concentration = 93.39;
+		//o2_concentration = 93.39;
 			display_o2 (o2_concentration);
-			stay_time = CURR_RUN_TIME_SECS;
+			stay_time = O2C_DISP_TIME_SECS;
 			break;
 		case 2:
-			stay_time = 0;
+		//temp
+		//output_pressure = 06.35;
+			display_pressure (output_pressure);
+			stay_time = PRESSURE_DISP_TIME_SECS;
 			break;
 		case 3:
-			stay_time = 0;
-			break;		
-		default:
+		//temp
+		//o2_moving_avg = 81.39;
+			display_o2_moving_avg (o2_moving_avg);
+			stay_time = MOVING_AVG_DISP_TIME_SECS;
 			break;
+		case 4:
+		// temp
+		//tempr_value_1 = 23.65;
+			display_temprature (tempr_value_1);	// temperature sensor - 1 is used
+			stay_time = TEMPR_DISP_TIME_SECS;
+			break;
+// 		case 5:
+//             secs = ( current_run_time_secs %  60);
+//             mins = ((current_run_time_secs % (60 * 60)) / 60);
+//             hrs  = ( current_run_time_secs / (60 * 60));
+//             display_current_run_hours(hrs, mins);
+// 			stay_time = CURR_RUN_TIME_SECS;
+// 			break;
 	}
 	
 	state++;
-	
 
-     if (f_system_running)   {
-//         display_o2 (o2_concentration);
-//         if (f_run_hours == 1) {
-            // display current run hours : CRN
-            int secs = ( current_run_time_secs %  60);
-            int mins = ((current_run_time_secs % (60 * 60)) / 60);
-            int hrs  = ( current_run_time_secs / (60 * 60));
-            display_current_run_hours(hrs, mins);  
-
-//             neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  OFF_LED);  
-//             neo_pixel_control (NEO_PXL_CURR_RUN_TIME, ON_LED);  
-//         }
-//         else  {
-//             // display total run hours : TRN
-//             int hrs = (total_run_time_secs / (60 * 60));
-//               
-//             display_total_run_hours(hrs);
-//             neo_pixel_control (NEO_PXL_CURR_RUN_TIME, OFF_LED);  
-//             neo_pixel_control (NEO_PXL_TOTAL_RUN_TIME,  ON_LED);  
-//         }
-    }
 
 }
 

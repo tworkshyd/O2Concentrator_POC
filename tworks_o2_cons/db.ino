@@ -43,6 +43,7 @@ uint8_t         alarms_byte;     // can hold upto 8 alarms, 1 bit for each
 
 
 float           o2_concentration = 93.50;
+float           o2_moving_avg = 91.31;
 float           prev_o2_concentration;
 float           output_pressure;//  = 25.03;
 float           prev_output_pressure  = 25;
