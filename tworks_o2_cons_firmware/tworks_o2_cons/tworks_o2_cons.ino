@@ -59,7 +59,7 @@ void setup (void) {
 
         // print retrieved record.. 
         DBG_PRINTLN ();
-        DBG_PRINTLN ("EEprom retrieved record...");
+        DBG_PRINTLN ("EEprom retrieved calibration constants...");
         DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
         DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
         DBG_PRINT   ("eep_record.total_run_time_secs      : ");
@@ -88,6 +88,22 @@ void setup (void) {
 
     }
 
+	// check for logs retrieve
+	/*
+		Note : if alarms button is kept pressed for 5 to 10 seconds on power-up.. 
+		system will flush out all the logs recorded
+	*/
+	// Alarm Clear Button Press detection
+	unsigned long int	time_tag = systemtick_msecs;
+	while (digitalRead(alarmClearButton) == ALARM_CLEAR_BUTTON_PRESSED) {   // press detection
+		if (time_elapsed(time_tag) > 5500)	{
+			DBG_PRINTLN ("Alarm Clear Button Pressed long press detected.. : ");
+			beep_for (100);
+			// flush all collected logs
+			log_serial_dump ();
+		}
+	}
+		
     
     o2_cons_init ();
     init_7segments ();
@@ -313,7 +329,7 @@ void o2_main_task (void)    {
 
     tworks2_PSA_logic();
 	
-	// log sensor data after every PSA cycle
+	// log sensor data after every PSA cycle (when unit is ON) 
 	logs_store ();
 
 

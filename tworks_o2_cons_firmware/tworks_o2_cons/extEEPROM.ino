@@ -277,9 +277,10 @@ void push_log_to_eeprom (LOG_RECORD_U * log_p)	{
 	}
 	else {
 		// nop
-		
+				DBG_PRINTLN ("error.. in 'push_log_to_eeprom()'!!!");
+
 		// todo 
-			// overlap and require the oldest record.
+			// overlap and over-write on to the oldest record.
 	}
 	
 
@@ -287,15 +288,18 @@ void push_log_to_eeprom (LOG_RECORD_U * log_p)	{
 
 
 
-LOG_RECORD_U * pull_log_from_eeprom (void)	{
+void pull_log_from_eeprom (LOG_RECORD_U * log_p)	{
 	
-// 		if ( (eep_log_next_record_address + EEPROM_LOGS_RECORD_SIZE) < EEPROM_LOGS_AREA_END)	{
-// 			eepwrite (eep_log_next_record_address, (byte*) log_p, EEPROM_LOGS_RECORD_SIZE);
-// 			eep_log_next_record_address += EEPROM_LOGS_RECORD_SIZE;
-// 		}
-// 		else {
-// 
-// 		}
+	if ( (eep_log_next_record_address + EEPROM_LOGS_RECORD_SIZE) < EEPROM_LOGS_AREA_END )	{
+		eepread (eep_log_next_record_address, (byte*) log_p, EEPROM_LOGS_RECORD_SIZE);
+		eep_log_next_record_address += EEPROM_LOGS_RECORD_SIZE;
+	}
+	else {
+		// nop
+		DBG_PRINTLN ("error..!!!");
+		// todo
+			// overlap and read the oldest record.
+	}
 	
 }
 

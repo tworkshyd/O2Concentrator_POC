@@ -86,8 +86,8 @@ void eepfill	  (unsigned int address, uint8_t data, uint16_t n_bytes);
 void eeptest      (void);
 void save_run_hrs_n_calib_constants (void);
 void update_log_rcord_head_ptr (uint16_t eep_address);
-void push_log_to_eeprom (LOG_RECORD_U * log_p);
-LOG_RECORD_U * pull_log_from_eeprom (void);
+void push_log_to_eeprom   (LOG_RECORD_U * log_p);
+void pull_log_from_eeprom (LOG_RECORD_U * log_p);
 
 
 #endif

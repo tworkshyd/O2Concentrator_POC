@@ -149,10 +149,15 @@ void ui_task_main (void)    {
 	if (!f_system_running && alarm_button_press_count >= EEPROM_ERASE_BUTTON_PRESSES)	{
 		alarm_button_press_count = 0;
 		BUUZZER_CNTRL (BUZZ_ON);
+		delay(100);
+		BUUZZER_CNTRL (BUZZ_OFF);
 		DBG_PRINTLN ("EEPROM Erase command issued..");
 		DBG_PRINTLN ("erasing..");
 		eepfill	  (EEPROM_LOGS_START_ADDRESS, 0xFF, EEPROM_LOGS_AREA_SIZE_IN_BYTES);
 		DBG_PRINTLN ("erase complete.");
+		
+		BUUZZER_CNTRL (BUZZ_ON);
+		delay(333);
 		BUUZZER_CNTRL (BUZZ_OFF);
 
 	}

@@ -39,7 +39,9 @@
 typedef enum log_type_e	{
 	
 	LOG_SENSOR_DATA = 0x03,
-	LOG_TIME_STAMP
+	LOG_TIME_STAMP  = 0x05,
+	
+	INVALID_RECORD  = 0xFF
 	
 } LOG_TYPE_E;
 
@@ -60,7 +62,7 @@ typedef enum log_type_e	{
 
 typedef struct time_stamp_t	{
 	
-	LOG_TYPE_E	rec_type;
+	uint8_t		rec_type;
 	uint8_t		ss;
 	uint8_t		mm;
 	uint8_t		hh;
@@ -71,7 +73,7 @@ typedef struct time_stamp_t	{
 
 typedef struct sensor_data_t	{
 	
-	LOG_TYPE_E	rec_type;
+	uint8_t		rec_type;
 	uint8_t		ss;
 	// Note : All decimal values are stored in integer format after multiplying by 100, to save on memory
 	//			(to avoid expensive 8 bytes floating point values), just divide by 100 to get actual value with
@@ -87,7 +89,7 @@ typedef struct sensor_data_t	{
 // Note: below union is used to ease handing of different type of records.
 typedef union log_record_t	{
 	
-	LOG_TYPE_E		rec_type;
+	uint8_t			rec_type;
 	TIME_STAMP_T	time_stamp;
 	SENSOR_DATA_T	sensor_data;
 	
@@ -101,7 +103,7 @@ typedef union log_record_t	{
 // Function declarations -----------------------------------------------------
 void log_init		(void);
 void logs_task      (void);
-void log_serial_dump(void);
+void log_print_on_terminal(void);
 void logs_store     (void);
 void logs_retrive   (void);
 

@@ -38,7 +38,7 @@ void logs_task (void) {
         log_period++;
         if (log_period >= SET_LOG_PERIOD_SECS)  {
             log_period = 0;
-            log_serial_dump ();
+            log_print_on_terminal ();
 #endif
         }
     }
@@ -49,7 +49,7 @@ void logs_task (void) {
     change_in_value = abs(change_in_value);
     if (change_in_value >= O2_VALUE_CHANGE_THRESHOLD)  {
         last_o2_concentration = o2_concentration;
-        log_serial_dump ();
+        log_print_on_terminal ();
     }
 #endif
 
@@ -61,7 +61,7 @@ void logs_task (void) {
 
 
 
-void log_serial_dump (void)  {
+void log_print_on_terminal (void)  {
 
 	static uint8_t		skip_count = 0;
 
@@ -123,9 +123,127 @@ void log_serial_dump (void)  {
 }
 
 
+void log_serial_dump (void)	{
+			
+	DBG_PRINTLN ("Printing all collected logs..");
+
+	static uint8_t		skip_count = 0;
+
+	unsigned int	address;
+	unsigned int	record_count;
+	LOG_RECORD_U	one_record;
+	
+	record_count = 0;
+	update_log_rcord_head_ptr (EEPROM_LOGS_START_ADDRESS);
+	
+	// temp
+	pull_log_from_eeprom (&one_record);
+	
+	
+	do 
+	{
+		pull_log_from_eeprom (&one_record);
+		DBG_PRINT ("#");
+		DBG_PRINT (record_count);
+		DBG_PRINT (" ");
+
+		switch (one_record.rec_type)
+		{
+			case 	LOG_TIME_STAMP:
+				DBG_PRINT (one_record.time_stamp.hh);	DBG_PRINT (":");
+				DBG_PRINT (one_record.time_stamp.mm);	DBG_PRINT (":");
+				DBG_PRINT (one_record.time_stamp.ss);	
+				break;
+			case 	LOG_SENSOR_DATA:
+				DBG_PRINT (one_record.sensor_data.o2_p);	DBG_PRINT (", ");
+				DBG_PRINT (one_record.sensor_data.press);	DBG_PRINT (", ");
+				DBG_PRINT (one_record.sensor_data.tempr);	
+				break;
+			
+		}
+		DBG_PRINTLN ();
+// 		DBG_PRINTLN (one_record.rec_type);
+		
+// 		DBG_PRINT   ("one_record.sensor_data.rec_type : ");
+// 		DBG_PRINTLN (one_record.sensor_data.rec_type);
+// 		DBG_PRINT   ("one_record.time_stamp.rec_type : ");
+// 		DBG_PRINTLN (one_record.time_stamp.rec_type);
+// 		DBG_PRINT   ("record_count : ");
+// 		DBG_PRINTLN (record_count);
+// 		DBG_PRINTLN ();
+
+		record_count++;
+	// } while (record_count < EEPROM_LOGS_TOTAL_COUNT);
+	 } while (one_record.sensor_data.rec_type != 0xFF   &&  record_count < EEPROM_LOGS_TOTAL_COUNT);
+	
+	
+	DBG_PRINT  ("Total records printed.. : ");
+	DBG_PRINTLN (record_count);
+
+
+	// 1. print legend
+	// sample output :
+
+	// On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV, o2_concen,   tempr-snsr-1, tempr-snsr-2, pressures
+	// 00:00:23 00:00:22,   5400,       0,        700,    822,      666.38,     18.45,        25.65,        24.50,       25.03
+
+	// print label once every 10 (say) records
+	#define		SKIP_COUNT		(10)
+	if (skip_count++ >= SKIP_COUNT)	{
+		skip_count = 0;
+		DBG_PRINTLN ();
+		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV, o2_concen,   tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
+	}
+	
+	// 1. time stamp
+	sprintf(lcd_temp_string, "%02d:%02d:%02d ", systemtick_hrs, systemtick_mins, systemtick_secs);
+	DBG_PRINT (lcd_temp_string);
+
+	// 2. system run time
+	int secs = ( current_run_time_secs %  60);
+	int mins = ((current_run_time_secs % (60 * 60)) / 60);
+	int hrs  = ( current_run_time_secs / (60 * 60));
+	sprintf(lcd_temp_string, "%02d:%02d:%02d,  ", hrs, mins, secs);
+	Serial.print (lcd_temp_string);
+
+	// 3. production time, flush time n precharge time
+	Serial.printf ("%5d,  ", Production_Delay);
+	Serial.printf ("%6d,  ", Flush_Delay);
+	Serial.printf ("%9d,  ", PreCharge_Delay);
+
+	// 4. sieve A, B & back flush valve status
+	//    sprintf(lcd_temp_string, "%d %d %d ", (do_byte & SIEVE_A_VALVE_CONTROL) != 0, (do_byte & SIEVE_B_VALVE_CONTROL) != 0, (do_byte & SIEVE_FLUSH_VLV_CNTRL) != 0);
+	//    Serial.print (lcd_temp_string);
+
+	// 5. O2 raw adc, mv, %
+	//sprintf(lcd_temp_string, "%4d %lf %lf ", o2_raw_adc_count, m_raw_voltage, o2_concentration);
+	//Serial.print (lcd_temp_string);
+	Serial.printf ("%5d,      ", o2_raw_adc_count);
+	Serial.print (o2_m_raw_voltage, 2);
+	Serial.print (",     ");
+	Serial.print (o2_concentration, 2);
+	Serial.print (",    ");
+
+	// 6. Temperature values
+	Serial.print ("    ");
+	Serial.print(tempr_value_1);
+	Serial.print (",        ");
+	Serial.print(tempr_value_2);
+	Serial.print (",       ");
+	
+	// 7. Pressure
+	Serial.print(output_pressure, 2);
+	Serial.println("\r\n");
+	//Serial.println("\r\n");
+	
+}
+
+
+
+
 void logs_store     (void)	{
 	
-	LOG_RECORD_U	log_data;
+	static LOG_RECORD_U		log_data;
 	
 	
 	/* 
@@ -139,8 +257,7 @@ void logs_store     (void)	{
 	static int record_no;
 	
 	record_no++;
-	if (record_no >= TS_AFTER_N_RECORDS)	{
-		record_no = 0;
+	if ((record_no % TS_AFTER_N_RECORDS) == 0)	{
 		
 		// log time stamp
 		log_data.time_stamp.rec_type  = LOG_TIME_STAMP;
@@ -153,6 +270,9 @@ void logs_store     (void)	{
 		
 		// store into eeprom
 		push_log_to_eeprom (&log_data);
+		record_no++;
+		DBG_PRINT   ("logging record : ");
+		DBG_PRINTLN (record_no);
 	}
 	
 	log_data.sensor_data.rec_type  = LOG_SENSOR_DATA;
@@ -162,6 +282,8 @@ void logs_store     (void)	{
 	
 	// store into eeprom
 	push_log_to_eeprom (&log_data);
+	DBG_PRINT   ("logging record : ");
+	DBG_PRINTLN (record_no);
 	
 }
 
