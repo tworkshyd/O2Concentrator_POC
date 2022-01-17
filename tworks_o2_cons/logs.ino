@@ -93,7 +93,7 @@ void log_dump (void)  {
     //sprintf(lcd_temp_string, "%4d %lf %lf ", o2_raw_adc_count, m_raw_voltage, o2_concentration);
     //Serial.print (lcd_temp_string);
     Serial.printf ("%5d,      ", o2_raw_adc_count);
-    Serial.print (m_raw_voltage, 2);
+    Serial.print (o2_m_raw_voltage, 2);
     Serial.print (",     ");
     Serial.print (o2_concentration, 2);
     Serial.print (",    ");
