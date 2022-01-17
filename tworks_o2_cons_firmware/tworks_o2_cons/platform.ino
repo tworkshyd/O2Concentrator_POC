@@ -475,12 +475,12 @@ bool compare_buff (byte * buff_a, byte * buff_b, int  len)  {
     
 void eeptest (void) {
     
-    int       i, address;
-    byte      write_buff[EEPROM_TEST_BUFFER_SIZE];
-    byte      read_buff[EEPROM_TEST_BUFFER_SIZE];
-    int       buff_size = EEPROM_TEST_BUFFER_SIZE;
-    int       success = 0;
-    int       fail = 0;
+    uint64_t		i, address;
+    byte			write_buff[EEPROM_TEST_BUFFER_SIZE];
+    byte			read_buff[EEPROM_TEST_BUFFER_SIZE];
+    uint64_t		buff_size = EEPROM_TEST_BUFFER_SIZE;
+    int				success = 0;
+    int				fail = 0;
 
 
     DBG_PRINTLN();
@@ -497,17 +497,22 @@ void eeptest (void) {
     DBG_PRINTLN ();
     
     DBG_PRINT ("Writing test buffer..");
+	int		iteration = 0;
     for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
     {
         eepwrite (address, write_buff, EEPROM_TEST_BUFFER_SIZE);
+        DBG_PRINTLN (iteration); 
+		iteration++;
     }
 
     DBG_PRINT ("Reading test buffer..");
+	iteration = 0;
     for (address = extEEPROM_START_ADDRESS; address < extEEPROM_LAST_ADDRESS; address += EEPROM_TEST_BUFFER_SIZE)
     {
         eepread (address, read_buff, EEPROM_TEST_BUFFER_SIZE);
-        DBG_PRINT (read_buff[5]); // just a sample element printed
+        DBG_PRINT (read_buff[iteration % EEPROM_TEST_BUFFER_SIZE]); // just a sample element printed
         DBG_PRINT (" ");   
+		iteration++;
 
         if (compare_buff (read_buff, write_buff, EEPROM_TEST_BUFFER_SIZE) == true)  {
             success++;
