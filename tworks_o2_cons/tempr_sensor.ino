@@ -25,7 +25,8 @@ float   alpha = 3.85; //0.00385;
 
 void tempr_sensor_scan (void)  {
 
-    //DBG_PRINTLN ();
+
+    float	m_raw_voltage;
 
     // Senor - 1
     ADS.readADC(TEMPR_SENSOR_1_CHANNEL_NO);

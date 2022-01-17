@@ -71,7 +71,7 @@ unsigned char     do_byte;              // holds all digital outputs current sta
 volatile int16_t  o2_raw_adc_count;
 volatile float    o2_slope;
 volatile float    o2_const_val;
-volatile float    m_raw_voltage;
+volatile float    o2_m_raw_voltage;
 
 
 uint8_t   start_switch_pressed;
