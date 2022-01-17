@@ -29,7 +29,7 @@ void logs_task (void) {
         log_period++;
         if (log_period >= SET_LOG_PERIOD_SECS)  {
             log_period = 0;
-            log_dump ();
+            log_serial_dump ();
 #endif
         }
     }
@@ -40,7 +40,7 @@ void logs_task (void) {
     change_in_value = abs(change_in_value);
     if (change_in_value >= O2_VALUE_CHANGE_THRESHOLD)  {
         last_o2_concentration = o2_concentration;
-        log_dump ();
+        log_serial_dump ();
     }
 #endif
 
@@ -51,7 +51,7 @@ void logs_task (void) {
 }
 
 
-void log_dump (void)  {
+void log_serial_dump (void)  {
 
 	static uint8_t		skip_count = 0;
 
@@ -111,6 +111,22 @@ void log_dump (void)  {
     //Serial.println("\r\n");
 
 }
+
+
+void logs_store     (void)	{
+	
+	
+	
+}
+
+
+void logs_retrive   (void)	{
+	
+	
+	
+}
+
+
 
 
 // EoF -------------

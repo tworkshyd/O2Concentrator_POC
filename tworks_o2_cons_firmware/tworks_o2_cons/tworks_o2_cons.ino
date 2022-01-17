@@ -1,6 +1,5 @@
 // tworks_o2_cons.c
 
-#include <extEEPROM.h>
 #include "tempr_sensor.h"
 #include "o2_sensor.h"
 #include "platform.h"
@@ -168,7 +167,7 @@ void loop (void) {
         // 1 minute tasks go here..
 
         if (f_system_running) {
-            save_record ();
+            save_calib_constants ();
         }
         
     }

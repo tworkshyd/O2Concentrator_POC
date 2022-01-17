@@ -3,6 +3,11 @@
 #ifndef _PLATFORM_h
 #define _PLATFORM_h
 
+
+#include <extEEPROM.h>
+
+
+
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
 #else
@@ -10,6 +15,7 @@
 #endif
 
 #include "config.h"
+#include "extEEPROM.h"
 
 
 

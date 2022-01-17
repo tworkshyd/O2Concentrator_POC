@@ -188,7 +188,7 @@ void eeptest (void) {
 }
 
 
-void save_record (void) {
+void save_calib_constants (void) {
 
     eep_record.last_cycle_run_time_secs = last_cycle_run_time_secs;
     eep_record.total_run_time_secs      = total_run_time_secs;
