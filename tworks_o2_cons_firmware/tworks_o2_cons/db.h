@@ -33,6 +33,8 @@ typedef struct eep_record_t {
 } EEP_RECORD_T;
 
 
+
+
 // variable declarations
 extern bool          f_eeprom_working;
 extern EEP_RECORD_T  eep_record;

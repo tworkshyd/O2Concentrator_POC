@@ -42,12 +42,24 @@ bool eeprom_init (void) {
     DBG_PRINTLN(EEPROM_TEST_AREA_END);
 
     DBG_PRINTLN();
-    DBG_PRINT ("EEPROM_RECORD_START          : ");
-    DBG_PRINTLN(EEPROM_RECORD_START);
-    DBG_PRINT ("EEPROM_RECORD_AREA_SIZE      : ");
-    DBG_PRINTLN(EEPROM_RECORD_AREA_SIZE);    
-    DBG_PRINT ("EEPROM_RECORD_AREA_END       : ");
-    DBG_PRINTLN(EEPROM_RECORD_AREA_END);
+    DBG_PRINT ("EEPROM_CALIB_START          : ");
+    DBG_PRINTLN(EEPROM_CALIB_START);
+    DBG_PRINT ("EEPROM_CALIB_AREA_SIZE      : ");
+    DBG_PRINTLN(EEPROM_CALIB_AREA_SIZE);    
+    DBG_PRINT ("EEPROM_CALIB_AREA_END       : ");
+    DBG_PRINTLN(EEPROM_CALIB_AREA_END);
+	
+    DBG_PRINTLN();
+    DBG_PRINT ("EEPROM_LOGS_START_ADDRESS   : ");
+    DBG_PRINTLN(EEPROM_LOGS_START_ADDRESS);
+    DBG_PRINT ("EEPROM_LOGS_END_ADDRESS     : ");
+    DBG_PRINTLN(EEPROM_LOGS_END_ADDRESS);
+    DBG_PRINT ("EEPROM_LOGS_RECORD_SIZE     : ");
+    DBG_PRINTLN(EEPROM_LOGS_RECORD_SIZE);
+    DBG_PRINT ("EEPROM_LOGS_TOTAL_COUNT     : ");
+    DBG_PRINTLN(EEPROM_LOGS_TOTAL_COUNT);
+    DBG_PRINT ("EEPROM_LOGS_AREA_END        : ");
+    DBG_PRINTLN(EEPROM_LOGS_AREA_END);
 
     return true;
   
@@ -188,16 +200,16 @@ void eeptest (void) {
 }
 
 
-void save_calib_constants (void) {
+void save_run_hrs_n_calib_constants (void) {
 
-    eep_record.last_cycle_run_time_secs = last_cycle_run_time_secs;
-    eep_record.total_run_time_secs      = total_run_time_secs;
-    
-    // write on to eeprom
-    if (f_eeprom_working) {
-      eepwrite (EEPROM_RECORD_START, (byte*)&eep_record, EEPROM_RECORD_AREA_SIZE);
-    }
-            
+	eep_record.last_cycle_run_time_secs = last_cycle_run_time_secs;
+	eep_record.total_run_time_secs      = total_run_time_secs;
+	
+	// write on to eeprom
+	if (f_eeprom_working) {
+		eepwrite (EEPROM_CALIB_START, (byte*)&eep_record, EEPROM_CALIB_AREA_SIZE);
+	}
+	
 }
 
 

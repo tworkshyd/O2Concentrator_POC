@@ -194,7 +194,7 @@ void ui_task_main (void)    {
 
             last_cycle_run_time_secs = current_run_time_secs;
             current_run_time_secs = 0;
-            save_calib_constants ();
+            save_run_hrs_n_calib_constants ();
             
 			if (!f_critical_alarms)	{
 				DBG_PRINTLN("Stop Button Pressed!");

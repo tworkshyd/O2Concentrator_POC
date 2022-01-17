@@ -54,7 +54,7 @@ void setup (void) {
     if (eeprom_init () == true) {
         f_eeprom_working = 1;
         // read eeprom and retrieve saved counters and system parameters
-        eepread (EEPROM_RECORD_START, (byte*)&eep_record, EEPROM_RECORD_AREA_SIZE);
+        eepread (EEPROM_CALIB_START, (byte*)&eep_record, EEPROM_CALIB_AREA_SIZE);
 
         // print retrieved record.. 
         DBG_PRINTLN ();
@@ -76,7 +76,7 @@ void setup (void) {
 
         buff1 = (byte*)&eep_record;
         buff2 = (byte*)&eep_record_default;
-        for (int i = 0; i < EEPROM_RECORD_AREA_SIZE; i++)
+        for (int i = 0; i < EEPROM_CALIB_AREA_SIZE; i++)
         {
             buff1[i] = buff2[i];
         }
@@ -167,7 +167,7 @@ void loop (void) {
         // 1 minute tasks go here..
 
         if (f_system_running) {
-            save_calib_constants ();
+            save_run_hrs_n_calib_constants ();
         }
         
     }

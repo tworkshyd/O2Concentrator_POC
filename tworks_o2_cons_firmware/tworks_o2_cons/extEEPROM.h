@@ -49,17 +49,26 @@
 #define   extEEPROM_LAST_ADDRESS          (extEEPROM_START_ADDRESS + extEEPROM_SIZE_IN_BYTES)
 
 
-// Memory address allocations
+
+
+// Memory address allocations : For test buffer
 #define   EEPROM_TEST_AREA_START          (extEEPROM_START_ADDRESS)
 #define   EEPROM_TEST_AREA_SIZE           (extEEPROM_PAGE_SIZE_IN_BYTES)
 #define   EEPROM_TEST_AREA_END            (EEPROM_TEST_AREA_START + EEPROM_TEST_AREA_SIZE)
-#define   EEPROM_TEST_BUFFER_SIZE         (33)
+#define   EEPROM_TEST_BUFFER_SIZE         (extEEPROM_PAGE_SIZE_IN_BYTES)
 
-#define   EEPROM_RECORD_START             (EEPROM_TEST_AREA_END)
-#define   EEPROM_RECORD_AREA_SIZE         (sizeof(EEP_RECORD_T))
-#define   EEPROM_RECORD_AREA_END          (EEPROM_RECORD_START + EEPROM_RECORD_AREA_SIZE)
+// Memory address allocations : for Run hours and calibration data 
+#define   EEPROM_CALIB_START             (EEPROM_TEST_AREA_END)
+#define   EEPROM_CALIB_AREA_SIZE         (sizeof(EEP_RECORD_T))
+#define   EEPROM_CALIB_AREA_END          (EEPROM_CALIB_START + EEPROM_CALIB_AREA_SIZE)
 
-// ... 
+// Memory address allocations : for log records
+#define   EEPROM_LOGS_START_ADDRESS      (EEPROM_CALIB_AREA_END)
+#define   EEPROM_LOGS_END_ADDRESS        (extEEPROM_LAST_ADDRESS)
+#define   EEPROM_LOGS_RECORD_SIZE        (sizeof(LOG_RECORD_U))
+#define   EEPROM_LOGS_TOTAL_COUNT        ((EEPROM_LOGS_END_ADDRESS - EEPROM_LOGS_START_ADDRESS) / EEPROM_LOGS_RECORD_SIZE)
+#define   EEPROM_LOGS_AREA_END			 (EEPROM_LOGS_START_ADDRESS + (EEPROM_LOGS_TOTAL_COUNT * EEPROM_LOGS_RECORD_SIZE))
+
 
 
 

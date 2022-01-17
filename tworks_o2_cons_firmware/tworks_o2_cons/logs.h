@@ -76,13 +76,13 @@ struct sensor_data_t	{
 
 
 // Note: below union is used to ease handing of different type of records.
-union log_record_t	{
+typedef union log_record_t	{
 	
 	uint8_t					rec_type;
 	struct time_stamp_t		time_stamp;
 	struct sensor_data_t	sensor_data;
 	
-};
+} LOG_RECORD_U;
 
 
 
