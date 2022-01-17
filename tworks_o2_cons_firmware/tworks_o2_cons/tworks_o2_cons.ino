@@ -99,7 +99,7 @@ void setup (void) {
     ui_init ();
 	
     // temp test area ---------------------
-    // eeptest ();    
+    eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
 	// 	while (1)
