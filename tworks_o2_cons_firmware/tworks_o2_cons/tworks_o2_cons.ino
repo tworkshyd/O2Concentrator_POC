@@ -18,7 +18,8 @@
 // System tick time
 #define TICK_time (10)
 
-extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
+// extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
+extEEPROM eep(extEEPROM_SIZE_IN_BITS, extEEPROM_NO_OF_DEVICES, extEEPROM_PAGE_SIZE_IN_BYTES);         // device size, number of devices, page size
 
 unsigned char cycle;
 unsigned char f_crn;
