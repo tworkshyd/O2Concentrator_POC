@@ -1,7 +1,3 @@
-// Sketch uses 20220 bytes (15%) of program storage space. Maximum is 130048 bytes.
-// Global variables use 2386 bytes (14%) of dynamic memory, leaving 13998 bytes for local variables. Maximum is 16384 bytes.
-
-
 // tworks_o2_cons.c
 
 #include <extEEPROM.h>
@@ -18,7 +14,7 @@
 // System tick time
 #define TICK_time (10)
 
-// extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
+
 extEEPROM eep(extEEPROM_SIZE_IN_BITS, extEEPROM_NO_OF_DEVICES, extEEPROM_PAGE_SIZE_IN_BYTES);         // device size, number of devices, page size
 
 unsigned char cycle;
@@ -100,7 +96,7 @@ void setup (void) {
     ui_init ();
 	
     // temp test area ---------------------
-    eeptest ();    
+    // eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
 	// 	while (1)
@@ -109,7 +105,7 @@ void setup (void) {
 	// // 		test_7segments ();
 	// // 		DBG_PRINTLN ("7.");
 	// 		
-	// 		DBG_PRINTLN ("Neo-pixcels test...");
+	// 		DBG_PRINTLN ("Neo-pixels test...");
 	// 		neo_pixel_leds_test ();
 	// 
 	// //         digitalWrite(miso_neo_data1,    HIGH );
