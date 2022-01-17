@@ -96,9 +96,10 @@ void setup (void) {
 	// Alarm Clear Button Press detection
 	unsigned long int	time_tag = systemtick_msecs;
 	while (digitalRead(alarmClearButton) == ALARM_CLEAR_BUTTON_PRESSED) {   // press detection
-		if (time_elapsed(time_tag) > 5500)	{
+		if (time_elapsed(time_tag) > 3300)	{
 			DBG_PRINTLN ("Alarm Clear Button Pressed long press detected.. : ");
 			beep_for (100);
+			DBG_PRINTLN ();
 			// flush all collected logs
 			log_serial_dump ();
 		}
@@ -329,8 +330,6 @@ void o2_main_task (void)    {
 
     tworks2_PSA_logic();
 	
-	// log sensor data after every PSA cycle (when unit is ON) 
-	logs_store ();
 
 
     if (nb_delay != prev_nb_delay)  {
@@ -388,6 +387,8 @@ void tworks2_PSA_logic (void)  {
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
             nb_delay = PreCharge_Delay;
             cycle++;
+			// log sensor data after every PSA cycle (when unit is ON)
+			logs_store ();
             break;
             
         default:

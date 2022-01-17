@@ -98,6 +98,9 @@ typedef union log_record_t	{
 
 
 
+extern int record_no;
+
+
 
 
 // Function declarations -----------------------------------------------------

@@ -155,7 +155,8 @@ void ui_task_main (void)    {
 		DBG_PRINTLN ("erasing..");
 		eepfill	  (EEPROM_LOGS_START_ADDRESS, 0xFF, EEPROM_LOGS_AREA_SIZE_IN_BYTES);
 		DBG_PRINTLN ("erase complete.");
-		
+		record_no = 0;
+		update_log_rcord_head_ptr (EEPROM_LOGS_START_ADDRESS);
 		BUUZZER_CNTRL (BUZZ_ON);
 		delay(333);
 		BUUZZER_CNTRL (BUZZ_OFF);

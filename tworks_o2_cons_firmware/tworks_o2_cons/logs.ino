@@ -10,7 +10,7 @@
 
 
 CircularBuffer <int, 400> buffer;
-
+int record_no = 0;
 
 
 
@@ -126,38 +126,55 @@ void log_print_on_terminal (void)  {
 void log_serial_dump (void)	{
 			
 	DBG_PRINTLN ("Printing all collected logs..");
+    DBG_PRINTLN ();
 
 	static uint8_t		skip_count = 0;
+	char	temp_string[100];
 
 	unsigned int	address;
 	unsigned int	record_count;
 	LOG_RECORD_U	one_record;
 	
-	record_count = 0;
+	record_count = 1;	// for do while()
 	update_log_rcord_head_ptr (EEPROM_LOGS_START_ADDRESS);
 	
 	// temp
 	pull_log_from_eeprom (&one_record);
+	DBG_PRINTLN ("---------------------------");
+	DBG_PRINTLN ("RecNo.   %O2    psi    *C");
+	DBG_PRINTLN ("---------------------------");
+	//            #0000   07.14, 00.44, 20.56
+	// one_record.time_stamp.mm, one_record.time_stamp.ss);
 	
 	
 	do 
 	{
 		pull_log_from_eeprom (&one_record);
-		DBG_PRINT ("#");
-		DBG_PRINT (record_count);
-		DBG_PRINT (" ");
-
+// 		DBG_PRINT ("#");
+// 		DBG_PRINT (record_count);
+// 		DBG_PRINT (" ");
+		sprintf(temp_string, "#%04d   ", record_count);
+		DBG_PRINT (temp_string);;
+		
 		switch (one_record.rec_type)
 		{
 			case 	LOG_TIME_STAMP:
-				DBG_PRINT (one_record.time_stamp.hh);	DBG_PRINT (":");
-				DBG_PRINT (one_record.time_stamp.mm);	DBG_PRINT (":");
-				DBG_PRINT (one_record.time_stamp.ss);	
+// 				DBG_PRINT (one_record.time_stamp.hh);	DBG_PRINT (":");
+// 				DBG_PRINT (one_record.time_stamp.mm);	DBG_PRINT (":");
+// 				DBG_PRINT (one_record.time_stamp.ss);	
+				sprintf(temp_string, "%02d:%02d:%02d ", one_record.time_stamp.hh, \
+									one_record.time_stamp.mm, one_record.time_stamp.ss);
+				DBG_PRINT (temp_string);
 				break;
 			case 	LOG_SENSOR_DATA:
-				DBG_PRINT (one_record.sensor_data.o2_p);	DBG_PRINT (", ");
-				DBG_PRINT (one_record.sensor_data.press);	DBG_PRINT (", ");
-				DBG_PRINT (one_record.sensor_data.tempr);	
+// 				DBG_PRINT (one_record.sensor_data.o2_p);	DBG_PRINT (", ");
+// 				DBG_PRINT (one_record.sensor_data.press);	DBG_PRINT (", ");
+// 				DBG_PRINT (one_record.sensor_data.tempr);	
+				sprintf(temp_string, "%02d.%02d, %02d.%02d, %02d.%02d", \
+							one_record.sensor_data.o2_p / 100, one_record.sensor_data.o2_p % 100, \
+							one_record.sensor_data.press / 100, one_record.sensor_data.press % 100, \
+							one_record.sensor_data.tempr / 100, one_record.sensor_data.tempr % 100);
+				DBG_PRINT (temp_string);
 				break;
 			
 		}
@@ -173,9 +190,11 @@ void log_serial_dump (void)	{
 // 		DBG_PRINTLN ();
 
 		record_count++;
-	// } while (record_count < EEPROM_LOGS_TOTAL_COUNT);
-	 } while (one_record.sensor_data.rec_type != 0xFF   &&  record_count < EEPROM_LOGS_TOTAL_COUNT);
+	} while (record_count < (EEPROM_LOGS_TOTAL_COUNT - 1));		
+// 	 } while (one_record.sensor_data.rec_type != 0xFF   &&  record_count < EEPROM_LOGS_TOTAL_COUNT);
 	
+	DBG_PRINTLN ("---------------------------");
+	DBG_PRINTLN ();
 	
 	DBG_PRINT  ("Total records printed.. : ");
 	DBG_PRINTLN (record_count);
@@ -254,10 +273,8 @@ void logs_store     (void)	{
 	#define TS_AFTER_N_RECORDS	(10)	// introduce on time stamp record after these many data records.
 		
 		
-	static int record_no;
 	
-	record_no++;
-	if ((record_no % TS_AFTER_N_RECORDS) == 0)	{
+	if ((record_no % TS_AFTER_N_RECORDS) == 0  ||  (record_no == 0) )	{
 		
 		// log time stamp
 		log_data.time_stamp.rec_type  = LOG_TIME_STAMP;
@@ -269,9 +286,9 @@ void logs_store     (void)	{
 		// log_data.time_stamp.YM    = ;
 		
 		// store into eeprom
+		DBG_PRINT  ("logging time stamp  : ");
 		push_log_to_eeprom (&log_data);
 		record_no++;
-		DBG_PRINT   ("logging record : ");
 		DBG_PRINTLN (record_no);
 	}
 	
@@ -281,8 +298,9 @@ void logs_store     (void)	{
 	log_data.sensor_data.tempr     = (uint16_t)(tempr_value_1    * 100);
 	
 	// store into eeprom
+	DBG_PRINT   ("logging sensor data : ");
 	push_log_to_eeprom (&log_data);
-	DBG_PRINT   ("logging record : ");
+	record_no++;
 	DBG_PRINTLN (record_no);
 	
 }

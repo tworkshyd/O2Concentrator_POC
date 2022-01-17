@@ -278,6 +278,8 @@ void push_log_to_eeprom (LOG_RECORD_U * log_p)	{
 	else {
 		// nop
 				DBG_PRINTLN ("error.. in 'push_log_to_eeprom()'!!!");
+				DBG_PRINT ("eep_log_next_record_address : ");
+				DBG_PRINTLN (eep_log_next_record_address);
 
 		// todo 
 			// overlap and over-write on to the oldest record.
@@ -297,6 +299,9 @@ void pull_log_from_eeprom (LOG_RECORD_U * log_p)	{
 	else {
 		// nop
 		DBG_PRINTLN ("error..!!!");
+		DBG_PRINT ("eep_log_next_record_address : ");
+		DBG_PRINTLN (eep_log_next_record_address);
+
 		// todo
 			// overlap and read the oldest record.
 	}
