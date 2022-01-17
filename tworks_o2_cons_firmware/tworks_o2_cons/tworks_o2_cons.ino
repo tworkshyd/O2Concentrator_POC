@@ -50,6 +50,7 @@ void setup (void) {
     platform_init ();
     ads_init ();
     db_init ();
+	log_init ();
     
     if (eeprom_init () == true) {
         f_eeprom_working = 1;
@@ -95,6 +96,20 @@ void setup (void) {
     ui_init ();
 	
     // temp test area ---------------------
+	// 	eepfill	  (EEPROM_LOGS_START_ADDRESS, 0xFF, EEPROM_LOGS_AREA_SIZE_IN_BYTES);
+	// 
+	// 	uint16_t	address = EEPROM_LOGS_START_ADDRESS;
+	// 	byte		data;
+	// 	while (address < EEPROM_LOGS_END_ADDRESS)
+	// 	{
+	// 		eepread   (EEPROM_LOGS_START_ADDRESS, &data, 1);
+	// 		address += 1;
+	// 		DBG_PRINT (data);
+	// 		DBG_PRINT (" ");
+	// 	}
+	// 	DBG_PRINTLN ();
+	// 	DBG_PRINTLN (address);
+
     // eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
@@ -297,6 +312,9 @@ void o2_main_task (void)    {
     time_tag = systemtick_msecs;
 
     tworks2_PSA_logic();
+	
+	// log sensor data after every PSA cycle
+	logs_store ();
 
 
     if (nb_delay != prev_nb_delay)  {

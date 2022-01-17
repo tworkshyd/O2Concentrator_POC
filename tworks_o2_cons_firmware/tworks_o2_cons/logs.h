@@ -35,6 +35,15 @@
 #endif
 
 
+// Enum ----------------------------------------------------------------------
+typedef enum log_type_e	{
+	
+	LOG_SENSOR_DATA = 0x03,
+	LOG_TIME_STAMP
+	
+} LOG_TYPE_E;
+
+
 // Structure declarations ----------------------------------------------------
 
 // Periodicity - Capture log every time the 4 step cycle ends.
@@ -49,20 +58,20 @@
 	T1				Int/Byte
 */
 
-struct time_stamp_t	{
+typedef struct time_stamp_t	{
 	
-	uint8_t		rec_type;
+	LOG_TYPE_E	rec_type;
 	uint8_t		ss;
 	uint8_t		mm;
 	uint8_t		hh;
 	uint8_t		dd;
 	uint8_t		YM;	// Year & month (one nibble for each)
 	
-};
+} TIME_STAMP_T;
 
-struct sensor_data_t	{
+typedef struct sensor_data_t	{
 	
-	uint8_t		rec_type;
+	LOG_TYPE_E	rec_type;
 	uint8_t		ss;
 	// Note : All decimal values are stored in integer format after multiplying by 100, to save on memory
 	//			(to avoid expensive 8 bytes floating point values), just divide by 100 to get actual value with
@@ -71,16 +80,16 @@ struct sensor_data_t	{
 	uint16_t	press;	// 06.31 psi, 2.2 digits
 	uint16_t	tempr;	// 45.57 Deg C, 2.2 digits
 	
-};
+} SENSOR_DATA_T;
 
 
 
 // Note: below union is used to ease handing of different type of records.
 typedef union log_record_t	{
 	
-	uint8_t					rec_type;
-	struct time_stamp_t		time_stamp;
-	struct sensor_data_t	sensor_data;
+	LOG_TYPE_E		rec_type;
+	TIME_STAMP_T	time_stamp;
+	SENSOR_DATA_T	sensor_data;
 	
 } LOG_RECORD_U;
 
@@ -88,8 +97,9 @@ typedef union log_record_t	{
 
 
 
-// Function declarations -----------------------------------------------------
 
+// Function declarations -----------------------------------------------------
+void log_init		(void);
 void logs_task      (void);
 void log_serial_dump(void);
 void logs_store     (void);

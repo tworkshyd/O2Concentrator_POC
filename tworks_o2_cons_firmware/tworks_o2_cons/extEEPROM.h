@@ -6,6 +6,7 @@
 
 
 #include "config.h"
+#include "logs.h"
 
 
 /* ---------------------------------------------------------------------------
@@ -65,22 +66,28 @@
 // Memory address allocations : for log records
 #define   EEPROM_LOGS_START_ADDRESS      (EEPROM_CALIB_AREA_END)
 #define   EEPROM_LOGS_END_ADDRESS        (extEEPROM_LAST_ADDRESS)
+#define   EEPROM_LOGS_AREA_SIZE_IN_BYTES (EEPROM_LOGS_END_ADDRESS - EEPROM_LOGS_START_ADDRESS)
 #define   EEPROM_LOGS_RECORD_SIZE        (sizeof(LOG_RECORD_U))
 #define   EEPROM_LOGS_TOTAL_COUNT        ((EEPROM_LOGS_END_ADDRESS - EEPROM_LOGS_START_ADDRESS) / EEPROM_LOGS_RECORD_SIZE)
 #define   EEPROM_LOGS_AREA_END			 (EEPROM_LOGS_START_ADDRESS + (EEPROM_LOGS_TOTAL_COUNT * EEPROM_LOGS_RECORD_SIZE))
 
 
 
+extern uint16_t	eep_log_next_record_address;
+
 
 
 
 // Function declarations -----------------------------------------------------
 bool eeprom_init  (void);
-void eepwrite     (unsigned int address, byte * buff_p, uint8_t n_bytes);
-void eepread      (unsigned int address, byte * buff_p, uint8_t n_bytes);
+void eepwrite     (unsigned int address, byte * buff_p, uint16_t n_bytes);
+void eepread      (unsigned int address, byte * buff_p, uint16_t n_bytes);
+void eepfill	  (unsigned int address, uint8_t data, uint16_t n_bytes);
 void eeptest      (void);
-void save_record  (void);
-
+void save_run_hrs_n_calib_constants (void);
+void update_log_rcord_head_ptr (uint16_t eep_address);
+void push_log_to_eeprom (LOG_RECORD_U * log_p);
+LOG_RECORD_U * pull_log_from_eeprom (void);
 
 
 #endif

@@ -4,12 +4,21 @@
 
 #include "db.h"
 #include "logs.h"
+#include "extEEPROM.h"
 
 
 
 
 CircularBuffer <int, 400> buffer;
 
+
+
+
+void log_init (void)	{
+	
+	update_log_rcord_head_ptr (EEPROM_LOGS_START_ADDRESS);
+	
+}
 
 
 void logs_task (void) {
@@ -49,6 +58,7 @@ void logs_task (void) {
     // DBG_PRINTLN (" see u here..!!");
 
 }
+
 
 
 void log_serial_dump (void)  {
@@ -115,16 +125,47 @@ void log_serial_dump (void)  {
 
 void logs_store     (void)	{
 	
+	LOG_RECORD_U	log_data;
 	
+	
+	/* 
+		Note: To store more records on eeprom memory .. the time stamp will be store 
+			  only once after 'TS_AFTER_N_RECORDS' records.
+	*/
+	
+	#define TS_AFTER_N_RECORDS	(10)	// introduce on time stamp record after these many data records.
+		
+		
+	static int record_no;
+	
+	record_no++;
+	if (record_no >= TS_AFTER_N_RECORDS)	{
+		record_no = 0;
+		
+		// log time stamp
+		log_data.time_stamp.rec_type  = LOG_TIME_STAMP;
+		log_data.time_stamp.ss    = systemtick_secs % 60;
+		log_data.time_stamp.mm    = systemtick_mins % 60;
+		log_data.time_stamp.hh    = systemtick_hrs;
+		// todo
+		// log_data.time_stamp.dd    = ;
+		// log_data.time_stamp.YM    = ;
+		
+		// store into eeprom
+		push_log_to_eeprom (&log_data);
+	}
+	
+	log_data.sensor_data.rec_type  = LOG_SENSOR_DATA;
+	log_data.sensor_data.o2_p      = (uint16_t)(o2_concentration * 100);
+	log_data.sensor_data.press     = (uint16_t)(output_pressure  * 100);
+	log_data.sensor_data.tempr     = (uint16_t)(tempr_value_1    * 100);
+	
+	// store into eeprom
+	push_log_to_eeprom (&log_data);
 	
 }
 
 
-void logs_retrive   (void)	{
-	
-	
-	
-}
 
 
 

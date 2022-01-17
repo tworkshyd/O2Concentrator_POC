@@ -7,7 +7,11 @@
 
 
 
-// Function definations --------------------------------------------------
+uint16_t	eep_log_next_record_address;
+
+
+
+// Function definitions --------------------------------------------------
 
 bool eeprom_init (void) {
 
@@ -54,6 +58,9 @@ bool eeprom_init (void) {
     DBG_PRINTLN(EEPROM_LOGS_START_ADDRESS);
     DBG_PRINT ("EEPROM_LOGS_END_ADDRESS     : ");
     DBG_PRINTLN(EEPROM_LOGS_END_ADDRESS);
+    DBG_PRINT ("EEPROM_LOGS_AREA_SIZE_IN_BYTES     : ");
+    DBG_PRINTLN(EEPROM_LOGS_AREA_SIZE_IN_BYTES);
+		
     DBG_PRINT ("EEPROM_LOGS_RECORD_SIZE     : ");
     DBG_PRINTLN(EEPROM_LOGS_RECORD_SIZE);
     DBG_PRINT ("EEPROM_LOGS_TOTAL_COUNT     : ");
@@ -66,7 +73,7 @@ bool eeprom_init (void) {
 }
 
 
-void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
+void eepwrite (unsigned int address, byte * buff_p, uint16_t n_bytes)  {
 
     unsigned int    len, partial_len, offset_bytes;
     
@@ -108,13 +115,44 @@ void eepwrite (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
 }
 
 
-void eepread (unsigned int address, byte * buff_p, uint8_t n_bytes)  {
+void eepread (unsigned int address, byte * buff_p, uint16_t n_bytes)  {
     
     if (buff_p == NULL  ||  address > extEEPROM_LAST_ADDRESS || n_bytes == 0) {
         return; 
     }
 
     eep.read(address, buff_p, n_bytes);
+
+}
+
+
+void eepfill (unsigned int address, uint8_t data, uint16_t n_bytes)  {
+	
+    byte			write_buff[EEPROM_TEST_BUFFER_SIZE];
+	uint16_t		bytes_to_write;
+	
+
+	if (address > extEEPROM_LAST_ADDRESS || n_bytes == 0) {
+		return;
+	}
+	
+	for (int i = 0; i < EEPROM_TEST_BUFFER_SIZE; i++)	
+	{
+		write_buff[i] = data;
+	}
+
+	while (n_bytes)
+	{
+		if (n_bytes >= EEPROM_TEST_BUFFER_SIZE)	{
+			bytes_to_write = EEPROM_TEST_BUFFER_SIZE;
+		}
+		else {
+			bytes_to_write = n_bytes;
+		}
+		eep.write(address, write_buff, bytes_to_write);
+		address += bytes_to_write;
+		n_bytes -= bytes_to_write;
+	}
 
 }
 
@@ -213,6 +251,53 @@ void save_run_hrs_n_calib_constants (void) {
 }
 
 
+
+void update_log_rcord_head_ptr (uint16_t eep_address)	{
+	
+	// todo
+		// build logic to scan eeprom from log_address start to end .. to find actual start 
+		//	of the logs and update the address and logs count accordingly and
+		// update 'eep_log_next_record_address'
+		
+
+	// for now just use start address of the log section as logs start
+	eep_log_next_record_address = eep_address;
+	
+}
+
+
+
+void push_log_to_eeprom (LOG_RECORD_U * log_p)	{
+	
+	
+	// check for room to store new record
+	if ( (eep_log_next_record_address + EEPROM_LOGS_RECORD_SIZE) < EEPROM_LOGS_AREA_END)	{
+		eepwrite (eep_log_next_record_address, (byte*) log_p, EEPROM_LOGS_RECORD_SIZE);
+		eep_log_next_record_address += EEPROM_LOGS_RECORD_SIZE;
+	}
+	else {
+		// nop
+		
+		// todo 
+			// overlap and require the oldest record.
+	}
+	
+
+}
+
+
+
+LOG_RECORD_U * pull_log_from_eeprom (void)	{
+	
+// 		if ( (eep_log_next_record_address + EEPROM_LOGS_RECORD_SIZE) < EEPROM_LOGS_AREA_END)	{
+// 			eepwrite (eep_log_next_record_address, (byte*) log_p, EEPROM_LOGS_RECORD_SIZE);
+// 			eep_log_next_record_address += EEPROM_LOGS_RECORD_SIZE;
+// 		}
+// 		else {
+// 
+// 		}
+	
+}
 
 
 /////////////////// scrap area /////////////////////////////////
