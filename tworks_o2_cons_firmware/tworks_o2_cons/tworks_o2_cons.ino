@@ -18,7 +18,8 @@
 // System tick time
 #define TICK_time (10)
 
-extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
+// extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
+extEEPROM eep(extEEPROM_SIZE_IN_BITS, extEEPROM_NO_OF_DEVICES, extEEPROM_PAGE_SIZE_IN_BYTES);         // device size, number of devices, page size
 
 unsigned char cycle;
 unsigned char f_crn;
@@ -99,7 +100,7 @@ void setup (void) {
     ui_init ();
 	
     // temp test area ---------------------
-    // eeptest ();    
+    eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
 	// 	while (1)
@@ -263,6 +264,7 @@ void o2_main_task (void)    {
         current_run_time_secs++;
         total_run_time_secs++;
 
+/*
         // display run hours, 45 seconds current run hours, 15 seconds total run hours
         int secs = ( current_run_time_secs %  60);
         int mins = ((current_run_time_secs % (60 * 60)) / 60);
@@ -289,7 +291,7 @@ void o2_main_task (void)    {
 // 				  f_run_hours = 0;           
 //                   break;
 //             }
-//         }
+//         }*/
     }
     
     if (time_elapsed (time_tag) < nb_delay)  {
