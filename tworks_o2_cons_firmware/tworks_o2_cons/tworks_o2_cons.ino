@@ -66,12 +66,12 @@ void setup (void) {
         eepread (EEPROM_CALIB_START, (byte*)&eep_record, EEPROM_CALIB_AREA_SIZE);
 
         // print retrieved record.. 
-        DBG_PRINTLN ();
-        DBG_PRINTLN ("EEprom retrieved calibration constants...");
-        DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
-        DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
-        DBG_PRINT   ("eep_record.total_run_time_secs      : ");
-        DBG_PRINTLN (eep_record.total_run_time_secs);
+		DBG_PRINTLN ();
+		DBG_PRINTLN ("Retrieved calibration constants...");
+		//         DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
+		//         DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
+		//         DBG_PRINT   ("eep_record.total_run_time_secs      : ");
+		//         DBG_PRINTLN (eep_record.total_run_time_secs);
 
         // update system variables
         last_cycle_run_time_secs = eep_record.last_cycle_run_time_secs;

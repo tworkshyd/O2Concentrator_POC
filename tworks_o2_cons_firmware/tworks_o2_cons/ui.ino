@@ -60,8 +60,8 @@ void button_check (void)  {
             alarm_clear_bttn_dbnc_dly = 0;
 			alarm_button_press_count++;
 			multi_beeps (alarm_clear_button_pressed);
-			DBG_PRINT   (__FILE__);
-			DBG_PRINT (" : Alarm Clear Button Pressed.. : ");
+			//DBG_PRINT   (__FILE__);
+			DBG_PRINT ("Alarm Clear Button Pressed.. : ");
 			DBG_PRINT (alarm_button_press_count);
 			DBG_PRINTLN (" times..");
 			time_tag = systemtick_msecs;
@@ -183,6 +183,7 @@ void ui_task_main (void)    {
                 f_system_running = true;
 
                 DBG_PRINTLN();
+                DBG_PRINTLN();
                 DBG_PRINTLN("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
                 lcd.print("Start Button Pressed");
@@ -233,7 +234,9 @@ void ui_task_main (void)    {
             save_run_hrs_n_calib_constants ();
             
 			if (!f_critical_alarms)	{
+				DBG_PRINTLN();
 				DBG_PRINTLN("Stop Button Pressed!");
+				DBG_PRINTLN();
 				lcd.setCursor(0, 3);
 				lcd.print("Stop Button Pressed ");
 			}
