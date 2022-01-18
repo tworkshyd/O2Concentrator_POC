@@ -7,9 +7,9 @@
 #include "extEEPROM.h"
 
 
+CircularBuffer <float, O2_MOVING_AVG_COUNT> cbuf;
 
 
-CircularBuffer <int, 400> buffer;
 int record_no = 0;
 
 
@@ -73,11 +73,18 @@ void log_print_on_terminal (void)  {
 
 	// print label once every 10 (say) records
 	#define		SKIP_COUNT		(10)
-	if (skip_count++ >= SKIP_COUNT)	{
+	if (skip_count >= SKIP_COUNT || skip_count == 0)	{
 		skip_count = 0;
 		DBG_PRINTLN ();
-		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV, o2_concen,   tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
+// 		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV, o2_concen,   tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
+//                  00:00:23 00:00:22,   5400,       0,        700,    822,      666.38,     18.45,        25.65,        24.50,       25.03
+//                  00:00:23 00:00:22,   5400,       0,        700,    822,      666.38,   18.45,   18.45,     25.65,        24.50,       25.03
+		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV,   %o2,  avgO2%, tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
 	}
+	skip_count++;
+
+// On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV,   %o2,  avgO2%, tempr-snsr-1, tempr-snsr-2, pressures
+// 00:00:22 00:00:21,   5400,       0,        700,    152,      19.00,     7.07,  7.07,        20.85,        20.73,       0.58
 	
     // 1. time stamp
     sprintf(lcd_temp_string, "%02d:%02d:%02d ", systemtick_hrs, systemtick_mins, systemtick_secs);
@@ -106,6 +113,9 @@ void log_print_on_terminal (void)  {
     Serial.print (o2_m_raw_voltage, 2);
     Serial.print (",     ");
     Serial.print (o2_concentration, 2);
+    Serial.print (",  ");
+
+    Serial.print (o2_moving_avg, 2);
     Serial.print (",    ");
 
     // 6. Temperature values

@@ -167,6 +167,21 @@ void o2_sensor_scan (void)  {
     o2_concentration = ((o2_m_raw_voltage * o2_slope) + o2_const_val);
 
 
+	// moving average
+	cbuf.push(o2_concentration);
+	o2_moving_avg = 0.0;
+	// the following ensures using the right type for the index variable
+	using index_t = decltype(cbuf)::index_t;
+	for (index_t i = 0; i < cbuf.size(); i++) 
+	{
+		o2_moving_avg += cbuf[i];
+	}
+	o2_moving_avg = o2_moving_avg / cbuf.size();
+// 	DBG_PRINT   ("Average is : ");
+// 	DBG_PRINTLN (o2_moving_avg);
+	
+	
+	
 
     #if (CAPP_AT_95_O2 == 1)
     // capping O2C value.. to restrict it below.. 95% of FiO2   
