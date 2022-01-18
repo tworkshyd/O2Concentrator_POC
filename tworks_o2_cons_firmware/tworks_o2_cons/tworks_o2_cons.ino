@@ -33,13 +33,21 @@ void setup (void) {
     
     DBG_PRINTLN ();
     DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
+	delay (100);
     DBG_PRINTLN ("Oxygen Concentrator Project\n");
+	delay (100);
     DBG_PRINTLN ("Harware Board Revision : " HW_REVISION_TXT);
+	delay (100);
     DBG_PRINTLN ("Firmware Version       : " FW_VERSION_TXT);
+	delay (100);
     DBG_PRINT   ("Build Time             : ");
+	delay (100);
     DBG_PRINT   (__DATE__);
+	delay (100);
     DBG_PRINT   (", ");
+	delay (100);
     DBG_PRINTLN (__TIME__);
+	delay (100);
     DBG_PRINTLN ();
 
 
