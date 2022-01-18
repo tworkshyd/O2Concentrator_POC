@@ -10,7 +10,7 @@
 #endif
 
 
-#define BUTTON_DEBOUNCE_DLY ( 15)    // in msecs
+#define BUTTON_DEBOUNCE_DLY (150)    // in msecs
 
 
 #define HIGH_BEEP           (200)
@@ -45,6 +45,12 @@ enum UI_STATES_E  {
     UI_LAST,          // 8
 
 };
+
+
+
+extern uint8_t		alarm_button_press_count;
+
+
 
 
 void ui_init            (void);

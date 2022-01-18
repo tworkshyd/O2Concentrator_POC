@@ -16,12 +16,16 @@ static int  f_state_changed;
 int         start_switch_dbnc_dly;
 int         alarm_clear_bttn_dbnc_dly;
 
+uint8_t		alarm_button_press_count;
+
 
 void button_check (void)  {
 
     int     start_switch_state = 0;         // variable for reading the pushbutton status
     int     alarm_clear_buttn_state = 0;    // variable for reading the pushbutton status
 
+	static long	int	time_tag;
+	
 
     start_switch_state      = digitalRead(startSwitchPin);
     alarm_clear_buttn_state = digitalRead(alarmClearButton);
@@ -54,12 +58,20 @@ void button_check (void)  {
         if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
             alarm_clear_button_pressed = true;
             alarm_clear_bttn_dbnc_dly = 0;
-			DBG_PRINT   (__FILE__);
-			DBG_PRINTLN (" : Alarm Clear Button Pressed..");
+			alarm_button_press_count++;
+			multi_beeps (alarm_clear_button_pressed);
+			//DBG_PRINT   (__FILE__);
+			DBG_PRINT ("Alarm Clear Button Pressed.. : ");
+			DBG_PRINT (alarm_button_press_count);
+			DBG_PRINTLN (" times..");
+			time_tag = systemtick_msecs;
 		}
     }
     else {
-        // nop
+         // reset press count after 1.5 sec of no activity
+		 if (time_elapsed(time_tag) > 1500)	{
+				alarm_button_press_count = 0;
+		 }
     }
      
 }
@@ -127,6 +139,30 @@ void ui_task_main (void)    {
     }
 
     button_check ();
+	
+	// check for alarm button presses for special functions
+	#define EEPROM_ERASE_BUTTON_PRESSES		(5)
+	/*
+		Note: Erase EEPROM if alarm reset button is pressed for 5 times continuously, 
+				when system is in off condition
+	*/
+	if (!f_system_running && alarm_button_press_count >= EEPROM_ERASE_BUTTON_PRESSES)	{
+		alarm_button_press_count = 0;
+		BUUZZER_CNTRL (BUZZ_ON);
+		delay(100);
+		BUUZZER_CNTRL (BUZZ_OFF);
+		DBG_PRINTLN ("EEPROM Erase command issued..");
+		DBG_PRINTLN ("erasing..");
+		eepfill	  (EEPROM_LOGS_START_ADDRESS, 0xFF, EEPROM_LOGS_AREA_SIZE_IN_BYTES);
+		DBG_PRINTLN ("erase complete.");
+		record_no = 0;
+		update_log_rcord_head_ptr (EEPROM_LOGS_START_ADDRESS);
+		BUUZZER_CNTRL (BUZZ_ON);
+		delay(333);
+		BUUZZER_CNTRL (BUZZ_OFF);
+
+	}
+	
 
     switch (ui_state)
     {
@@ -146,6 +182,7 @@ void ui_task_main (void)    {
             if ( start_switch_pressed == true && !f_critical_alarms )  {
                 f_system_running = true;
 
+                DBG_PRINTLN();
                 DBG_PRINTLN();
                 DBG_PRINTLN("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
@@ -194,10 +231,12 @@ void ui_task_main (void)    {
 
             last_cycle_run_time_secs = current_run_time_secs;
             current_run_time_secs = 0;
-            save_record ();
+            save_run_hrs_n_calib_constants ();
             
 			if (!f_critical_alarms)	{
+				DBG_PRINTLN();
 				DBG_PRINTLN("Stop Button Pressed!");
+				DBG_PRINTLN();
 				lcd.setCursor(0, 3);
 				lcd.print("Stop Button Pressed ");
 			}

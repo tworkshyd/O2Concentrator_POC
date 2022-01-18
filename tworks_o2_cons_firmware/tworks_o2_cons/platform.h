@@ -3,6 +3,11 @@
 #ifndef _PLATFORM_h
 #define _PLATFORM_h
 
+
+#include <extEEPROM.h>
+
+
+
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
 #else
@@ -10,6 +15,7 @@
 #endif
 
 #include "config.h"
+#include "extEEPROM.h"
 
 
 
@@ -276,13 +282,6 @@ void          platform_init   (void);
 unsigned long time_elapsed    (unsigned long time_delay);
 void          new_delay_msecs (unsigned int  time_delay);
 
-
-////////////////// external eeprom driver //////////////////
-bool eeprom_init  (void);
-void eepwrite     (unsigned int address, byte * buff_p, uint8_t n_bytes);
-void eepread      (unsigned int address, byte * buff_p, uint8_t n_bytes);
-void eeptest      (void);
-void save_record  (void);
 
 
 

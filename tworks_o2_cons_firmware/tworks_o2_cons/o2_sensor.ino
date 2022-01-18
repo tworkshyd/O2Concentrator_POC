@@ -118,17 +118,18 @@ int sensor_zero_calibration (void)  {
         sigmaXX += x * x;
         sigmaXY += x * y;
 
-        DBG_PRINT ("      x : "); DBG_PRINTLN (x);        DBG_PRINT ("      y : "); DBG_PRINTLN (y);
-        DBG_PRINT (" sigmaX : "); DBG_PRINTLN (sigmaX);   DBG_PRINT (" sigmaY : "); DBG_PRINTLN (sigmaY);
-        DBG_PRINT ("sigmaXX : "); DBG_PRINTLN (sigmaXX);  DBG_PRINT ("sigmaXY : "); DBG_PRINTLN (sigmaXY);
+//         DBG_PRINT ("      x : "); DBG_PRINTLN (x);        DBG_PRINT ("      y : "); DBG_PRINTLN (y);
+//         DBG_PRINT (" sigmaX : "); DBG_PRINTLN (sigmaX);   DBG_PRINT (" sigmaY : "); DBG_PRINTLN (sigmaY);
+//         DBG_PRINT ("sigmaXX : "); DBG_PRINTLN (sigmaXX);  DBG_PRINT ("sigmaXY : "); DBG_PRINTLN (sigmaXY);
     }
     
     denominator = (NUM_OF_SAMPLES_O2 * sigmaXX) - (sigmaX * sigmaX);
-    DBG_PRINT ("dnmnatr : "); DBG_PRINTLN (denominator);
+//     DBG_PRINT ("dnmnatr : "); DBG_PRINTLN (denominator);
 
     if (denominator != 0) {      
         o2_slope = ((NUM_OF_SAMPLES_O2 * sigmaXY) - (sigmaX * sigmaY)) / denominator;
         o2_const_val = ((sigmaY * sigmaXX) - (sigmaX * sigmaXY)) / denominator;
+        DBG_PRINTLN ("O2 calibration successful .!!");
         result = SUCCESS;
     } 
     else {      
@@ -138,11 +139,11 @@ int sensor_zero_calibration (void)  {
         DBG_PRINTLN ("Error: O2 calibration failed!!");
     }
 
-    DBG_PRINTLN ("");
-    DBG_PRINT   ("o2_slope : ");
-    DBG_PRINT   (o2_slope);
-    DBG_PRINT   (", o2_const_val : ");
-    DBG_PRINT   (o2_const_val);
+//     DBG_PRINTLN ("");
+//     DBG_PRINT   ("o2_slope : ");
+//     DBG_PRINT   (o2_slope);
+//     DBG_PRINT   (", o2_const_val : ");
+//     DBG_PRINT   (o2_const_val);
 
     return result;
     
@@ -167,6 +168,21 @@ void o2_sensor_scan (void)  {
     o2_concentration = ((o2_m_raw_voltage * o2_slope) + o2_const_val);
 
 
+	// moving average
+	cbuf.push(o2_concentration);
+	o2_moving_avg = 0.0;
+	// the following ensures using the right type for the index variable
+	using index_t = decltype(cbuf)::index_t;
+	for (index_t i = 0; i < cbuf.size(); i++) 
+	{
+		o2_moving_avg += cbuf[i];
+	}
+	o2_moving_avg = o2_moving_avg / cbuf.size();
+// 	DBG_PRINT   ("Average is : ");
+// 	DBG_PRINTLN (o2_moving_avg);
+	
+	
+	
 
     #if (CAPP_AT_95_O2 == 1)
     // capping O2C value.. to restrict it below.. 95% of FiO2   

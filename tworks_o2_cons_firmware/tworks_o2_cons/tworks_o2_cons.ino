@@ -1,10 +1,5 @@
-// Sketch uses 20220 bytes (15%) of program storage space. Maximum is 130048 bytes.
-// Global variables use 2386 bytes (14%) of dynamic memory, leaving 13998 bytes for local variables. Maximum is 16384 bytes.
-
-
 // tworks_o2_cons.c
 
-#include <extEEPROM.h>
 #include "tempr_sensor.h"
 #include "o2_sensor.h"
 #include "platform.h"
@@ -18,7 +13,7 @@
 // System tick time
 #define TICK_time (10)
 
-// extEEPROM eep(kbits_64, 1, 8);         // device size, number of devices, page size
+
 extEEPROM eep(extEEPROM_SIZE_IN_BITS, extEEPROM_NO_OF_DEVICES, extEEPROM_PAGE_SIZE_IN_BYTES);         // device size, number of devices, page size
 
 unsigned char cycle;
@@ -38,13 +33,21 @@ void setup (void) {
     
     DBG_PRINTLN ();
     DBG_PRINTLN ("Tworks Foundation, Hyderabad, Telangana, Inida\n");
+	delay (100);
     DBG_PRINTLN ("Oxygen Concentrator Project\n");
+	delay (100);
     DBG_PRINTLN ("Harware Board Revision : " HW_REVISION_TXT);
+	delay (100);
     DBG_PRINTLN ("Firmware Version       : " FW_VERSION_TXT);
+	delay (100);
     DBG_PRINT   ("Build Time             : ");
+	delay (100);
     DBG_PRINT   (__DATE__);
+	delay (100);
     DBG_PRINT   (", ");
+	delay (100);
     DBG_PRINTLN (__TIME__);
+	delay (100);
     DBG_PRINTLN ();
 
 
@@ -55,19 +58,20 @@ void setup (void) {
     platform_init ();
     ads_init ();
     db_init ();
+	log_init ();
     
     if (eeprom_init () == true) {
         f_eeprom_working = 1;
         // read eeprom and retrieve saved counters and system parameters
-        eepread (EEPROM_RECORD_START, (byte*)&eep_record, EEPROM_RECORD_AREA_SIZE);
+        eepread (EEPROM_CALIB_START, (byte*)&eep_record, EEPROM_CALIB_AREA_SIZE);
 
         // print retrieved record.. 
-        DBG_PRINTLN ();
-        DBG_PRINTLN ("EEprom retrieved record...");
-        DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
-        DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
-        DBG_PRINT   ("eep_record.total_run_time_secs      : ");
-        DBG_PRINTLN (eep_record.total_run_time_secs);
+		DBG_PRINTLN ();
+		DBG_PRINTLN ("Retrieved calibration constants...");
+		//         DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
+		//         DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
+		//         DBG_PRINT   ("eep_record.total_run_time_secs      : ");
+		//         DBG_PRINTLN (eep_record.total_run_time_secs);
 
         // update system variables
         last_cycle_run_time_secs = eep_record.last_cycle_run_time_secs;
@@ -81,7 +85,7 @@ void setup (void) {
 
         buff1 = (byte*)&eep_record;
         buff2 = (byte*)&eep_record_default;
-        for (int i = 0; i < EEPROM_RECORD_AREA_SIZE; i++)
+        for (int i = 0; i < EEPROM_CALIB_AREA_SIZE; i++)
         {
             buff1[i] = buff2[i];
         }
@@ -92,6 +96,23 @@ void setup (void) {
 
     }
 
+	// check for logs retrieve
+	/*
+		Note : if alarms button is kept pressed for 5 to 10 seconds on power-up.. 
+		system will flush out all the logs recorded
+	*/
+	// Alarm Clear Button Press detection
+	unsigned long int	time_tag = systemtick_msecs;
+	while (digitalRead(alarmClearButton) == ALARM_CLEAR_BUTTON_PRESSED) {   // press detection
+		if (time_elapsed(time_tag) > 3300)	{
+			DBG_PRINTLN ("Alarm Clear Button Pressed long press detected.. : ");
+			beep_for (100);
+			DBG_PRINTLN ();
+			// flush all collected logs
+			log_serial_dump ();
+		}
+	}
+		
     
     o2_cons_init ();
     init_7segments ();
@@ -100,7 +121,21 @@ void setup (void) {
     ui_init ();
 	
     // temp test area ---------------------
-    eeptest ();    
+	// 	eepfill	  (EEPROM_LOGS_START_ADDRESS, 0xFF, EEPROM_LOGS_AREA_SIZE_IN_BYTES);
+	// 
+	// 	uint16_t	address = EEPROM_LOGS_START_ADDRESS;
+	// 	byte		data;
+	// 	while (address < EEPROM_LOGS_END_ADDRESS)
+	// 	{
+	// 		eepread   (EEPROM_LOGS_START_ADDRESS, &data, 1);
+	// 		address += 1;
+	// 		DBG_PRINT (data);
+	// 		DBG_PRINT (" ");
+	// 	}
+	// 	DBG_PRINTLN ();
+	// 	DBG_PRINTLN (address);
+
+    // eeptest ();    
     // test_ads1115 ();
     // test_7segments ();
 	// 	while (1)
@@ -109,7 +144,7 @@ void setup (void) {
 	// // 		test_7segments ();
 	// // 		DBG_PRINTLN ("7.");
 	// 		
-	// 		DBG_PRINTLN ("Neo-pixcels test...");
+	// 		DBG_PRINTLN ("Neo-pixels test...");
 	// 		neo_pixel_leds_test ();
 	// 
 	// //         digitalWrite(miso_neo_data1,    HIGH );
@@ -172,7 +207,7 @@ void loop (void) {
         // 1 minute tasks go here..
 
         if (f_system_running) {
-            save_record ();
+            save_run_hrs_n_calib_constants ();
         }
         
     }
@@ -302,6 +337,7 @@ void o2_main_task (void)    {
     time_tag = systemtick_msecs;
 
     tworks2_PSA_logic();
+	
 
 
     if (nb_delay != prev_nb_delay)  {
@@ -359,6 +395,8 @@ void tworks2_PSA_logic (void)  {
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
             nb_delay = PreCharge_Delay;
             cycle++;
+			// log sensor data after every PSA cycle (when unit is ON)
+			logs_store ();
             break;
             
         default:

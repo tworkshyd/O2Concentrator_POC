@@ -1,15 +1,24 @@
 // logs.c
 
+#include <CircularBuffer.h>
 
 #include "db.h"
 #include "logs.h"
-#include "tempr_sensor.h"
+#include "extEEPROM.h"
+
+
+CircularBuffer <float, O2_MOVING_AVG_COUNT> cbuf;
+
+
+int record_no = 0;
 
 
 
-uint8_t      alaram_byte;    // holds one bit for each alarm
-bool         f_critical_alarms;
-bool         f_start_alarm_beeps;
+void log_init (void)	{
+	
+	update_log_rcord_head_ptr (EEPROM_LOGS_START_ADDRESS);
+	
+}
 
 
 void logs_task (void) {
@@ -29,7 +38,7 @@ void logs_task (void) {
         log_period++;
         if (log_period >= SET_LOG_PERIOD_SECS)  {
             log_period = 0;
-            log_dump ();
+            log_print_on_terminal ();
 #endif
         }
     }
@@ -40,7 +49,7 @@ void logs_task (void) {
     change_in_value = abs(change_in_value);
     if (change_in_value >= O2_VALUE_CHANGE_THRESHOLD)  {
         last_o2_concentration = o2_concentration;
-        log_dump ();
+        log_print_on_terminal ();
     }
 #endif
 
@@ -51,9 +60,14 @@ void logs_task (void) {
 }
 
 
-void log_dump (void)  {
+
+void log_print_on_terminal (void)  {
 
 	static uint8_t		skip_count = 0;
+	char				temp_buffer[100];
+	char				temp1[10];
+	char				temp2[10];
+	char				temp3[10];
 
     // 1. print legend
     // sample output : 
@@ -63,11 +77,23 @@ void log_dump (void)  {
 
 	// print label once every 10 (say) records
 	#define		SKIP_COUNT		(10)
-	if (skip_count++ >= SKIP_COUNT)	{
+	if (skip_count >= SKIP_COUNT || skip_count == 0)	{
 		skip_count = 0;
 		DBG_PRINTLN ();
-		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV, o2_concen,   tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
+// 		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV, o2_concen,   tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
+//                  00:00:23 00:00:22,   5400,       0,        700,    822,      666.38,     18.45,        25.65,        24.50,       25.03
+//                  00:00:23 00:00:22,   5400,       0,        700,    822,      666.38,   18.45,   18.45,     25.65,        24.50,       25.03
+// 		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV,   %o2,  avgO2%, tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
+		DBG_PRINT ("On-time  Curr-RHs    PrdDly  FlshDly  PrechrgDly   o2_ADC  o2_mV    %o2  avgO2%     tempr-1  tempr-2    pressure\r\n" );
+//                  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
+				//  On-time  Curr-RHs    PrdDly  FlshDly  PrechrgDly   o2_ADC  o2_mV    %o2  avgO2%     tempr-1  tempr-2    pressure
+				//  00:00:02 00:00:01     5400       0          0       1018  127.25  22.94  22.99      21.19     20.50       0.56
+
 	}
+	skip_count++;
+
+// On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV,   %o2,  avgO2%, tempr-snsr-1, tempr-snsr-2, pressures
+// 00:00:22 00:00:21,   5400,       0,        700,    152,      19.00,     7.07,  7.07,        20.85,        20.73,       0.58
 	
     // 1. time stamp
     sprintf(lcd_temp_string, "%02d:%02d:%02d ", systemtick_hrs, systemtick_mins, systemtick_secs);
@@ -77,14 +103,18 @@ void log_dump (void)  {
     int secs = ( current_run_time_secs %  60);
     int mins = ((current_run_time_secs % (60 * 60)) / 60);
     int hrs  = ( current_run_time_secs / (60 * 60));
-    sprintf(lcd_temp_string, "%02d:%02d:%02d,  ", hrs, mins, secs);
-    Serial.print (lcd_temp_string);
+    sprintf(lcd_temp_string, "%02d:%02d:%02d  ", hrs, mins, secs);
+    DBG_PRINT (lcd_temp_string);
 
     // 3. production time, flush time n precharge time
-    Serial.printf ("%5d,  ", Production_Delay);
-    Serial.printf ("%6d,  ", Flush_Delay);
-    Serial.printf ("%9d,  ", PreCharge_Delay);
+//     Serial.printf ("%5d,  ", Production_Delay);
+//     Serial.printf ("%6d,  ", Flush_Delay);
+//     Serial.printf ("%9d,  ", PreCharge_Delay);
 
+//                  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
+	sprintf (temp_buffer, "  %5d   %5d      %5d", Production_Delay, Flush_Delay, PreCharge_Delay);
+	DBG_PRINT (temp_buffer);
+	
     // 4. sieve A, B & back flush valve status
     //    sprintf(lcd_temp_string, "%d %d %d ", (do_byte & SIEVE_A_VALVE_CONTROL) != 0, (do_byte & SIEVE_B_VALVE_CONTROL) != 0, (do_byte & SIEVE_FLUSH_VLV_CNTRL) != 0);
     //    Serial.print (lcd_temp_string);
@@ -92,219 +122,181 @@ void log_dump (void)  {
     // 5. O2 raw adc, mv, %
     //sprintf(lcd_temp_string, "%4d %lf %lf ", o2_raw_adc_count, m_raw_voltage, o2_concentration);
     //Serial.print (lcd_temp_string);
-    Serial.printf ("%5d,      ", o2_raw_adc_count);
-    Serial.print (o2_m_raw_voltage, 2);
-    Serial.print (",     ");
-    Serial.print (o2_concentration, 2);
-    Serial.print (",    ");
+//     Serial.printf ("%5d,      ", o2_raw_adc_count);
+//     Serial.print (o2_m_raw_voltage, 2);
+//     Serial.print (",     ");
+//     Serial.print (o2_concentration, 2);
+//     Serial.print (",  ");
+// 
+//     Serial.print (o2_moving_avg, 2);
+//     Serial.print (",    ");
+
+	/* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
+	dtostrf(o2_m_raw_voltage, 6, 2, temp1);
+	dtostrf(o2_concentration, 5, 2, temp2);
+	dtostrf(o2_moving_avg,    5, 2, temp3);
+
+//                  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
+	sprintf (temp_buffer, "      %5d  %s  %s  %s", o2_raw_adc_count, temp1, temp2, temp3);
+	DBG_PRINT (temp_buffer);
+
 
     // 6. Temperature values
-    Serial.print ("    ");
-    Serial.print(tempr_value_1);
-    Serial.print (",        ");
-    Serial.print(tempr_value_2);
-    Serial.print (",       ");
-     
-    // 7. Pressure 
-    Serial.print(output_pressure, 2);
-    Serial.println("\r\n");
-    //Serial.println("\r\n");
+//     Serial.print ("    ");
+//     Serial.print(tempr_value_1);
+//     Serial.print (",        ");
+//     Serial.print(tempr_value_2);
+//     Serial.print (",       ");
 
+    // 7. Pressure 
+//     Serial.print(output_pressure, 2);
+//     Serial.println("\r\n");
+//     //Serial.println("\r\n");
+	dtostrf(tempr_value_1,   5, 2, temp1);
+	dtostrf(tempr_value_2,   5, 2, temp2);
+	dtostrf(output_pressure, 5, 2, temp3);
+	//                  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
+	sprintf (temp_buffer, "      %s     %s      %s", temp1, temp2, temp3);
+	DBG_PRINT   (temp_buffer);
+    DBG_PRINTLN ();
+     
+}
+
+
+void log_serial_dump (void)	{
+			
+	DBG_PRINTLN ("Printing all collected logs..");
+    DBG_PRINTLN ();
+
+	static uint8_t		skip_count = 0;
+	char	temp_string[100];
+
+	unsigned int	address;
+	unsigned int	record_count;
+	LOG_RECORD_U	one_record;
+	
+	record_count = 1;	// for do while()
+	update_log_rcord_head_ptr (EEPROM_LOGS_START_ADDRESS);
+	
+	// temp
+	pull_log_from_eeprom (&one_record);
+	DBG_PRINTLN ("---------------------------");
+	DBG_PRINTLN ("RecNo.   %O2    psi    *C");
+	DBG_PRINTLN ("---------------------------");
+	//            #0000   07.14, 00.44, 20.56
+	// one_record.time_stamp.mm, one_record.time_stamp.ss);
+	
+	
+	do 
+	{
+		pull_log_from_eeprom (&one_record);
+// 		DBG_PRINT ("#");
+// 		DBG_PRINT (record_count);
+// 		DBG_PRINT (" ");
+		sprintf(temp_string, "#%04d   ", record_count);
+		DBG_PRINT (temp_string);;
+		
+		switch (one_record.rec_type)
+		{
+			case 	LOG_TIME_STAMP:
+// 				DBG_PRINT (one_record.time_stamp.hh);	DBG_PRINT (":");
+// 				DBG_PRINT (one_record.time_stamp.mm);	DBG_PRINT (":");
+// 				DBG_PRINT (one_record.time_stamp.ss);	
+				sprintf(temp_string, "%02d:%02d:%02d ", one_record.time_stamp.hh, \
+									one_record.time_stamp.mm, one_record.time_stamp.ss);
+				DBG_PRINT (temp_string);
+				break;
+			case 	LOG_SENSOR_DATA:
+// 				DBG_PRINT (one_record.sensor_data.o2_p);	DBG_PRINT (", ");
+// 				DBG_PRINT (one_record.sensor_data.press);	DBG_PRINT (", ");
+// 				DBG_PRINT (one_record.sensor_data.tempr);	
+				sprintf(temp_string, "%02d.%02d, %02d.%02d, %02d.%02d", \
+							one_record.sensor_data.o2_p / 100, one_record.sensor_data.o2_p % 100, \
+							one_record.sensor_data.press / 100, one_record.sensor_data.press % 100, \
+							one_record.sensor_data.tempr / 100, one_record.sensor_data.tempr % 100);
+				DBG_PRINT (temp_string);
+				break;
+			
+		}
+		DBG_PRINTLN ();
+// 		DBG_PRINTLN (one_record.rec_type);
+		
+// 		DBG_PRINT   ("one_record.sensor_data.rec_type : ");
+// 		DBG_PRINTLN (one_record.sensor_data.rec_type);
+// 		DBG_PRINT   ("one_record.time_stamp.rec_type : ");
+// 		DBG_PRINTLN (one_record.time_stamp.rec_type);
+// 		DBG_PRINT   ("record_count : ");
+// 		DBG_PRINTLN (record_count);
+// 		DBG_PRINTLN ();
+
+		record_count++;
+	} while (record_count < (EEPROM_LOGS_TOTAL_COUNT - 1));		
+// 	 } while (one_record.sensor_data.rec_type != 0xFF   &&  record_count < EEPROM_LOGS_TOTAL_COUNT);
+	
+	DBG_PRINTLN ("---------------------------");
+	DBG_PRINTLN ();
+	
+	DBG_PRINT  ("Total records printed.. : ");
+	DBG_PRINTLN (record_count);
+
+	// please reset the log pointer to its starting position
+	update_log_rcord_head_ptr(EEPROM_LOGS_START_ADDRESS);
+	// todo
+		// have two different pointers one for read and the other for write.
+	
 }
 
 
 
-void alarms_task (void)    {
 
-    static uint8_t  low_fio2_alarm_dly;
-    static uint8_t  low_pressure_alarm_dly;
-    static uint8_t  high_temperature_alarm_dly;
-
-    if (f_sec_change_alarm_task)    {
-        f_sec_change_alarm_task = 0;
-    }
-    else {
-        return;
-    }
-
-
-    // comes here once in a second only..
-	if (alarm_clear_button_pressed)	{
-		alarm_clear_button_pressed = false;
+void logs_store     (void)	{
+	
+	static LOG_RECORD_U		log_data;
+	
+	
+	/* 
+		Note: To store more records on eeprom memory .. the time stamp will be store 
+			  only once after 'TS_AFTER_N_RECORDS' records.
+	*/
+	
+	#define TS_AFTER_N_RECORDS	(10)	// introduce on time stamp record after these many data records.
 		
-		low_fio2_alarm_dly = 0;
-		low_pressure_alarm_dly = 0;
-		high_temperature_alarm_dly = 0;
 		
-		alarms_byte = 0;
-		f_start_alarm_beeps = 0;
-		neo_pixel_control (LOW_O2C_ALARM, OFF_LED);
-		neo_pixel_control (LOW_PRESSURE_ALARM, OFF_LED);
-		neo_pixel_control (HIGH_TEMPER_ALARM, OFF_LED);
-		DBG_PRINTLN ();
-		DBG_PRINT   (__FILE__);
-		DBG_PRINTLN (" : Alarm Clear Button Pressed..");
-	}
-
-	if (alarms_byte != 0)	{
-		// some alarms present .. pls print them..
-		DBG_PRINTLN ();
-		if (alarms_byte & O2C_ALARM_BIT)	{
-			DBG_PRINTLN ("Alarm : LOW O2 concentration ..!!");	
-		}
-		if (alarms_byte & TEMPR_ALARM_BIT)	{
-			DBG_PRINTLN ("Alarm : High Temperature ..!!");
-		}
-		if (alarms_byte & PRESSURE_DROP_ALARM_BIT)	{
-			DBG_PRINTLN ("Alarm : LOW Pressure ..!!");
-		}			
-	}
-
-
-    // Check for alarms, then set / clear them.
-    
-    // 1. Low O2 concentration alarm
-    if ( f_system_running   &&  (current_run_time_secs > SYSTEM_START_UP_PERIOD) )  {
-        if (o2_concentration < O2_CONCENTRATION_LOW_THRHLD)   {
-            
-            if (low_fio2_alarm_dly < TIME_DELAY_BEFORE_LOW_O2_ALARM_ASSERTION) {
-                low_fio2_alarm_dly++;
-				DBG_PRINTLN ();
-				DBG_PRINT ("!!!!!!! Warning : Low O2 concentration Alarm.. ticking  ");
-				DBG_PRINTLN (TIME_DELAY_BEFORE_LOW_O2_ALARM_ASSERTION - low_fio2_alarm_dly);
-            }
-            else {
-                alarms_byte |= O2C_ALARM_BIT;
-                neo_pixel_control (LOW_O2C_ALARM,  ON_LED);
-                f_start_alarm_beeps = 1;
-				DBG_PRINTLN ();
-                DBG_PRINTLN ("Low O2 concentration Alarm Triggered..!!!");
-            }
-        }
-        else if ( o2_concentration > O2_CONCENTRATION_LOW_THRHLD ) {    // no hysteresis here..
-            // clear alarm 
-            if (low_fio2_alarm_dly) {
-                low_fio2_alarm_dly--;
-				DBG_PRINTLN ();
-				DBG_PRINT   ("Alarm Clearing : Low O2 concentration Alarm.. ticking ... ");
-				DBG_PRINTLN (low_fio2_alarm_dly);
-            }
-            else {
-                alarms_byte &= ~O2C_ALARM_BIT;
-                neo_pixel_control (LOW_O2C_ALARM,  OFF_LED);  
-            }
-        }
-    }
-    else {
-        // nop
-    }
-
-
-    // 2. Low Pressure alarm
-    if ( f_system_running )  {
-        if ( (output_pressure < (PRESSURE_VALUE_LOW_THRHLD - 0.5)) )   {
-            if (low_pressure_alarm_dly < TIME_DELAY_BEFORE_LOW_PRESSRUE_ALARM_ASSERTION) {
-                low_pressure_alarm_dly++;
-				DBG_PRINTLN ();
-				DBG_PRINT   ("!!!!!!! Warning : Low Pressure Alarm.. ticking  ");
-				DBG_PRINTLN (TIME_DELAY_BEFORE_LOW_PRESSRUE_ALARM_ASSERTION - low_pressure_alarm_dly);
-            }
-            else {
-                alarms_byte |= PRESSURE_DROP_ALARM_BIT;        
-                neo_pixel_control (LOW_PRESSURE_ALARM, ON_LED);  
-                f_start_alarm_beeps = 1;
-				DBG_PRINTLN ();
-                DBG_PRINTLN ("Low Pressure Alarm.. Triggered !!!");			
-            }
-        }
-        
-		else if ( output_pressure > PRESSURE_VALUE_LOW_THRHLD ) {    // no hysteresis here..
-			// clear alarm 
-			if (low_pressure_alarm_dly) {
-				low_pressure_alarm_dly--;
-				DBG_PRINTLN ();
-				DBG_PRINT   ("Alarm Clearing : Low Pressure Alarm.. ticking ...");
-				DBG_PRINTLN (low_pressure_alarm_dly);
-			}
-			else {
-				alarms_byte &= ~PRESSURE_DROP_ALARM_BIT;
-				// Auto clear neo-pixel LED as well?, if so uncomment below line
-				neo_pixel_control (LOW_PRESSURE_ALARM, OFF_LED);  
-			}
-		}
-	}
-    else {
-        // nop
-    }
-
-    
-    // 3. High Temperature alarm
-	// Note: Practically observed that if temperature sensor is not connected the temperature value is reaching 150.0 constant
-	//		Hence taking this as a condition for checking temperature sensor absence and discarding its value if condition check
-	float temp_tempr_value_1 = tempr_value_1;
-	float temp_tempr_value_2 = tempr_value_2;
-	if (tempr_value_1 >= INVALID_TEMPERATURE_VALUE)	{
-		temp_tempr_value_1 = TEMPERATURE_HIGH_THRHLD - 1.0;		// just one deg. less to avoid alarm
-	}
-	if (tempr_value_2 >= INVALID_TEMPERATURE_VALUE)	{
-		temp_tempr_value_2 = TEMPERATURE_HIGH_THRHLD - 1.0;		// just one deg. less to avoid alarm
+	
+	if ((record_no % TS_AFTER_N_RECORDS) == 0  ||  (record_no == 0) )	{
+		
+		// log time stamp
+		log_data.time_stamp.rec_type  = LOG_TIME_STAMP;
+		log_data.time_stamp.ss    = systemtick_secs % 60;
+		log_data.time_stamp.mm    = systemtick_mins % 60;
+		log_data.time_stamp.hh    = systemtick_hrs;
+		// todo
+		// log_data.time_stamp.dd    = ;
+		// log_data.time_stamp.YM    = ;
+		
+		// store into eeprom
+		DBG_PRINT  ("logging time stamp  : ");
+		push_log_to_eeprom (&log_data);
+		record_no++;
+		DBG_PRINTLN (record_no);
 	}
 	
-    if ( f_system_running )  {
-	//if (tempr_value_1 > TEMPERATURE_HIGH_THRHLD)   {
-        if ( (temp_tempr_value_1 > TEMPERATURE_HIGH_THRHLD)	 ||  (temp_tempr_value_2 > TEMPERATURE_HIGH_THRHLD) )	{
-            if (high_temperature_alarm_dly < TIME_DELAY_BEFORE_HIGH_TEMPR_ALARM_ASSERTION)  {
-                high_temperature_alarm_dly++;
-				DBG_PRINTLN ();
-				DBG_PRINT   ("!!!!!!! Warning : High Temperature Alarm.. ticking  ");
-				DBG_PRINTLN (TIME_DELAY_BEFORE_HIGH_TEMPR_ALARM_ASSERTION - high_temperature_alarm_dly);
-            }
-            else {
-                alarms_byte |= TEMPR_ALARM_BIT;           
-                neo_pixel_control (HIGH_TEMPER_ALARM, ON_LED);
-                f_start_alarm_beeps = 1;
-				DBG_PRINTLN ();
-                DBG_PRINTLN ("High temperature Alarm Triggered..!!!\n");
-                // SHUT - DOWN the system
-                    // todo
-            }
-        }
-    
-		// else if ( tempr_value_1 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
-		else if ( temp_tempr_value_1 < TEMPERATURE_HIGH_THRHLD  &&  temp_tempr_value_2 < TEMPERATURE_HIGH_THRHLD ) {    // no hysteresis here..
-			// clear alarm 
-			if (high_temperature_alarm_dly) {
-				high_temperature_alarm_dly--;
-				DBG_PRINTLN ();
-				DBG_PRINT   ("Alarm Clearing : High Temperature Alarm.. ticking ...");
-				DBG_PRINT   (high_temperature_alarm_dly);
-			}
-			else {
-				alarms_byte &= ~TEMPR_ALARM_BIT;
-				// Auto clear neo-pixel LED as well?, if so uncomment below line
-				neo_pixel_control (HIGH_TEMPER_ALARM, OFF_LED);  
-			}
-		}
-    }
-    else {
-        // nop
-    }
-
-
-    // Shutdown criteria
-    if (alarms_byte & CRITICAL_ALARMS)  {
-        f_critical_alarms = 1;
-    }
-    else {
-        f_critical_alarms = 0;
-    }
-
-    if (f_start_alarm_beeps)   {
-        beep_for (100);
-    }
-
-    
+	log_data.sensor_data.rec_type  = LOG_SENSOR_DATA;
+	log_data.sensor_data.o2_p      = (uint16_t)(o2_concentration * 100);
+	log_data.sensor_data.press     = (uint16_t)(output_pressure  * 100);
+	log_data.sensor_data.tempr     = (uint16_t)(tempr_value_1    * 100);
+	
+	// store into eeprom
+	DBG_PRINT   ("logging sensor data : ");
+	push_log_to_eeprom (&log_data);
+	record_no++;
+	DBG_PRINTLN (record_no);
+	
 }
+
+
+
+
 
 
 // EoF -------------
