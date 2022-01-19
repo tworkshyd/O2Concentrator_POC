@@ -51,7 +51,7 @@
  * 1. Enable / disable O2 concentration value capping
  * ======================================================================== */
 // i. Uncomment below line to enable O2c Capping
-#define CAPP_AT_95_O2        (1)   
+//#define CAPP_AT_95_O2        (1)   
 // ii. Choose capping value
 #define O2C_CAP_VALUE_MAX    (95.0)
 // ---------------------------------------------------------------------------
@@ -106,7 +106,7 @@
 /* ===========================================================================
  * 5. O2 Sensor selection for calibration values (selecting hard coded values)
  * ======================================================================== */
-#define O2_SENSOR	(3)
+#define O2_SENSOR	(2)
 // ---------------------------------------------------------------------------
 
 
