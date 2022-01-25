@@ -68,10 +68,6 @@ void setup (void) {
         // print retrieved record.. 
 		DBG_PRINTLN ();
 		DBG_PRINTLN ("Retrieved calibration constants...");
-		//         DBG_PRINT   ("eep_record.last_cycle_run_time_secs : ");
-		//         DBG_PRINTLN (eep_record.last_cycle_run_time_secs);
-		//         DBG_PRINT   ("eep_record.total_run_time_secs      : ");
-		//         DBG_PRINTLN (eep_record.total_run_time_secs);
 
         // update system variables
         last_cycle_run_time_secs = eep_record.last_cycle_run_time_secs;
@@ -121,6 +117,7 @@ void setup (void) {
     ui_init ();
 	
     // temp test area ---------------------
+/*
 	// 	eepfill	  (EEPROM_LOGS_START_ADDRESS, 0xFF, EEPROM_LOGS_AREA_SIZE_IN_BYTES);
 	// 
 	// 	uint16_t	address = EEPROM_LOGS_START_ADDRESS;
@@ -157,6 +154,7 @@ void setup (void) {
 	// // 	delay (10);
 	// 
 	// 	}
+*/
     // ------------------------------------
 	
 
@@ -196,11 +194,6 @@ void loop (void) {
         tempr_sensor_scan ();
         read_pressure ();
     
-		// 		if (f_system_running)	{
-		// 			display_o2 (o2_concentration);  
-		// 		}
-       
-        // DBG_PRINT (".");
     }
     else if (f_1min) {
         f_1min = 0;
@@ -298,35 +291,6 @@ void o2_main_task (void)    {
         f_sec_change_o2_task = 0;
         current_run_time_secs++;
         total_run_time_secs++;
-
-/*
-        // display run hours, 45 seconds current run hours, 15 seconds total run hours
-        int secs = ( current_run_time_secs %  60);
-        int mins = ((current_run_time_secs % (60 * 60)) / 60);
-        int hrs  = ( current_run_time_secs / (60 * 60));
-           
-//         if ((current_run_time_secs % 15) == 0) {
-//             quadrant++;
-//             switch (quadrant) 
-//             {
-//                 case 0:
-//                 case 1:
-//                 case 2:
-                  display_current_run_hours(hrs, mins);
-                  f_crn = 1;
-                  f_trn = 0;
-		          f_run_hours = 1;
-//                   break;
-//                case 3:
-//                   hrs = (total_run_time_secs / (60 * 60));
-//                   display_total_run_hours(hrs);
-//                   quadrant = 0;
-//                   f_crn = 0;
-//                   f_trn = 1;  
-// 				  f_run_hours = 0;           
-//                   break;
-//             }
-//         }*/
     }
     
     if (time_elapsed (time_tag) < nb_delay)  {
@@ -362,8 +326,7 @@ void tworks2_PSA_logic (void)  {
     switch (cycle)
     {
         case 0:
-            //CYCLE 1
-            //**************************************************************************
+            // CYCLE 1
             do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE); 
             nb_delay = Production_Delay;
@@ -371,8 +334,7 @@ void tworks2_PSA_logic (void)  {
             break;
       
         case 1:
-            //CYCLE 3
-            //**************************************************************************
+            // CYCLE 3
             do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
             nb_delay = PreCharge_Delay;
@@ -380,8 +342,7 @@ void tworks2_PSA_logic (void)  {
             break;
             
         case 2:
-            //CYCLE 4
-            //**************************************************************************
+            // CYCLE 4
             do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
             nb_delay = Production_Delay;
@@ -389,8 +350,7 @@ void tworks2_PSA_logic (void)  {
             break;
 
         case 3:
-            //CYCLE 6
-            //**************************************************************************
+            // CYCLE 6
             do_control (SIEVE_A_VALVE_CONTROL,    OPEN_VALVE);         
             do_control (SIEVE_B_VALVE_CONTROL,    OPEN_VALVE);
             nb_delay = PreCharge_Delay;

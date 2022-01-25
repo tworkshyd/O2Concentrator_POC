@@ -156,7 +156,6 @@ void alarms_task (void)    {
 	}
 	
     if ( f_system_running )  {
-	//if (tempr_value_1 > TEMPERATURE_HIGH_THRHLD)   {
         if ( (temp_tempr_value_1 > TEMPERATURE_HIGH_THRHLD)	 ||  (temp_tempr_value_2 > TEMPERATURE_HIGH_THRHLD) )	{
             if (high_temperature_alarm_dly < TIME_DELAY_BEFORE_HIGH_TEMPR_ALARM_ASSERTION)  {
                 high_temperature_alarm_dly++;

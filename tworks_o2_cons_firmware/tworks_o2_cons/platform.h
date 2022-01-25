@@ -78,24 +78,26 @@
 //----------------------------------------------------------------------------
 
 // 1. LCD display port mappings
-	#define RS		        (18)
-	#define EN		        (19)
-	#define D4		        (20)
-	#define D5		        (21)
-	#define D6		        (22)
-	#define D7		        (23)
-
+	#define RS					(18)
+	#define EN					(19)
+	#define D4					(20)
+	#define D5					(21)
+	#define D6					(22)
+	#define D7					(23)
 // 2. Relay Controls
-	#define RLY_1           (A0)
-	#define RLY_2           (A1)
-	#define RLY_3           (A2)
+	#define RLY_1				(A0)
+	#define RLY_2				(A1)
+	#define RLY_3				(A2)
+	
 #if   (HW_REVISION == HW_REV_1_0)
-	#define RLY_4           (A3)
+	#define RLY_4				(A3)
 	
 #elif (HW_REVISION == HW_REV_2_0)
 	// no 4th relay
+	
 #else
 	// nop
+	
 #endif
 
 
@@ -105,8 +107,10 @@
 
 #elif (HW_REVISION == HW_REV_2_0)
 	#define buzzr_cntrl_pin  	(A4)
+	
 #else
-// nop
+	// nop
+	
 #endif
 
 
@@ -116,8 +120,10 @@
 
 #elif (HW_REVISION == HW_REV_2_0)
 	#define compr_cntrl_pin     (A3)
+	
 #else
 	// nop
+	
 #endif
 
 
@@ -127,14 +133,16 @@
 
 #elif (HW_REVISION == HW_REV_2_0)
 	// nop
+	
 #else
 	// nop
+	
 #endif
 
 
 // 6. Button input
-	#define startSwitchPin			(3)    
-	#define alarmClearButton		(4)    
+	#define startSwitchPin		(3)    
+	#define alarmClearButton	(4)    
 
 
 // Serial 7-segment display signals
@@ -147,8 +155,10 @@
 	#define dataPin_7segment    (5)
 	#define clckPin_7segment    (7)
 	#define loadPin_7segment    (A5)
+	
 #else
 	// nop
+	
 #endif
 
 
@@ -206,11 +216,11 @@
 
 
 
-	#define BUTTON_ACTIVE       (LOW)
+#define BUTTON_ACTIVE				(LOW)
 
-	// Digital output Controls
-	#define BUUZZER_CNTRL(x)            (do_control(BUZZER_CONTROL, x))
-	#define COMPRSSR_CNTRL(x)           (do_control(COMPRESSOR_CONTROL, x))
+// Digital output Controls
+#define BUUZZER_CNTRL(x)            (do_control(BUZZER_CONTROL, x))
+#define COMPRSSR_CNTRL(x)           (do_control(COMPRESSOR_CONTROL, x))
 
 
 

@@ -11,35 +11,35 @@
 
 
 
-float y_samples[NUM_OF_SAMPLES_O2]     = {  1.0,    20.9,   99.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+float y_samples[NUM_OF_SAMPLES_O2]     = {  1.0,    20.9,   99.0};			// based on o2c tank purity = 96% & nitrogen tank purity = 95%
 
 // Hard coding calibration parameters for all 5 machines.
 #if    (O2_SENSOR == 1)
-// 1. for Envitec sensor marked as S1 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = { 7.55, 566.63, 570.0};   // default calib values
+	// 1. for Envitec sensor marked as S1 for demo device
+	float x_samples[NUM_OF_SAMPLES_O2]     = { 7.55, 566.63, 570.0};		// default calib values
 
 #elif  (O2_SENSOR == 2)
-// 2. for Envitec sensor marked as S2 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = { 19.5, 130.5,  628.9};     // default calib values
+	// 2. for Envitec sensor marked as S2 for demo device
+	float x_samples[NUM_OF_SAMPLES_O2]     = { 19.5, 130.5,  628.9};		// default calib values
 
 #elif  (O2_SENSOR == 3)
-// 3. for Envitec sensor marked as S3 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = { 21.25, 134.0,  637.63};   // default calib values
+	// 3. for Envitec sensor marked as S3 for demo device
+	float x_samples[NUM_OF_SAMPLES_O2]     = { 21.25, 134.0,  637.63};		// default calib values
 
 #elif  (O2_SENSOR == 4)
-// 1. for Envitec sensor marked as S1 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = { 24.88, 159.13, 675.0};		// default calib values
+	// 1. for Envitec sensor marked as S1 for demo device
+	float x_samples[NUM_OF_SAMPLES_O2]     = { 24.88, 159.13, 675.0};		// default calib values
 
 #elif  (O2_SENSOR == 5)
-// 2. for Envitec sensor marked as S2 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = {  10.13, 142.0,  655.25};     // default calib values
+	// 2. for Envitec sensor marked as S2 for demo device
+	float x_samples[NUM_OF_SAMPLES_O2]     = {  10.13, 142.0,  655.25};     // default calib values
 
 #elif  (O2_SENSOR == 6)
-// 2. for Envitec sensor marked as S2 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = {  21.25, 130.38,  627.63};    // default calib values
+	// 2. for Envitec sensor marked as S2 for demo device
+	float x_samples[NUM_OF_SAMPLES_O2]     = {  21.25, 130.38,  627.63};    // default calib values
 
 #else
-float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
+	float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
 
 #endif
 

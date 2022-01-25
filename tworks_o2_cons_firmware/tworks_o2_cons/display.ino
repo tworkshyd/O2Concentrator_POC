@@ -30,7 +30,7 @@ void lcd_clear_buf (char * bufp) {
 void neo_led_data_send (uint8_t  select_bits)    {
 
     // bit 2
-    if (select_bits & 0x04) {   //0b100)    {
+    if (select_bits & 0x04) {  
         digitalWrite(miso_neo_data1,    HIGH );
     }
     else {
@@ -38,7 +38,7 @@ void neo_led_data_send (uint8_t  select_bits)    {
     }
 
     // bit 1
-    if (select_bits & 0x02) {   //0b010)    {
+    if (select_bits & 0x02) {  
         digitalWrite(pd6_neo_data2,    HIGH );
     }
     else {
@@ -46,7 +46,7 @@ void neo_led_data_send (uint8_t  select_bits)    {
     }
 
     // bit 0
-    if (select_bits & 0x01) {   //0b001)    {
+    if (select_bits & 0x01) {   
         digitalWrite(pd7_neo_data3,    HIGH );
     }
     else {
@@ -352,93 +352,10 @@ void blank_7segments (void) {
 	set7segmentDigit (3, BLANK, false);
 	set7segmentDigit (4, BLANK, false);
 	set7segmentDigit (5, BLANK, false);
-// 	set7segmentDigit (6, BLANK, false);
-// 	set7segmentDigit (7, BLANK, false);
-// 	set7segmentDigit (8, BLANK, false);
 	
 }
 
 
-
-// void test_7segments (void)	{
-// 	
-// 	int		dly = 3000;
-// 	
-// 	
-// 	DBG_PRINTLN ("test_7segments(). entry..");
-// 
-// 	// digit 1
-// 	set7segmentDigit (1, 0, true);
-// 	
-// 	DBG_PRINTLN ("1.");
-// 
-// 	// digit 2
-// 	set7segmentDigit (2, 1, false);
-// 	// digit 3
-// 	set7segmentDigit (3, 2, false); // to display '.'
-// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-// 	// digit 4
-// 	set7segmentDigit (4, 3, false);
-// 	// digit 5
-// 	set7segmentDigit (5, 4, false);
-// 	delay (dly);
-// 	
-// 	// digit 1
-// 	set7segmentDigit (1, 1, false);
-// 	// digit 2
-// 	set7segmentDigit (2, 2, true);
-// 	// digit 3
-// 	set7segmentDigit (3, 3, false); // to display '.'
-// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-// 	// digit 4
-// 	set7segmentDigit (4, 4, false);
-// 	// digit 5
-// 	set7segmentDigit (5, 5, false);
-// 	delay (dly);
-// 		
-// 	// digit 1
-// 	set7segmentDigit (1, 6, false);
-// 	// digit 2
-// 	set7segmentDigit (2, 7, false);
-// 	// digit 3
-// 	set7segmentDigit (3, 8, true); // to display '.'
-// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-// 	// digit 4
-// 	set7segmentDigit (4, 9, false);
-// 	// digit 5
-// 	set7segmentDigit (5, 0, false);
-// 	delay (dly);
-// 	
-// 	// digit 1
-// 	set7segmentDigit (1, 7, false);
-// 	// digit 2
-// 	set7segmentDigit (2, 8, false);
-// 	// digit 3
-// 	set7segmentDigit (3, 9, false); // to display '.'
-// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-// 	// digit 4
-// 	set7segmentDigit (4, 0, true);
-// 	// digit 5
-// 	set7segmentDigit (5, 1, false);
-// 	delay (dly);
-// 	
-// 	// digit 1
-// 	set7segmentDigit (1, 8, false);
-// 	// digit 2
-// 	set7segmentDigit (2, 9, false);
-// 	// digit 3
-// 	set7segmentDigit (3, 0, false); // to display '.'
-// 	//set7segmentDigit (6, _HYPHEN, false);    // to display '-'
-// 	// digit 4
-// 	set7segmentDigit (4, 1, false);
-// 	// digit 5
-// 	set7segmentDigit (5, 2, true);
-// 	delay (dly);
-// 	
-// 	DBG_PRINTLN ("test_7segments(). exit..");
-// 
-// 		
-// }
 
 // ver2: Display 2.0 digits for O2 concentration
 void display_o2 (float o2value) {
@@ -587,29 +504,29 @@ void display_temprature (float tempr_value) {
 }
 
 
-// void display_total_run_hours (uint32_t runhours) {
-// 
-//     uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
-// 
-//     unit_digit    = runhours % 10;
-//     runhours      = runhours / 10;
-//     tens_digit    = runhours % 10;
-//     runhours      = runhours / 10;
-//     hund_digit    = runhours % 10;
-//     runhours      = runhours / 10;
-//     thnd_digit    = runhours % 10;
-//     runhours      = runhours / 10;    
-//     ten_th_digit  = runhours % 10;
-//     runhours      = runhours / 10;
-// 
-// 
-//     set7segmentDigit (4, ten_th_digit, false);
-//     set7segmentDigit (5, thnd_digit,   false);
-//     set7segmentDigit (6, hund_digit,   false);
-//     set7segmentDigit (7, tens_digit,   false);
-//     set7segmentDigit (8, unit_digit,   false);
-//          
-// }
+void display_total_run_hours (uint32_t runhours) {
+
+    uint8_t     ten_th_digit, thnd_digit, hund_digit, tens_digit, unit_digit;
+
+    unit_digit    = runhours % 10;
+    runhours      = runhours / 10;
+    tens_digit    = runhours % 10;
+    runhours      = runhours / 10;
+    hund_digit    = runhours % 10;
+    runhours      = runhours / 10;
+    thnd_digit    = runhours % 10;
+    runhours      = runhours / 10;    
+    ten_th_digit  = runhours % 10;
+    runhours      = runhours / 10;
+
+
+    set7segmentDigit (4, ten_th_digit, false);
+    set7segmentDigit (5, thnd_digit,   false);
+    set7segmentDigit (6, hund_digit,   false);
+    set7segmentDigit (7, tens_digit,   false);
+    set7segmentDigit (8, unit_digit,   false);
+         
+}
 
 
 
@@ -619,7 +536,6 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
 	
 	
 	// init_7segments ();
-
 
 	// validate parameters
 	mins  = mins % 60;
@@ -685,8 +601,10 @@ void    display_task (void) {
 	// check if set delay is over
 	if (stay_time)	{
 		return;
+		// control will return from here.. will not execute below code (till closing brace of this function)..
 	}
 	
+	// control comes here and executes this part of the code, only if 'stay_time == 0'
 	switch (state)
 	{
 		
@@ -694,26 +612,18 @@ void    display_task (void) {
 			state = 0;
 			break;
 		case 1:
-		//temp
-		//o2_concentration = 93.39;
 			display_o2 (o2_concentration);
 			stay_time = O2C_DISP_TIME_SECS;
 			break;
 		case 2:
-		//temp
-		//output_pressure = 06.35;
 			display_pressure (output_pressure);
 			stay_time = PRESSURE_DISP_TIME_SECS;
 			break;
 		case 3:
-		//temp
-		//o2_moving_avg = 81.39;
 			display_o2_moving_avg (o2_moving_avg);
 			stay_time = MOVING_AVG_DISP_TIME_SECS;
 			break;
 		case 4:
-		// temp
-		//tempr_value_1 = 23.65;
 			display_temprature (tempr_value_1);	// temperature sensor - 1 is used
 			stay_time = TEMPR_DISP_TIME_SECS;
 			break;

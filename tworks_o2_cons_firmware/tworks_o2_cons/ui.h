@@ -10,13 +10,13 @@
 #endif
 
 
-#define BUTTON_DEBOUNCE_DLY (150)    // in msecs
+#define BUTTON_DEBOUNCE_DLY				(150)    // in msecs
 
 
-#define HIGH_BEEP           (200)
-#define LOW_BEEP            ( 50)
-#define SYS_ON_BEEP         (555)
-#define SYS_OFF_BEEP        (111)
+#define HIGH_BEEP						(200)
+#define LOW_BEEP						( 50)
+#define SYS_ON_BEEP						(555)
+#define SYS_OFF_BEEP					(111)
 
 
 // Entry Check

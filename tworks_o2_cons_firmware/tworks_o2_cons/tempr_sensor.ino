@@ -31,8 +31,8 @@ void tempr_sensor_scan (void)  {
     // Senor - 1
     ADS.readADC(TEMPR_SENSOR_1_CHANNEL_NO);
     tempr1_raw_adc_count = ADS.getValue();   
-    // DBG_PRINT   ("tempr1_raw_adc_count : ");
-    //////////////////////////////////////////////////////.DBG_PRINTLN (tempr1_raw_adc_count);
+    //	DBG_PRINT   ("tempr1_raw_adc_count : ");
+	//	DBG_PRINTLN (tempr1_raw_adc_count);
 
     // bits to voltage
     m_raw_voltage = ((float)tempr1_raw_adc_count) * 0.125;
@@ -51,6 +51,7 @@ void tempr_sensor_scan (void)  {
     //    DBG_PRINT   ("tempr_value_1 : ");
     //    DBG_PRINTLN (tempr_value_1, 4);
     //    DBG_PRINTLN ();
+
 
     // Senor - 2
     ADS.readADC(TEMPR_SENSOR_2_CHANNEL_NO);

@@ -69,93 +69,50 @@ void log_print_on_terminal (void)  {
 	char				temp2[10];
 	char				temp3[10];
 
-    // 1. print legend
     // sample output : 
+				//  On-time  Curr-RHs    PrdDly  FlshDly  PrechrgDly   o2_ADC  o2_mV    %o2  avgO2%     tempr-1  tempr-2    pressure
+				//  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
 
-    // On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV, o2_concen,   tempr-snsr-1, tempr-snsr-2, pressures
-    // 00:00:23 00:00:22,   5400,       0,        700,    822,      666.38,     18.45,        25.65,        24.50,       25.03
-
-	// print label once every 10 (say) records
+    // 1. print legend once every (say) 10 records
 	#define		SKIP_COUNT		(10)
 	if (skip_count >= SKIP_COUNT || skip_count == 0)	{
 		skip_count = 0;
 		DBG_PRINTLN ();
-// 		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV, o2_concen,   tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
-//                  00:00:23 00:00:22,   5400,       0,        700,    822,      666.38,     18.45,        25.65,        24.50,       25.03
-//                  00:00:23 00:00:22,   5400,       0,        700,    822,      666.38,   18.45,   18.45,     25.65,        24.50,       25.03
-// 		DBG_PRINT ("On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV,   %o2,  avgO2%, tempr-snsr-1, tempr-snsr-2, pressures\r\n" );
 		DBG_PRINT ("On-time  Curr-RHs    PrdDly  FlshDly  PrechrgDly   o2_ADC  o2_mV    %o2  avgO2%     tempr-1  tempr-2    pressure\r\n" );
-//                  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
 				//  On-time  Curr-RHs    PrdDly  FlshDly  PrechrgDly   o2_ADC  o2_mV    %o2  avgO2%     tempr-1  tempr-2    pressure
-				//  00:00:02 00:00:01     5400       0          0       1018  127.25  22.94  22.99      21.19     20.50       0.56
+                //  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
 
 	}
 	skip_count++;
 
-// On-time, Curr-RHs, PrdDly, FlshDly, PrechrgDly, o2_raw_ADC, o2_raw_mV,   %o2,  avgO2%, tempr-snsr-1, tempr-snsr-2, pressures
-// 00:00:22 00:00:21,   5400,       0,        700,    152,      19.00,     7.07,  7.07,        20.85,        20.73,       0.58
 	
-    // 1. time stamp
+    // 2. time stamp
     sprintf(lcd_temp_string, "%02d:%02d:%02d ", systemtick_hrs, systemtick_mins, systemtick_secs);
     DBG_PRINT (lcd_temp_string);
 
-    // 2. system run time
+    // 3. system run time
     int secs = ( current_run_time_secs %  60);
     int mins = ((current_run_time_secs % (60 * 60)) / 60);
     int hrs  = ( current_run_time_secs / (60 * 60));
     sprintf(lcd_temp_string, "%02d:%02d:%02d  ", hrs, mins, secs);
     DBG_PRINT (lcd_temp_string);
 
-    // 3. production time, flush time n precharge time
-//     Serial.printf ("%5d,  ", Production_Delay);
-//     Serial.printf ("%6d,  ", Flush_Delay);
-//     Serial.printf ("%9d,  ", PreCharge_Delay);
-
-//                  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
+    // 4. production time, flush time n pre-charge time
 	sprintf (temp_buffer, "  %5d   %5d      %5d", Production_Delay, Flush_Delay, PreCharge_Delay);
 	DBG_PRINT (temp_buffer);
-	
-    // 4. sieve A, B & back flush valve status
-    //    sprintf(lcd_temp_string, "%d %d %d ", (do_byte & SIEVE_A_VALVE_CONTROL) != 0, (do_byte & SIEVE_B_VALVE_CONTROL) != 0, (do_byte & SIEVE_FLUSH_VLV_CNTRL) != 0);
-    //    Serial.print (lcd_temp_string);
 
     // 5. O2 raw adc, mv, %
-    //sprintf(lcd_temp_string, "%4d %lf %lf ", o2_raw_adc_count, m_raw_voltage, o2_concentration);
-    //Serial.print (lcd_temp_string);
-//     Serial.printf ("%5d,      ", o2_raw_adc_count);
-//     Serial.print (o2_m_raw_voltage, 2);
-//     Serial.print (",     ");
-//     Serial.print (o2_concentration, 2);
-//     Serial.print (",  ");
-// 
-//     Serial.print (o2_moving_avg, 2);
-//     Serial.print (",    ");
-
-	/* 4 is mininum width, 2 is precision; float value is copied onto str_temp*/
+		// '2nd param' is minimum width, '3rd param' is precision; float value is copied onto '4th param' 
 	dtostrf(o2_m_raw_voltage, 6, 2, temp1);
 	dtostrf(o2_concentration, 5, 2, temp2);
 	dtostrf(o2_moving_avg,    5, 2, temp3);
-
-//                  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
 	sprintf (temp_buffer, "      %5d  %s  %s  %s", o2_raw_adc_count, temp1, temp2, temp3);
 	DBG_PRINT (temp_buffer);
 
-
-    // 6. Temperature values
-//     Serial.print ("    ");
-//     Serial.print(tempr_value_1);
-//     Serial.print (",        ");
-//     Serial.print(tempr_value_2);
-//     Serial.print (",       ");
-
-    // 7. Pressure 
-//     Serial.print(output_pressure, 2);
-//     Serial.println("\r\n");
-//     //Serial.println("\r\n");
+    // 6. Temperature n pressure values
 	dtostrf(tempr_value_1,   5, 2, temp1);
 	dtostrf(tempr_value_2,   5, 2, temp2);
 	dtostrf(output_pressure, 5, 2, temp3);
-	//                  00:00:23 00:00:22     5400       0        700         822  666.38  18.45  18.45      25.65     24.50      25.03
 	sprintf (temp_buffer, "      %s     %s      %s", temp1, temp2, temp3);
 	DBG_PRINT   (temp_buffer);
     DBG_PRINTLN ();
@@ -190,26 +147,17 @@ void log_serial_dump (void)	{
 	do 
 	{
 		pull_log_from_eeprom (&one_record);
-// 		DBG_PRINT ("#");
-// 		DBG_PRINT (record_count);
-// 		DBG_PRINT (" ");
 		sprintf(temp_string, "#%04d   ", record_count);
 		DBG_PRINT (temp_string);;
 		
 		switch (one_record.rec_type)
 		{
 			case 	LOG_TIME_STAMP:
-// 				DBG_PRINT (one_record.time_stamp.hh);	DBG_PRINT (":");
-// 				DBG_PRINT (one_record.time_stamp.mm);	DBG_PRINT (":");
-// 				DBG_PRINT (one_record.time_stamp.ss);	
 				sprintf(temp_string, "%02d:%02d:%02d ", one_record.time_stamp.hh, \
 									one_record.time_stamp.mm, one_record.time_stamp.ss);
 				DBG_PRINT (temp_string);
 				break;
 			case 	LOG_SENSOR_DATA:
-// 				DBG_PRINT (one_record.sensor_data.o2_p);	DBG_PRINT (", ");
-// 				DBG_PRINT (one_record.sensor_data.press);	DBG_PRINT (", ");
-// 				DBG_PRINT (one_record.sensor_data.tempr);	
 				sprintf(temp_string, "%02d.%02d, %02d.%02d, %02d.%02d", \
 							one_record.sensor_data.o2_p / 100, one_record.sensor_data.o2_p % 100, \
 							one_record.sensor_data.press / 100, one_record.sensor_data.press % 100, \
@@ -219,19 +167,10 @@ void log_serial_dump (void)	{
 			
 		}
 		DBG_PRINTLN ();
-// 		DBG_PRINTLN (one_record.rec_type);
-		
-// 		DBG_PRINT   ("one_record.sensor_data.rec_type : ");
-// 		DBG_PRINTLN (one_record.sensor_data.rec_type);
-// 		DBG_PRINT   ("one_record.time_stamp.rec_type : ");
-// 		DBG_PRINTLN (one_record.time_stamp.rec_type);
-// 		DBG_PRINT   ("record_count : ");
-// 		DBG_PRINTLN (record_count);
-// 		DBG_PRINTLN ();
 
 		record_count++;
 	} while (record_count < (EEPROM_LOGS_TOTAL_COUNT - 1));		
-// 	 } while (one_record.sensor_data.rec_type != 0xFF   &&  record_count < EEPROM_LOGS_TOTAL_COUNT);
+	// 	 } while (one_record.sensor_data.rec_type != 0xFF   &&  record_count < EEPROM_LOGS_TOTAL_COUNT);
 	
 	DBG_PRINTLN ("---------------------------");
 	DBG_PRINTLN ();
