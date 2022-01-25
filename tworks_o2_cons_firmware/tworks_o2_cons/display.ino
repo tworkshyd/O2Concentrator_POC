@@ -357,7 +357,42 @@ void blank_7segments (void) {
 
 
 
+void __7seg_display_float_in_2p2_format (float o2value) {
+	
+    uint16_t    integer;
+    uint8_t     unit_digit;
+    uint8_t     tens_digit;
+    uint8_t     decm_digit1;
+    uint8_t     decm_digit2;
+
+	//     int_o2value   = round (o2value);
+	integer   = (unsigned int) (o2value * 100.0);
+	
+	decm_digit2   = integer % 10;
+	integer       = integer / 10;
+	decm_digit1   = integer % 10;
+	integer       = integer / 10;
+	unit_digit    = integer % 10;
+	integer       = integer / 10;
+	tens_digit    = integer % 10;
+	
+	
+	// digit 2
+	set7segmentDigit (2, tens_digit, false);
+	// digit 3
+	set7segmentDigit (3, unit_digit, true);		// to display '.'
+	// digit 4
+	set7segmentDigit (4, decm_digit1, false);
+	// digit 5
+	set7segmentDigit (5, decm_digit2, false);
+	
+		
+}
+
+
+
 // ver2: Display 2.0 digits for O2 concentration
+/*
 void display_o2 (float o2value) {
 
     uint16_t    int_o2value;
@@ -393,112 +428,48 @@ void display_o2 (float o2value) {
 	
     
 }
+*/
 
+// ver 3
+void display_o2 (float o2value) {
+
+	// digit 1 display
+	set7segment_disp_char (1, 'o');
+	
+	// digit 2 to 5 display
+	__7seg_display_float_in_2p2_format (o2value);
+	
+}
 
 void display_pressure (float pressure_value) {
 
-	uint16_t    int_pressure_value;
-	uint8_t     unit_digit;
-	uint8_t     tens_digit;
-	uint8_t     decm_digit1;
-	uint8_t     decm_digit2;
-	
-
-	//     int_o2value   = round (o2value);
-	int_pressure_value   = (unsigned int) (pressure_value * 100.0);
-	
-	decm_digit2		= int_pressure_value % 10;
-	int_pressure_value   = int_pressure_value / 10;
-	decm_digit1		= int_pressure_value % 10;
-	int_pressure_value   = int_pressure_value / 10;
-	unit_digit		= int_pressure_value % 10;
-	int_pressure_value   = int_pressure_value / 10;
-	tens_digit		= int_pressure_value % 10;
-	
-	
 	// digit 1
 	set7segment_disp_char (1, 'P');
-	// digit 2
-	set7segmentDigit (2, tens_digit, false);
-	// digit 3
-	set7segmentDigit (3, unit_digit, true);		// to display '.'
-	// digit 4
-	set7segmentDigit (4, decm_digit1, false);
-	// digit 5
-	set7segmentDigit (5, decm_digit2, false);
 	
-	
+	// digit 2 to 5 display
+	__7seg_display_float_in_2p2_format (pressure_value);
 	
 }
 
 
 void display_o2_moving_avg (float avg) {
 
-	uint16_t    int_pressure_value;
-	uint8_t     unit_digit;
-	uint8_t     tens_digit;
-	uint8_t     decm_digit1;
-	uint8_t     decm_digit2;
-	
-
-	//     int_o2value   = round (o2value);
-	int_pressure_value   = (unsigned int) (avg * 100.0);
-	
-	decm_digit2		= int_pressure_value % 10;
-	int_pressure_value   = int_pressure_value / 10;
-	decm_digit1		= int_pressure_value % 10;
-	int_pressure_value   = int_pressure_value / 10;
-	unit_digit		= int_pressure_value % 10;
-	int_pressure_value   = int_pressure_value / 10;
-	tens_digit		= int_pressure_value % 10;
-	
-	
 	// digit 1
 	set7segment_disp_char (1, 'A');
-	// digit 2
-	set7segmentDigit (2, tens_digit, false);
-	// digit 3
-	set7segmentDigit (3, unit_digit, true);		// to display '.'
-	// digit 4
-	set7segmentDigit (4, decm_digit1, false);
-	// digit 5
-	set7segmentDigit (5, decm_digit2, false);
+
+	// digit 2 to 5 display
+	__7seg_display_float_in_2p2_format (avg);
 	
 	
 }
 
 void display_temprature (float tempr_value) {
 
-	uint16_t    int_temr_value;
-	uint8_t     unit_digit;
-	uint8_t     tens_digit;
-	uint8_t     decm_digit1;
-	uint8_t     decm_digit2;
-	
-
-	//     int_o2value   = round (o2value);
-	int_temr_value   = (unsigned int) (tempr_value * 100.0);
-	
-	decm_digit2		= int_temr_value % 10;
-	int_temr_value   = int_temr_value / 10;
-	decm_digit1		= int_temr_value % 10;
-	int_temr_value   = int_temr_value / 10;
-	unit_digit		= int_temr_value % 10;
-	int_temr_value   = int_temr_value / 10;
-	tens_digit		= int_temr_value % 10;
-	
-	
 	// digit 1
 	set7segment_disp_char (1, 't');
-	// digit 2
-	set7segmentDigit (2, tens_digit, false);
-	// digit 3
-	set7segmentDigit (3, unit_digit, true);		// to display '.'
-	// digit 4
-	set7segmentDigit (4, decm_digit1, false);
-	// digit 5
-	set7segmentDigit (5, decm_digit2, false);
-	
+
+	// digit 2 to 5 display
+	__7seg_display_float_in_2p2_format (tempr_value);
 	
 	
 }
@@ -570,8 +541,11 @@ void display_current_run_hours (uint16_t hours, uint16_t mins) {
 
 
 
+
+// Please feel free to change below display stay timeout settings as required
 enum DISPLAY_DELAY_E	{
 
+	TOTAL_RUN_TIME_SECS			= 05,
 	CURR_RUN_TIME_SECS			= 05,
 	O2C_DISP_TIME_SECS			= 05,
 	PRESSURE_DISP_TIME_SECS		= 05,
@@ -612,28 +586,47 @@ void    display_task (void) {
 			state = 0;
 			break;
 		case 1:
+			#ifdef	DISPLAY_O2C_ON_7_SEGMENTS
 			display_o2 (o2_concentration);
 			stay_time = O2C_DISP_TIME_SECS;
+			#endif
 			break;
 		case 2:
+			#ifdef	DISPLAY_PRESSURE_ON_7_SEGMENTS
 			display_pressure (output_pressure);
 			stay_time = PRESSURE_DISP_TIME_SECS;
+			#endif
 			break;
 		case 3:
+			#ifdef	DISPLAY_MOVING_AVG_ON_7_SEGMENTS
 			display_o2_moving_avg (o2_moving_avg);
 			stay_time = MOVING_AVG_DISP_TIME_SECS;
+			#endif
 			break;
 		case 4:
+			#ifdef	DISPLAY_TEMPR1_ON_7_SEGMENTS
 			display_temprature (tempr_value_1);	// temperature sensor - 1 is used
 			stay_time = TEMPR_DISP_TIME_SECS;
+			#endif
 			break;
-// 		case 5:
-//             secs = ( current_run_time_secs %  60);
-//             mins = ((current_run_time_secs % (60 * 60)) / 60);
-//             hrs  = ( current_run_time_secs / (60 * 60));
-//             display_current_run_hours(hrs, mins);
-// 			stay_time = CURR_RUN_TIME_SECS;
-// 			break;
+		case 5:
+			#ifdef	DISPLAY_CRN_ON_7_SEGMENTS
+            secs = ( current_run_time_secs %  60);
+            mins = ((current_run_time_secs % (60 * 60)) / 60);
+            hrs  = ( current_run_time_secs / (60 * 60));
+            display_current_run_hours(hrs, mins);
+			stay_time = CURR_RUN_TIME_SECS;
+			#endif
+			break;
+		case 6:
+			#ifdef	DISPLAY_TRN_ON_7_SEGMENTS
+			secs = ( current_run_time_secs %  60);
+			mins = ((current_run_time_secs % (60 * 60)) / 60);
+			hrs  = ( current_run_time_secs / (60 * 60));
+			display_total_run_hours(runhours);
+			stay_time = TOTAL_RUN_TIME_SECS;
+			#endif
+			break;
 	}
 	
 	state++;
