@@ -134,13 +134,18 @@ void neo_pixel_control		(uint8_t led_no, uint8_t on_off);
 void neo_pixel_leds_test	(void);
 
 
+void  set7segmentDigit		(int seg_no, int value, uint8_t  point);
+void  set7segment_disp_char (int seg_no, char character);
+
 void init_7segments		(void);
 void blank_7segments	(void);
 void test_7segments		(void);
 void display_banner		(void);
 void scrollDigits		(void);
 void test_7segments		(void);
-// void display_o2		(float o2value);
+void display_o2			(float o2value);
+void display_pressure	(float pressure_value);
+void display_temprature (float tempr_value);
 void display_current_run_hours   (uint16_t hours, uint16_t mins);
 void display_total_run_hours     (uint32_t runhours);
  

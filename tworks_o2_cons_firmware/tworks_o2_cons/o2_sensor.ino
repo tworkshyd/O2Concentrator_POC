@@ -11,28 +11,32 @@
 
 
 
-float y_samples[NUM_OF_SAMPLES_O2]     = {  5.0,    21.1,   96.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
+float y_samples[NUM_OF_SAMPLES_O2]     = {  1.0,    20.9,   99.0};      // based on o2c tank purity = 96% & nitrogen tank purity = 95%
 
 // Hard coding calibration parameters for all 5 machines.
 #if    (O2_SENSOR == 1)
 // 1. for Envitec sensor marked as S1 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = { 10.625, 177.875, 677.251};   // default calib values
+float x_samples[NUM_OF_SAMPLES_O2]     = { 7.55, 566.63, 570.0};   // default calib values
 
 #elif  (O2_SENSOR == 2)
 // 2. for Envitec sensor marked as S2 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = { 17.125, 134.875,  617.875};     // default calib values
+float x_samples[NUM_OF_SAMPLES_O2]     = { 19.5, 130.5,  628.9};     // default calib values
 
 #elif  (O2_SENSOR == 3)
 // 3. for Envitec sensor marked as S3 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = { 26.250, 144.125,  653.625};   // default calib values
+float x_samples[NUM_OF_SAMPLES_O2]     = { 21.25, 134.0,  637.63};   // default calib values
 
 #elif  (O2_SENSOR == 4)
 // 1. for Envitec sensor marked as S1 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = { 1.125, 120.375, 632.125};   // default calib values
+float x_samples[NUM_OF_SAMPLES_O2]     = { 24.88, 159.13, 675.0};		// default calib values
 
 #elif  (O2_SENSOR == 5)
 // 2. for Envitec sensor marked as S2 for demo device
-float x_samples[NUM_OF_SAMPLES_O2]     = {  2.875, 117.125,  625.250};     // default calib values
+float x_samples[NUM_OF_SAMPLES_O2]     = {  10.13, 142.0,  655.25};     // default calib values
+
+#elif  (O2_SENSOR == 6)
+// 2. for Envitec sensor marked as S2 for demo device
+float x_samples[NUM_OF_SAMPLES_O2]     = {  21.25, 130.38,  627.63};    // default calib values
 
 #else
 float x_samples[NUM_OF_SAMPLES_O2]     = { 10.375, 129.25,  588.125};   // default calib values
@@ -118,17 +122,18 @@ int sensor_zero_calibration (void)  {
         sigmaXX += x * x;
         sigmaXY += x * y;
 
-        DBG_PRINT ("      x : "); DBG_PRINTLN (x);        DBG_PRINT ("      y : "); DBG_PRINTLN (y);
-        DBG_PRINT (" sigmaX : "); DBG_PRINTLN (sigmaX);   DBG_PRINT (" sigmaY : "); DBG_PRINTLN (sigmaY);
-        DBG_PRINT ("sigmaXX : "); DBG_PRINTLN (sigmaXX);  DBG_PRINT ("sigmaXY : "); DBG_PRINTLN (sigmaXY);
+//         DBG_PRINT ("      x : "); DBG_PRINTLN (x);        DBG_PRINT ("      y : "); DBG_PRINTLN (y);
+//         DBG_PRINT (" sigmaX : "); DBG_PRINTLN (sigmaX);   DBG_PRINT (" sigmaY : "); DBG_PRINTLN (sigmaY);
+//         DBG_PRINT ("sigmaXX : "); DBG_PRINTLN (sigmaXX);  DBG_PRINT ("sigmaXY : "); DBG_PRINTLN (sigmaXY);
     }
     
     denominator = (NUM_OF_SAMPLES_O2 * sigmaXX) - (sigmaX * sigmaX);
-    DBG_PRINT ("dnmnatr : "); DBG_PRINTLN (denominator);
+//     DBG_PRINT ("dnmnatr : "); DBG_PRINTLN (denominator);
 
     if (denominator != 0) {      
         o2_slope = ((NUM_OF_SAMPLES_O2 * sigmaXY) - (sigmaX * sigmaY)) / denominator;
         o2_const_val = ((sigmaY * sigmaXX) - (sigmaX * sigmaXY)) / denominator;
+        DBG_PRINTLN ("O2 calibration successful .!!");
         result = SUCCESS;
     } 
     else {      
@@ -138,11 +143,11 @@ int sensor_zero_calibration (void)  {
         DBG_PRINTLN ("Error: O2 calibration failed!!");
     }
 
-    DBG_PRINTLN ("");
-    DBG_PRINT   ("o2_slope : ");
-    DBG_PRINT   (o2_slope);
-    DBG_PRINT   (", o2_const_val : ");
-    DBG_PRINT   (o2_const_val);
+//     DBG_PRINTLN ("");
+//     DBG_PRINT   ("o2_slope : ");
+//     DBG_PRINT   (o2_slope);
+//     DBG_PRINT   (", o2_const_val : ");
+//     DBG_PRINT   (o2_const_val);
 
     return result;
     
@@ -167,6 +172,21 @@ void o2_sensor_scan (void)  {
     o2_concentration = ((o2_m_raw_voltage * o2_slope) + o2_const_val);
 
 
+	// moving average
+	cbuf.push(o2_concentration);
+	o2_moving_avg = 0.0;
+	// the following ensures using the right type for the index variable
+	using index_t = decltype(cbuf)::index_t;
+	for (index_t i = 0; i < cbuf.size(); i++) 
+	{
+		o2_moving_avg += cbuf[i];
+	}
+	o2_moving_avg = o2_moving_avg / cbuf.size();
+// 	DBG_PRINT   ("Average is : ");
+// 	DBG_PRINTLN (o2_moving_avg);
+	
+	
+	
 
     #if (CAPP_AT_95_O2 == 1)
     // capping O2C value.. to restrict it below.. 95% of FiO2   

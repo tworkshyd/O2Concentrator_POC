@@ -30,6 +30,7 @@ bool volatile   f_msec, f_10msec, f_100msec;
 bool volatile   f_1sec, f_1min, f_1hr;
 
 bool            f_system_running;
+bool            f_sec_disp_task;
 bool            f_sec_logs_task;
 bool            f_sec_change_ui_task;
 bool            f_sec_change_o2_task;
@@ -42,6 +43,7 @@ uint8_t         alarms_byte;     // can hold upto 8 alarms, 1 bit for each
 
 
 float           o2_concentration = 93.50;
+float           o2_moving_avg = 91.31;
 float           prev_o2_concentration;
 float           output_pressure;//  = 25.03;
 float           prev_output_pressure  = 25;

@@ -34,28 +34,81 @@
 #define DBG_PRINT       //  Serial.print
 #endif
 
-#define O2C_ALARM_BIT           (0x01)
-#define TEMPR_ALARM_BIT         (0x02)
-#define PRESSURE_DROP_ALARM_BIT (0x04)
 
-// critical Alarms will switch off the system, please make a selection by ORing the appropriate ones in below define
-#define CRITICAL_ALARMS         (TEMPR_ALARM_BIT | PRESSURE_DROP_ALARM_BIT)
-
-#define SYSTEM_START_UP_PERIOD							(120)       // delay in seconds, before actually checking for O2 Concentration after power-on
-#define TIME_DELAY_BEFORE_LOW_O2_ALARM_ASSERTION		(55)        // delay in seconds,
-#define TIME_DELAY_BEFORE_HIGH_TEMPR_ALARM_ASSERTION	(15)        // delay in seconds,
-#define TIME_DELAY_BEFORE_LOW_PRESSRUE_ALARM_ASSERTION  (25)        // delay in seconds,
-
+// Enum ----------------------------------------------------------------------
+typedef enum log_type_e	{
+	
+	LOG_SENSOR_DATA = 0x03,
+	LOG_TIME_STAMP  = 0x05,
+	
+	INVALID_RECORD  = 0xFF
+	
+} LOG_TYPE_E;
 
 
-extern uint8_t      alarms_byte;            // holds one bit for each alarm
-extern bool         f_critical_alarms;
-extern bool         f_start_alarm_beeps;
+// Structure declarations ----------------------------------------------------
+
+// Periodicity - Capture log every time the 4 step cycle ends.
+
+/*
+ Parameter			Remarks
+	HH				RTC, 24 hour time
+	MM				RTC, 24 hour time
+	SS				RTC, 24 hour time
+	O2 %			Int
+	P1				Pressure in psi, float
+	T1				Int/Byte
+*/
+
+typedef struct time_stamp_t	{
+	
+	uint8_t		rec_type;
+	uint8_t		ss;
+	uint8_t		mm;
+	uint8_t		hh;
+	uint8_t		dd;
+	uint8_t		YM;	// Year & month (one nibble for each)
+	
+} TIME_STAMP_T;
+
+typedef struct sensor_data_t	{
+	
+	uint8_t		rec_type;
+	uint8_t		ss;
+	// Note : All decimal values are stored in integer format after multiplying by 100, to save on memory
+	//			(to avoid expensive 8 bytes floating point values), just divide by 100 to get actual value with
+	//			2 digits precision
+	uint16_t	o2_p;	// 93.23 %, 2.2 digits		
+	uint16_t	press;	// 06.31 psi, 2.2 digits
+	uint16_t	tempr;	// 45.57 Deg C, 2.2 digits
+	
+} SENSOR_DATA_T;
 
 
 
+// Note: below union is used to ease handing of different type of records.
+typedef union log_record_t	{
+	
+	uint8_t			rec_type;
+	TIME_STAMP_T	time_stamp;
+	SENSOR_DATA_T	sensor_data;
+	
+} LOG_RECORD_U;
+
+
+
+
+extern int record_no;
+
+
+
+
+// Function declarations -----------------------------------------------------
+void log_init		(void);
 void logs_task      (void);
-void alarms_task    (void);
+void log_print_on_terminal(void);
+void logs_store     (void);
+void logs_retrive   (void);
 
 
 

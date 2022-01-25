@@ -16,12 +16,16 @@ static int  f_state_changed;
 int         start_switch_dbnc_dly;
 int         alarm_clear_bttn_dbnc_dly;
 
+uint8_t		alarm_button_press_count;
+
 
 void button_check (void)  {
 
     int     start_switch_state = 0;         // variable for reading the pushbutton status
     int     alarm_clear_buttn_state = 0;    // variable for reading the pushbutton status
 
+	static long	int	time_tag;
+	
 
     start_switch_state      = digitalRead(startSwitchPin);
     alarm_clear_buttn_state = digitalRead(alarmClearButton);
@@ -54,12 +58,20 @@ void button_check (void)  {
         if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
             alarm_clear_button_pressed = true;
             alarm_clear_bttn_dbnc_dly = 0;
-			DBG_PRINT   (__FILE__);
-			DBG_PRINTLN (" : Alarm Clear Button Pressed..");
+			alarm_button_press_count++;
+			multi_beeps (alarm_clear_button_pressed);
+			//DBG_PRINT   (__FILE__);
+			DBG_PRINT ("Alarm Clear Button Pressed.. : ");
+			DBG_PRINT (alarm_button_press_count);
+			DBG_PRINTLN (" times..");
+			time_tag = systemtick_msecs;
 		}
     }
     else {
-        // nop
+         // reset press count after 1.5 sec of no activity
+		 if (time_elapsed(time_tag) > 1500)	{
+				alarm_button_press_count = 0;
+		 }
     }
      
 }
@@ -127,6 +139,30 @@ void ui_task_main (void)    {
     }
 
     button_check ();
+	
+	// check for alarm button presses for special functions
+	#define EEPROM_ERASE_BUTTON_PRESSES		(5)
+	/*
+		Note: Erase EEPROM if alarm reset button is pressed for 5 times continuously, 
+				when system is in off condition
+	*/
+	if (!f_system_running && alarm_button_press_count >= EEPROM_ERASE_BUTTON_PRESSES)	{
+		alarm_button_press_count = 0;
+		BUUZZER_CNTRL (BUZZ_ON);
+		delay(100);
+		BUUZZER_CNTRL (BUZZ_OFF);
+		DBG_PRINTLN ("EEPROM Erase command issued..");
+		DBG_PRINTLN ("erasing..");
+		eepfill	  (EEPROM_LOGS_START_ADDRESS, 0xFF, EEPROM_LOGS_AREA_SIZE_IN_BYTES);
+		DBG_PRINTLN ("erase complete.");
+		record_no = 0;
+		update_log_rcord_head_ptr (EEPROM_LOGS_START_ADDRESS);
+		BUUZZER_CNTRL (BUZZ_ON);
+		delay(333);
+		BUUZZER_CNTRL (BUZZ_OFF);
+
+	}
+	
 
     switch (ui_state)
     {
@@ -146,6 +182,7 @@ void ui_task_main (void)    {
             if ( start_switch_pressed == true && !f_critical_alarms )  {
                 f_system_running = true;
 
+                DBG_PRINTLN();
                 DBG_PRINTLN();
                 DBG_PRINTLN("Start Button Pressed..!");
                 lcd.setCursor(0, 3);
@@ -168,7 +205,7 @@ void ui_task_main (void)    {
 
                 lcd.clear();
                 lcd.setCursor(0, 0);
-                sprintf(lcd_temp_string, "O2 CONC   PRESSURE ");
+                // sprintf(lcd_temp_string, "O2 CONC   PRESSURE ");
                 DBG_PRINTLN(lcd_temp_string);
                 //        "...................."
                 lcd.print(lcd_temp_string);
@@ -194,10 +231,12 @@ void ui_task_main (void)    {
 
             last_cycle_run_time_secs = current_run_time_secs;
             current_run_time_secs = 0;
-            save_record ();
+            save_run_hrs_n_calib_constants ();
             
 			if (!f_critical_alarms)	{
+				DBG_PRINTLN();
 				DBG_PRINTLN("Stop Button Pressed!");
+				DBG_PRINTLN();
 				lcd.setCursor(0, 3);
 				lcd.print("Stop Button Pressed ");
 			}
@@ -328,159 +367,3 @@ void power_on_self_test (void) {
 
 // ------------------------ EOF ------------------------------------
 
-/*
- *         
- *         case UI_START:
-            //if (powerUpTimer.check())   {
-//            if (state_time >= 10) {
-//                ui_state = UI_SYS_INIT;
-//                lcd.setCursor(0, 3);
-//                button_press_count = 0;
-//                lcd.print("Press ButtonToStart!");
-//            }
-//            else if (time_elapsed (time_tag) > 1500) {
-//                if (button_press_count >= CALIBRATION_MODE_ENTRY_CHECK)  {
-//                    button_press_count = 0;
-//                    ui_state = UI_CALIB_MODE;
-//                }
-//                else if (button_press_count >= FACTORY_MODE_ENTRY_CHECK)  {
-//                    button_press_count = 0;
-//                    ui_state = UI_FACTORY_MODE;
-//                }
-//                if (button_press_count >= CONFIG_MODE_ENTRY_CHECK)  {
-//                    button_press_count = 0;
-//                    ui_state = UI_CONFIG_MODE;
-//                }
-//            }
-//            else {
-//                if (f_state_changed)  {
-//                    ui_print_welcome ();
-//                }
-//            }
-            ui_state = UI_SYS_INIT;
-            break;
-//        case UI_CALIB_MODE:
-//            DBG_PRINTLN("Entered Calibration Mode..");
-//            lcd.clear();
-//            lcd.setCursor(0, 0);
-//            lcd.print("Calibration Mode..");
-//            lcd.setCursor(0, 1);
-//            lcd.print("O2 sensorCalibration");
-//            multi_beeps (5);
-//            
-//            ui_state = UI_SYS_INIT;
-//            break;
-//        case UI_FACTORY_MODE:
-//            DBG_PRINTLN("Factory Mode..");
-//            lcd.clear();
-//            lcd.setCursor(0, 0);
-//            lcd.print("Factory Mode..");
-//
-//            multi_beeps (3);
-//
-//            // Power On self test - on demand
-//            power_on_self_test ();
-//            ui_state = UI_SYS_INIT;
-//            break;
-//
-//        case UI_CONFIG_MODE:
-//            DBG_PRINTLN("Entered Configuration Mode..");
-//            lcd.clear();
-//            lcd.setCursor(0, 0);
-//            lcd.print("Configuration Mode..");
-//            lcd.setCursor(0, 1);
-//
-//            multi_beeps (2);
-//            ui_state = UI_SYS_INIT;
-//            break;
-
- */
-
- 
-//    if (buttonState == BUTTON_ACTIVE) {   // press detection
-//        button_debounce_delay++;
-//        if (button_debounce_delay >= BUTTON_DEBOUNCE_DLY)   {
-//            button_debounce_delay = 0;
-//            button_pressed = true;
-//        }
-//        // temp
-//        DBG_PRINT  ("button_debounce_delay : ");
-//        DBG_PRINTLN(button_debounce_delay);
-//    }
-//    else {  // release detection
-//        if (button_debounce_delay)
-//            button_debounce_delay--;
-//        if (button_debounce_delay == 0)    {
-//            if (button_pressed) {
-//                button_pressed = false;
-//                button_press_count++;
-//                time_tag = systemtick_msecs;
-//                // temp
-//                DBG_PRINT  ("button_press_count : ");
-//                DBG_PRINTLN(button_press_count);
-//            }
-//        }
-//
-//    }
-
-
-/*
-            // LCD Line 2
-            // O2 concentration / output pressure
-            if (prev_o2_concentration != o2_concentration || prev_output_pressure != output_pressure)  {
-                prev_o2_concentration  = o2_concentration;
-                prev_output_pressure = output_pressure;
-                // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
-                // DBG_PRINTLN(lcd_temp_string);
-                // 4 is mininum width, 2 is precision; float value is copied onto str_temp
-                dtostrf(o2_concentration, 4, 2, str_temp);
-
-
-                dtostrf(output_pressure, 5, 2, str_temp2);
-                // sprintf(lcd_temp_string, "%f \%%   %2d psi", o2_concentration, output_pressure);
-                sprintf(lcd_temp_string, "%s %%   %s psi", str_temp, str_temp2);
-
-                DBG_PRINTLN(lcd_temp_string);
-                lcd.setCursor(0, 1);
-                lcd.print(lcd_temp_string);
-#ifdef  CHANGE_IN_O2_LEVEL
-    
-
-#endif
-            }
-
-            // LCD Line 3
-            // lcd.setCursor(0, 2);
-            // blank for now
-
-            // LCD Line 4
-            if (prev_current_run_time_secs ^ current_run_time_secs) {
-                prev_current_run_time_secs = current_run_time_secs;
-
-                int secs = ( current_run_time_secs %  60);
-                int mins = ((current_run_time_secs % (60 * 60)) / 60);
-                int hrs  = ( current_run_time_secs / (60 * 60));
-                sprintf(lcd_temp_string, "RUN TIME  %02d:%02d:%02d", hrs, mins, secs);
-                DBG_PRINTLN(lcd_temp_string);
-                lcd.setCursor(0, 3);
-                lcd.print(lcd_temp_string);
-            }
-
-
-                //    // 4. Alarm Clear Button Release detection
-    //    else if (alarm_clear_buttn_state == ALARM_CLEAR_BUTTON_RELEASED) {   // press detection
-    //      alarm_clear_bttn_dbnc_dly++;
-    //      if (alarm_clear_bttn_dbnc_dly > BUTTON_DEBOUNCE_DLY)  {
-    //          alarm_clear_button_pressed = false;
-    //          alarm_clear_bttn_dbnc_dly = 0;
-    //          //DBG_PRINT  ("Alarm Clear Button RELEASED");
-    //      }
-    //      //DBG_PRINT  ("alarm_clear_bttn_dbnc_dly : ");
-    //      //DBG_PRINTLN(alarm_clear_bttn_dbnc_dly);
-    //    }
-    //    else {
-    //      // nop
-    //    }
-
-    
-*/
