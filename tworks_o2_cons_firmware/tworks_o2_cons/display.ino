@@ -491,11 +491,11 @@ void display_total_run_hours (uint32_t runhours) {
     runhours      = runhours / 10;
 
 
-    set7segmentDigit (4, ten_th_digit, false);
-    set7segmentDigit (5, thnd_digit,   false);
-    set7segmentDigit (6, hund_digit,   false);
-    set7segmentDigit (7, tens_digit,   false);
-    set7segmentDigit (8, unit_digit,   false);
+    set7segmentDigit (1, ten_th_digit, false);
+    set7segmentDigit (2, thnd_digit,   false);
+    set7segmentDigit (3, hund_digit,   false);
+    set7segmentDigit (4, tens_digit,   false);
+    set7segmentDigit (5, unit_digit,   false);
          
 }
 
@@ -602,7 +602,7 @@ void    display_task (void) {
 			display_o2_moving_avg (o2_moving_avg);
 			stay_time = MOVING_AVG_DISP_TIME_SECS;
 			#endif
-			break;
+			break;		
 		case 4:
 			#ifdef	DISPLAY_TEMPR1_ON_7_SEGMENTS
 			display_temprature (tempr_value_1);	// temperature sensor - 1 is used
@@ -620,10 +620,8 @@ void    display_task (void) {
 			break;
 		case 6:
 			#ifdef	DISPLAY_TRN_ON_7_SEGMENTS
-			secs = ( current_run_time_secs %  60);
-			mins = ((current_run_time_secs % (60 * 60)) / 60);
-			hrs  = ( current_run_time_secs / (60 * 60));
-			display_total_run_hours(runhours);
+			hrs  = ( total_run_time_secs / (60 * 60));
+			display_total_run_hours(hrs);
 			stay_time = TOTAL_RUN_TIME_SECS;
 			#endif
 			break;
