@@ -132,12 +132,12 @@
  * 8. Select display data on 7-segments (Enable / Disable)
  * ======================================================================== */
 // Uncomment below line to enable respective parameter display on 7-segments
-#define DISPLAY_O2C_ON_7_SEGMENTS
-#define DISPLAY_PRESSURE_ON_7_SEGMENTS
-#define DISPLAY_MOVING_AVG_ON_7_SEGMENTS
-#define DISPLAY_TEMPR1_ON_7_SEGMENTS
+// #define DISPLAY_O2C_ON_7_SEGMENTS
+// #define DISPLAY_PRESSURE_ON_7_SEGMENTS
+// #define DISPLAY_MOVING_AVG_ON_7_SEGMENTS
+// #define DISPLAY_TEMPR1_ON_7_SEGMENTS
 #define DISPLAY_CRN_ON_7_SEGMENTS
-#define DISPLAY_TRN_ON_7_SEGMENTS
+// #define DISPLAY_TRN_ON_7_SEGMENTS
 
 // ---------------------------------------------------------------------------
 
