@@ -214,10 +214,10 @@ void logs_store     (void)	{
 		// log_data.time_stamp.YM    = ;
 		
 		// store into eeprom
-		DBG_PRINT  ("logging time stamp  : ");
+		//DBG_PRINT  ("logging time stamp  : ");
 		push_log_to_eeprom (&log_data);
 		record_no++;
-		DBG_PRINTLN (record_no);
+		//DBG_PRINTLN (record_no);
 	}
 	
 	log_data.sensor_data.rec_type  = LOG_SENSOR_DATA;
@@ -226,10 +226,10 @@ void logs_store     (void)	{
 	log_data.sensor_data.tempr     = (uint16_t)(tempr_value_1    * 100);
 	
 	// store into eeprom
-	DBG_PRINT   ("logging sensor data : ");
+	//DBG_PRINT   ("logging sensor data : ");
 	push_log_to_eeprom (&log_data);
 	record_no++;
-	DBG_PRINTLN (record_no);
+	//DBG_PRINTLN (record_no);
 	
 }
 

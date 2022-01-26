@@ -340,6 +340,8 @@ void init_7segments (void) {
     
     set7segmentRegister (INTENSITY, 0x07);
     set7segmentRegister (SHUT_DOWN, 1);
+    set7segmentRegister (SCAN_LIMIT, 0x07);
+	set7segmentRegister (DISPLAY_TEST, 0);
 	 
 }
 
@@ -577,6 +579,8 @@ void    display_task (void) {
 		return;
 		// control will return from here.. will not execute below code (till closing brace of this function)..
 	}
+	
+	init_7segments ();
 	
 	// control comes here and executes this part of the code, only if 'stay_time == 0'
 	switch (state)

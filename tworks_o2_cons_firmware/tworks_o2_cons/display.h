@@ -14,7 +14,7 @@
 
 // include the library code:
 #include <LiquidCrystal.h>
-#include "LedControl.h"
+// #include "LedControl.h"
 
 
 
@@ -117,7 +117,7 @@
 #define LCD_COLS    (20)
 
 LiquidCrystal		lcd(RS, EN, D4, D5, D6, D7);
-LedControl			lc = LedControl(dataPin_7segment, clckPin_7segment, loadPin_7segment, 1);
+// LedControl			lc = LedControl(dataPin_7segment, clckPin_7segment, loadPin_7segment, 1);
 
 
 enum ALIGN {LEFT, CENTER, RIGHT};

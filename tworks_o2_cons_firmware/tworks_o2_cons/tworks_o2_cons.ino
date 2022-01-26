@@ -222,7 +222,7 @@ void loop (void) {
         
     }
     
-	init_7segments ();
+// 	init_7segments ();
   
 }
 
