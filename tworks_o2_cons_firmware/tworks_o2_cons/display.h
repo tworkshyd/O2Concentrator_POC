@@ -17,6 +17,45 @@
 #include "LedControl.h"
 
 
+//==================== 7-segments LED driver ====================
+#define NO_OF_MAX7219_CASCADED_ICs	(1)
+
+// #define NO_OP           (0x00)
+// #define DIGIT_0         (0x01)
+// #define DIGIT_1         (0x02)
+// #define DIGIT_2         (0x03)
+// #define DIGIT_3         (0x04)
+// #define DIGIT_4         (0x05)
+// #define DIGIT_5         (0x06)
+// #define DIGIT_6         (0x07)
+// #define DIGIT_7         (0x08)
+// #define DECODE_MODE     (0x09)
+// #define INTENSITY       (0x0A)
+// #define SCAN_LIMIT      (0x0B)
+// #define SHUT_DOWN       (0x0C)
+// #define DISPLAY_TEST    (0x0F)
+// 
+#define BLANK           (0x0F)
+
+#define OP_NOOP   0
+#define OP_DIGIT0 1
+#define OP_DIGIT1 2
+#define OP_DIGIT2 3
+#define OP_DIGIT3 4
+#define OP_DIGIT4 5
+#define OP_DIGIT5 6
+#define OP_DIGIT6 7
+#define OP_DIGIT7 8
+#define OP_DECODEMODE  9
+#define OP_INTENSITY   10
+#define OP_SCANLIMIT   11
+#define OP_SHUTDOWN    12
+#define OP_DISPLAYTEST 15
+
+
+extern uint8_t   digit_to_seg_value[];
+
+
 
 //==================== Neo-pixel LED driver ====================
 #if   (HW_REVISION == HW_REV_1_0)
@@ -116,8 +155,6 @@
 #define LCD_ROWS    ( 4)
 #define LCD_COLS    (20)
 
-LiquidCrystal		lcd(RS, EN, D4, D5, D6, D7);
-LedControl			lc = LedControl(dataPin_7segment, clckPin_7segment, loadPin_7segment, 1);
 
 
 enum ALIGN {LEFT, CENTER, RIGHT};

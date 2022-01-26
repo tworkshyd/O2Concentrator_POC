@@ -9,6 +9,11 @@ char     lcd_temp_string[LCD_COLS + 1];
 unsigned long delaytime = 50;
 
 
+// Constructors --------------------------------------------------------------
+LiquidCrystal		lcd(RS, EN, D4, D5, D6, D7);
+LedControl			lc = LedControl(dataPin_7segment, clckPin_7segment, loadPin_7segment, NO_OF_MAX7219_CASCADED_ICs);
+
+
 
 void lcd_clear_buf (char * bufp) {
 
@@ -187,25 +192,6 @@ void neo_pixel_leds_test (void)	{
 
 
 //==================== 7 segment driver ========================
-#define NO_OP           (0x00)
-#define DIGIT_0         (0x01)
-#define DIGIT_1         (0x02)
-#define DIGIT_2         (0x03)
-#define DIGIT_3         (0x04)
-#define DIGIT_4         (0x05)
-#define DIGIT_5         (0x06)
-#define DIGIT_6         (0x07)
-#define DIGIT_7         (0x08)
-#define DECODE_MODE     (0x09)
-#define INTENSITY       (0x0A)
-#define SCAN_LIMIT      (0x0B)
-#define SHUT_DOWN       (0x0C)
-#define DISPLAY_TEST    (0x0F)
-
-#define BLANK           (0x0F)
-
-
-
 uint8_t   digit_to_seg_value[] = {
   
     0b01111110,  // '0' 
@@ -329,18 +315,39 @@ void  set7segmentRegister (int reg, int value) {
    X   X   X   X   ADDRESS-----| MSB     DATA        LSB
  */
     //shiftOut(dataPin, clockPin, bitOrder, value);
+    digitalWrite(loadPin_7segment,   LOW);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, reg);
     shiftOut (dataPin_7segment, clckPin_7segment, MSBFIRST, value);     
-    digitalWrite(loadPin_7segment,   LOW);
     digitalWrite(loadPin_7segment,   HIGH);         
 }
 
 
 void init_7segments (void) {
     
-    set7segmentRegister (INTENSITY, 0x07);
-    set7segmentRegister (SHUT_DOWN, 1);
-	 
+    set7segmentRegister (OP_INTENSITY, 0x07);
+    set7segmentRegister (OP_SHUTDOWN,  1);
+    set7segmentRegister (OP_SCANLIMIT, 0x07);
+	
+
+
+//     for (int i = 0; i < NO_OF_MAX7219_CASCADED_ICs; i++) 
+// 	{
+// 	    lc.spiTransfer (i, OP_DISPLAYTEST, 0);
+// 	    //scanlimit is set to max on startup
+// 	    lc.setScanLimit(i,7);
+// 	    //decode is done in source
+// 	    lc.spiTransfer (i, OP_DECODEMODE, 0);
+// 	    lc.clearDisplay (i);
+// 	    //we go into shutdown-mode on startup
+// 	    lc.shutdown(i, true);
+// 		// set intensity
+// 		lc.setIntensity (7);
+//     }
+
+//     set7segmentRegister (OP_INTENSITY, 0x07);
+// 	lc.clearDisplay(0);
+// 	lc.shutdown(0, true);
+	
 }
 
 
