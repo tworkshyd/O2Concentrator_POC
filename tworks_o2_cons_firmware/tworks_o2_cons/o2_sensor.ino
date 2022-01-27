@@ -7,9 +7,17 @@
 #include "config.h"
 
 
-#define NUM_OF_SAMPLES_O2   (3)
 
 
+volatile int16_t  o2_raw_adc_count;
+volatile float    o2_m_raw_voltage;
+
+// for single point calibration
+volatile float    o2_calib_const;
+
+// for two / multi point calibration
+volatile float    o2_slope;
+volatile float    o2_offset_value;
 
 float y_samples[NUM_OF_SAMPLES_O2]     = {  1.0,    20.9,   99.0};			// based on o2c tank purity = 96% & nitrogen tank purity = 95%
 
@@ -101,7 +109,7 @@ void test_ads1115 (void)  {
     convert from byte to float
     use in algo to calc m and c values.
 */
-int sensor_zero_calibration (void)  {
+void multi_point_calibration (void)  {
 
     float x = 0, y = 0;
     float sigmaX = 0, sigmaY = 0;
@@ -132,13 +140,13 @@ int sensor_zero_calibration (void)  {
 
     if (denominator != 0) {      
         o2_slope = ((NUM_OF_SAMPLES_O2 * sigmaXY) - (sigmaX * sigmaY)) / denominator;
-        o2_const_val = ((sigmaY * sigmaXX) - (sigmaX * sigmaXY)) / denominator;
+        o2_offset_value = ((sigmaY * sigmaXX) - (sigmaX * sigmaXY)) / denominator;
         DBG_PRINTLN ("O2 calibration successful .!!");
         result = SUCCESS;
     } 
     else {      
         o2_slope = 0;
-        o2_const_val = 0;
+        o2_offset_value = 0;
         result =  ERROR_SENSOR_CALIBRATION;
         DBG_PRINTLN ("Error: O2 calibration failed!!");
     }
@@ -146,10 +154,33 @@ int sensor_zero_calibration (void)  {
 //     DBG_PRINTLN ("");
 //     DBG_PRINT   ("o2_slope : ");
 //     DBG_PRINT   (o2_slope);
-//     DBG_PRINT   (", o2_const_val : ");
-//     DBG_PRINT   (o2_const_val);
+//     DBG_PRINT   (", o2_offset_value : ");
+//     DBG_PRINT   (o2_offset_value);
 
-    return result;
+    
+}
+
+
+/*
+    main function to calibrate and get m (slope) and c (constant) 
+	using two points and slope formula.
+*/
+void two_point_calibration (void)  {
+
+	// todo
+	
+}
+
+
+/*
+    Single point calibration.
+*/
+void single_point_calibration (void)  {
+
+
+	// index '2' is for 99.5% oxygen calibration values
+	o2_calib_const = y_samples[2] / x_samples[2];
+
     
 }
 
@@ -159,20 +190,29 @@ void o2_sensor_scan (void)  {
     ADS.readADC(O2_SENSOR_CHANNEL_NO);
     o2_raw_adc_count = ADS.getValue();   
     // DBG_PRINT   ("o2_raw_adc_count : ");
-    // DBG_PRINTLN (o2_raw_adc_count);
-
+    // DBG_PRINTLN (o2_raw_adc_count);	
+	
     o2_m_raw_voltage = ((float)o2_raw_adc_count * 1000.0) * 0.000125;
-    // DBG_PRINT   ("m_raw_voltage    : ");
-    // DBG_PRINTLN (m_raw_voltage, 4);
-
-    // temp hard coding till calib menu is ready
-    // o2_slope     = 0.02065262;       //48.42;    //0.166;
-    // o2_const_val = -4.68815;         //227;      //1.3228;
-    
-    o2_concentration = ((o2_m_raw_voltage * o2_slope) + o2_const_val);
+    // DBG_PRINT   ("o2_m_raw_voltage    : ");
+    // DBG_PRINTLN (o2_m_raw_voltage, 4);	
 
 
-	// moving average
+#if	  (CALIBRATION_POINT	== 1)
+	// 'o2_calib_const' is pre-calculated in 'single_point_calibration ()'
+    o2_concentration = o2_m_raw_voltage * o2_calib_const;
+
+#elif (CALIBRATION_POINT	== 2)
+	// 'o2_slope' and 'o2_offset_value' are pre-calculated in 'two_point_calibration ()'
+    o2_concentration = ((o2_m_raw_voltage * o2_slope) + o2_offset_value); 
+		
+#else	// (CALIBRATION_POINT >= 3)
+	// 'o2_slope' and 'o2_offset_value' are pre-calculated in 'multi_point_calibration ()'
+	o2_concentration = ((o2_m_raw_voltage * o2_slope) + o2_offset_value);
+	
+#endif
+
+
+	// Moving average
 	cbuf.push(o2_concentration);
 	o2_moving_avg = 0.0;
 	// the following ensures using the right type for the index variable
@@ -182,8 +222,8 @@ void o2_sensor_scan (void)  {
 		o2_moving_avg += cbuf[i];
 	}
 	o2_moving_avg = o2_moving_avg / cbuf.size();
-// 	DBG_PRINT   ("Average is : ");
-// 	DBG_PRINTLN (o2_moving_avg);
+	// 	DBG_PRINT   ("Average is : ");
+	// 	DBG_PRINTLN (o2_moving_avg);
 	
 	
 	

@@ -90,11 +90,6 @@ extern unsigned long int nb_delay;
 extern unsigned long int prev_nb_delay;
 extern unsigned char     do_byte;						// holds all digital outputs current status
 
-extern volatile int16_t  o2_raw_adc_count;
-extern volatile float    o2_slope;
-extern volatile float    o2_const_val;
-extern volatile float    o2_m_raw_voltage;
-
 extern uint8_t			 start_switch_pressed;
 extern uint8_t			 alarm_clear_button_pressed;
 
