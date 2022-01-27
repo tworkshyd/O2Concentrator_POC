@@ -230,19 +230,26 @@ void loop (void) {
 
 void o2_cons_init (void)    {
 
-    // compute slope and constant values
-    sensor_zero_calibration ();
-
-    // temp
-    //    DBG_PRINTLN ("Warning..: Hard coding slope and constant for Fio2");
-    //    o2_slope = 0.1734;
-    //    o2_const_val = 0.9393;
-    
-    DBG_PRINTLN ("");
+    // Single point calibration : compute calibration constant
+    multi_point_calibration ();
+    DBG_PRINTLN ("Multi point calibration parameters - ");
     DBG_PRINT   ("o2_slope : ");
     DBG_PRINT   (o2_slope);
-    DBG_PRINT   (", o2_const_val : ");
-    DBG_PRINT   (o2_const_val);    
+    DBG_PRINT   (", o2_offset_value : ");
+    DBG_PRINTLN (o2_offset_value);
+
+    // Two point : compute slope and constant values
+    two_point_calibration ();
+    DBG_PRINTLN ("Two point calibration parameters - ");
+    DBG_PRINT   ("todo ");
+    DBG_PRINTLN ("-");
+
+    // Multi point : compute slope and constant values
+    single_point_calibration ();
+    DBG_PRINTLN ("Single point calibration parameter  - ");
+    DBG_PRINT   ("o2_calib_const :  ");
+    DBG_PRINTLN (o2_calib_const);
+
 
     //  SET DELAY TIMING HERE
     //**************************************************************************
@@ -262,6 +269,7 @@ void o2_cons_init (void)    {
     do_control (SIEVE_A_VALVE_CONTROL,    CLOSE_VALVE);
     do_control (SIEVE_B_VALVE_CONTROL,    CLOSE_VALVE);
     do_control (SIEVE_FLUSH_VLV_CNTRL,    CLOSE_VALVE);
+	
     new_delay_msecs (500);
 
 

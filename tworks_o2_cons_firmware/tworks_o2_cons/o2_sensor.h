@@ -31,7 +31,31 @@
 
 
 
-int  sensor_zero_calibration        (void);
+#define NUM_OF_SAMPLES_O2   (3)
+
+
+
+// Variable declarations
+extern volatile int16_t  o2_raw_adc_count;
+extern volatile float    o2_m_raw_voltage;
+
+// for single point calibration
+extern volatile float    o2_calib_const;
+ 
+// for two / multi point calibration
+extern volatile float    o2_slope;
+extern volatile float    o2_offset_value;
+
+
+
+extern float y_samples[NUM_OF_SAMPLES_O2];
+extern float x_samples[NUM_OF_SAMPLES_O2];
+
+
+// Function declarations -----------------------------------------------------
+void multi_point_calibration        (void);
+void two_point_calibration			(void);
+void single_point_calibration		(void);
 void test_ads1115                   (void);
 
 
